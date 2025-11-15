@@ -1,47 +1,249 @@
-@startuml MVC
-title MVC Architecture
+@startuml MVC2
+skinparam Linetype polyline
+title MVC Architecture for RPG Game
 
-package "DBMS"{
-    class ConnectionDB
-    class PlayerDAO
-}
 
-package "View" {
-  class MenuUI
-  class CombatUI
-  class InventoryUI
-  class DialogUI
-  class MapUI
-}
 
-package "Controller" {
-  class GameController
-  class MenuController
-  class CombatController
-  class InventoryController
-}
+
 
 package "Model" {
-  class GameState
-  class Player
-  class Party
-  class Enemy
-  class Inventory
-  class SaveData
-  class Story
-  class Item
-  class Map
+
+    class Stats {
+        - int hp
+        - int attack
+        - int defense
+        - int special
+        - int speed
+    }
+
+    class ItemStats {
+        - int damage
+        - int cure
+        - int durability
+    }
+
+    class Event {
+        - string name
+    }
+
+    class GameState {
+        - bool autoSaveEnabled
+        - string currentScene
+        - Map<Event,bool> storyFlags
+        - List<string> playerChoices
+        + applyChoice(choice)
+        + setFlag(flag)
+        + getFlag(flag)
+    }
+
+    class SaveSystem {
+        - SaveSlot[3] slots
+        + save(slot)
+        + load(slot)
+        + isCorrupted(slot)
+    }
+
+    class SaveSlot {
+        - GameState savedState
+        - DateTime lastSaved
+    }
+
+    class Player {
+        - int xp
+        - string name
+        - Job job
+        - Inventory inventory
+        - List<Ability> abilities
+        + equipItem(item)
+        + learnAbility(ability)
+    }
+
+    class Job {
+        - string name
+        - string description
+        - Stats baseStats
+    }
+
+    class Inventory {
+        - List<Item> items
+        + addItem(item)
+        + removeItem(item)
+        + getEquipable(slot)
+    }
+
+    class Item {
+        - string name
+        - ItemType type
+        - ItemStats bonus
+    }
+
+    class NPC {
+        - string name
+        - List<Item> shopItems
+        + talk()
+        + openShop()
+    }
+
+    class WorldMap {
+    }
+
+    class Party {
+        - List<Player> members
+        + updateFollowPositions()
+    }
+
+    class Battle {
+        - List<Enemy> enemies
+        - List<Player> party
+        - int turnIndex
+        + calculateDamage(attacker, defender)
+        + nextTurn()
+    }
+
+    class Ability {
+        - string name
+        - string description
+        - Effect effect
+    }
+
+    class Effect {
+        - int power
+        - StatusType status
+    }
+
+    class Enemy {
+        - string name
+        - List<Ability> abilities
+    }
+
 }
 
 
-MenuUI --> MenuController : user input
-CombatUI --> CombatController : actions
-InventoryUI --> InventoryController
 
-MenuController --> GameController
-CombatController --> GameState
-GameController --> SaveData
-GameController --> Story
-GameController --> Party
 
+
+package "Controller" {
+
+    class MainMenuController {
+        + startNewGame()
+        + continueGame(slot)
+        + openSettings()
+    }
+
+    class SaveController {
+        + showSlots()
+        + saveToSlot(slot)
+        + loadFromSlot(slot)
+    }
+
+    class GameController {
+        + startExploration()
+        + handleStoryChoice(choice)
+    }
+
+    class InventoryController {
+        + openInventory()
+        + equipItem(item)
+    }
+
+    class NPCController {
+        + startInteraction(npc)
+        + buyItem(npc, item)
+    }
+
+    class MovementController {
+        + movePlayer(direction)
+        + updatePartyFollow()
+    }
+
+    class BattleController {
+        + startBattle(enemies)
+        + playerTurn(action)
+        + enemyTurn()
+    }
+
+    class AbilityController {
+        + notifyNewAbility()
+        + learnAbility(ability)
+    }
+
+}
+
+
+
+
+
+package "View" {
+
+    class MainMenuView {
+        + displayMenu()
+    }
+
+    class SaveMenuView {
+        + displaySlots()
+    }
+
+    class InventoryView {
+        + showInventory()
+    }
+
+    class DialogueView {
+        + showDialogue(npc)
+    }
+
+    class BattleView {
+        + showBattleState()
+        + showTurn()
+    }
+
+    class ExplorationView {
+        + renderMap()
+    }
+
+    class AbilityView {
+        + displayAbilities()
+    }
+
+}
+
+
+
+
+
+
+MainMenuController --> GameState
+MainMenuController --> SaveSystem
+
+SaveController --> SaveSystem
+
+GameController --> GameState
+GameController --> WorldMap
+GameController --> NPC
+
+InventoryController --> Inventory
+InventoryController --> Player
+
+NPCController --> NPC
+NPCController --> Inventory
+
+MovementController --> Player
+MovementController --> Party
+MovementController --> WorldMap
+
+BattleController --> Battle
+BattleController --> Player
+BattleController --> Enemy
+
+AbilityController --> Ability
+AbilityController --> Player
+
+
+MainMenuView --> MainMenuController 
+SaveMenuView --> SaveController 
+InventoryView --> InventoryController 
+DialogueView --> NPCController 
+ExplorationView --> GameController 
+BattleView --> BattleController 
+AbilityView --> AbilityController 
+ExplorationView --> MovementController
 @enduml
