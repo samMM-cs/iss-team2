@@ -227,12 +227,12 @@ AbilityController --> Ability
 AbilityController --> Player
 
 ' Controllers update Views
-MainMenuController --> MainMenuView
-SaveController --> SaveMenuView
-InventoryController --> InventoryView
-NPCController --> DialogueView
-GameController --> ExplorationView
-BattleController --> BattleView
-AbilityController --> AbilityView
+MainMenuView --> MainMenuController 
+SaveMenuView --> SaveController 
+InventoryView --> InventoryController 
+DialogueView --> NPCController 
+ExplorationView --> GameController 
+BattleView --> BattleController 
+AbilityView --> AbilityController 
 
 @enduml
