@@ -2,219 +2,222 @@
 skinparam Linetype polyline
 title MVC Architecture for RPG Game
 
-' ===========================
-'          MODEL
-' ===========================
+
+
+
 
 package "Model" {
 
-  class GameState {
-      - bool autoSaveEnabled
-      - string currentScene
-      - Map<string,bool> storyFlags
-      - List<string> playerChoices
-      + applyChoice(choice)
-      + setFlag(flag)
-      + getFlag(flag)
-  }
+    class Stats {
+        - int hp
+        - int attack
+        - int defense
+        - int special
+        - int speed
+    }
 
-  class SaveSystem {
-      - SaveSlot[3] slots
-      + save(slot)
-      + load(slot)
-      + isCorrupted(slot)
-  }
+    class ItemStats {
+        - int damage
+        - int cure
+        - int durability
+    }
 
-  class SaveSlot {
-      - GameState savedState
-      - Player savedPlayer
-      - bool isCorrupted
-  }
+    class Event {
+        - string name
+    }
 
-  class Player {
-      - string name
-      - Job job
-      - Inventory inventory
-      - List<Ability> abilities
-      + equipItem(item)
-      + learnAbility(ability)
-  }
+    class GameState {
+        - bool autoSaveEnabled
+        - string currentScene
+        - Map<Event,bool> storyFlags
+        - List<string> playerChoices
+        + applyChoice(choice)
+        + setFlag(flag)
+        + getFlag(flag)
+    }
 
-  class Job {
-      - string name
-      - string description
-      - Stats baseStats
-  }
+    class SaveSystem {
+        - SaveSlot[3] slots
+        + save(slot)
+        + load(slot)
+        + isCorrupted(slot)
+    }
 
-  class Inventory {
-      - List<Item> items
-      + addItem(item)
-      + removeItem(item)
-      + getEquipable(slot)
-  }
+    class SaveSlot {
+        - GameState savedState
+        - DateTime lastSaved
+    }
 
-  class Item {
-      - string name
-      - ItemType type
-      - Stats bonus
-  }
+    class Player {
+        - int xp
+        - string name
+        - Job job
+        - Inventory inventory
+        - List<Ability> abilities
+        + equipItem(item)
+        + learnAbility(ability)
+    }
 
-  class NPC {
-      - string name
-      - List<Item> shopItems
-      - Event event
-      + talk()
-      + openShop()
-  }
+    class Job {
+        - string name
+        - string description
+        - Stats baseStats
+    }
 
-  class Event {
-      - string description
-      + trigger()
-  }
+    class Inventory {
+        - List<Item> items
+        + addItem(item)
+        + removeItem(item)
+        + getEquipable(slot)
+    }
 
-  class World {
-      - Map mapData
-  }
+    class Item {
+        - string name
+        - ItemType type
+        - ItemStats bonus
+    }
 
-  class Party {
-      - List<Character> members
-      + updateFollowPositions()
-  }
+    class NPC {
+        - string name
+        - List<Item> shopItems
+        + talk()
+        + openShop()
+    }
 
-  class Character {
-      - string name
-      - Stats stats
-  }
+    class WorldMap {
+    }
 
-  class Battle {
-      - List<Character> enemies
-      - List<Character> party
-      - int turnIndex
-      + calculateDamage(attacker, defender)
-      + nextTurn()
-  }
+    class Party {
+        - List<Player> members
+        + updateFollowPositions()
+    }
 
-  class Ability {
-      - string name
-      - string description
-      - Effect effect
-  }
+    class Battle {
+        - List<Enemy> enemies
+        - List<Player> party
+        - int turnIndex
+        + calculateDamage(attacker, defender)
+        + nextTurn()
+    }
 
-  class Effect {
-      - int power
-      - StatusType status
-  }
+    class Ability {
+        - string name
+        - string description
+        - Effect effect
+    }
 
-  class Enemy {
-      - string name
-      - Inventory inventory
-      - List<Ability> abilities
-      + equipItem(item)
-      + learnAbility(ability)
-  }
+    class Effect {
+        - int power
+        - StatusType status
+    }
+
+    class Enemy {
+        - string name
+        - List<Ability> abilities
+    }
 
 }
 
-' ===========================
-'          CONTROLLER
-' ===========================
+
+
+
 
 package "Controller" {
 
-  class MainMenuController {
-      + startNewGame()
-      + continueGame(slot)
-      + toggleAutoSave()
-  }
+    class MainMenuController {
+        + startNewGame()
+        + continueGame(slot)
+        + openSettings()
+    }
 
-  class SaveController {
-      + showSlots()
-      + saveToSlot(slot)
-      + loadFromSlot(slot)
-  }
+    class SaveController {
+        + showSlots()
+        + saveToSlot(slot)
+        + loadFromSlot(slot)
+    }
 
-  class GameController {
-      + startExploration()
-      + handleStoryChoice(choice)
-  }
+    class GameController {
+        + startExploration()
+        + handleStoryChoice(choice)
+    }
 
-  class InventoryController {
-      + openInventory()
-      + equipItem(item)
-  }
+    class InventoryController {
+        + openInventory()
+        + equipItem(item)
+    }
 
-  class NPCController {
-      + startInteraction(npc)
-      + buyItem(npc, item)
-  }
+    class NPCController {
+        + startInteraction(npc)
+        + buyItem(npc, item)
+    }
 
-  class MovementController {
-      + movePlayer(direction)
-      + updatePartyFollow()
-  }
+    class MovementController {
+        + movePlayer(direction)
+        + updatePartyFollow()
+    }
 
-  class BattleController {
-      + startBattle(enemies)
-      + playerTurn(action)
-      + enemyTurn()
-  }
+    class BattleController {
+        + startBattle(enemies)
+        + playerTurn(action)
+        + enemyTurn()
+    }
 
-  class AbilityController {
-      + notifyNewAbility()
-      + learnAbility(ability)
-  }
+    class AbilityController {
+        + notifyNewAbility()
+        + learnAbility(ability)
+    }
 
 }
 
-' ===========================
-'          VIEW
-' ===========================
+
+
+
 
 package "View" {
 
-  class MainMenuView {
-      + displayMenu()
-  }
+    class MainMenuView {
+        + displayMenu()
+    }
 
-  class SaveMenuView {
-      + displaySlots()
-  }
+    class SaveMenuView {
+        + displaySlots()
+    }
 
-  class InventoryView {
-      + showInventory()
-  }
+    class InventoryView {
+        + showInventory()
+    }
 
-  class DialogueView {
-      + showDialogue(npc)
-  }
+    class DialogueView {
+        + showDialogue(npc)
+    }
 
-  class BattleView {
-      + showBattleState()
-      + showTurn()
-  }
+    class BattleView {
+        + showBattleState()
+        + showTurn()
+    }
 
-  class ExplorationView {
-      + renderMap()
-  }
+    class ExplorationView {
+        + renderMap()
+    }
 
-  class AbilityView {
-      + displayAbilities()
-  }
+    class AbilityView {
+        + displayAbilities()
+    }
 
 }
 
-' ===========================
-'       RELATIONSHIPS
-' ===========================
 
-' Controllers use Models
+
+
+
+
 MainMenuController --> GameState
 MainMenuController --> SaveSystem
 
 SaveController --> SaveSystem
 
 GameController --> GameState
-GameController --> World
+GameController --> WorldMap
 GameController --> NPC
 
 InventoryController --> Inventory
@@ -225,7 +228,7 @@ NPCController --> Inventory
 
 MovementController --> Player
 MovementController --> Party
-MovementController --> World
+MovementController --> WorldMap
 
 BattleController --> Battle
 BattleController --> Player
@@ -234,7 +237,7 @@ BattleController --> Enemy
 AbilityController --> Ability
 AbilityController --> Player
 
-' Controllers update Views
+
 MainMenuView --> MainMenuController 
 SaveMenuView --> SaveController 
 InventoryView --> InventoryController 
@@ -242,5 +245,5 @@ DialogueView --> NPCController
 ExplorationView --> GameController 
 BattleView --> BattleController 
 AbilityView --> AbilityController 
-
+ExplorationView --> MovementController
 @enduml
