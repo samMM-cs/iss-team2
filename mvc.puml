@@ -4,6 +4,7 @@ title MVC Architecture
 package "DBMS"{
     class ConnectionDB
     class PlayerDAO
+    
 }
 package "View" {
   class MenuUI
@@ -18,6 +19,7 @@ package "Controller" {
   class MenuController
   class CombatController
   class InputController
+  class ItemController
 }
 
 package "Model" {
@@ -28,6 +30,7 @@ package "Model" {
   class Inventory
   class SaveData
   class Story
+  class Item
 }
 
 
@@ -42,3 +45,4 @@ GameController --> Story
 GameController --> Party
 
 @enduml
+
