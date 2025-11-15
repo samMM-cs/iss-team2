@@ -19,7 +19,6 @@ package "Controller" {
   class MenuController
   class CombatController
   class InputController
-  class ItemController
 }
 
 package "Model" {
@@ -45,4 +44,5 @@ GameController --> Story
 GameController --> Party
 
 @enduml
+
 
