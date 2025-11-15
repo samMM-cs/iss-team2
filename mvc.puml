@@ -36,7 +36,7 @@ package "Model" {
 
 MenuUI --> MenuController : user input
 CombatUI --> CombatController : actions
-InventoryUI --> InputController
+InventoryUI --> InventoryController
 
 MenuController --> GameController
 CombatController --> GameState

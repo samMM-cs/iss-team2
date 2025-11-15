@@ -1,0 +1,238 @@
+@startuml MVC2
+
+title MVC Architecture for RPG Game
+
+' ===========================
+'          MODEL
+' ===========================
+
+package "Model" {
+
+class GameState {
+    - bool autoSaveEnabled
+    - string currentScene
+    - Map<string,bool> storyFlags
+    - List<string> playerChoices
+    + applyChoice(choice)
+    + setFlag(flag)
+    + getFlag(flag)
+}
+
+class SaveSystem {
+    - SaveSlot[3] slots
+    + save(slot)
+    + load(slot)
+    + isCorrupted(slot)
+}
+
+class SaveSlot {
+    - GameState savedState
+    - Player savedPlayer
+    - bool isCorrupted
+}
+
+class Player {
+    - string name
+    - Job job
+    - Inventory inventory
+    - List<Ability> abilities
+    + equipItem(item)
+    + learnAbility(ability)
+}
+
+class Job {
+    - string name
+    - string description
+    - Stats baseStats
+}
+
+class Inventory {
+    - List<Item> items
+    + addItem(item)
+    + removeItem(item)
+    + getEquipable(slot)
+}
+
+class Item {
+    - string name
+    - ItemType type
+    - Stats bonus
+}
+
+class NPC {
+    - string name
+    - List<Item> shopItems
+    - Event event
+    + talk()
+    + openShop()
+}
+
+class Event {
+    - string description
+    + trigger()
+}
+
+class World {
+    - Map mapData
+}
+
+class Party {
+    - List<Character> members
+    + updateFollowPositions()
+}
+
+class Character {
+    - string name
+    - Stats stats
+}
+
+class Battle {
+    - List<Character> enemies
+    - List<Character> party
+    - int turnIndex
+    + calculateDamage(attacker, defender)
+    + nextTurn()
+}
+
+class Ability {
+    - string name
+    - string description
+    - Effect effect
+}
+
+class Effect {
+    - int power
+    - StatusType status
+}
+
+}
+
+' ===========================
+'          CONTROLLER
+' ===========================
+
+package "Controller" {
+
+class MainMenuController {
+    + startNewGame()
+    + continueGame(slot)
+    + toggleAutoSave()
+}
+
+class SaveController {
+    + showSlots()
+    + saveToSlot(slot)
+    + loadFromSlot(slot)
+}
+
+class GameController {
+    + startExploration()
+    + handleStoryChoice(choice)
+}
+
+class InventoryController {
+    + openInventory()
+    + equipItem(item)
+}
+
+class NPCController {
+    + startInteraction(npc)
+    + buyItem(npc, item)
+}
+
+class MovementController {
+    + movePlayer(direction)
+    + updatePartyFollow()
+}
+
+class BattleController {
+    + startBattle(enemies)
+    + playerTurn(action)
+    + enemyTurn()
+}
+
+class AbilityController {
+    + notifyNewAbility()
+    + learnAbility(ability)
+}
+
+}
+
+' ===========================
+'          VIEW
+' ===========================
+
+package "View" {
+
+class MainMenuView {
+    + displayMenu()
+}
+
+class SaveMenuView {
+    + displaySlots()
+}
+
+class InventoryView {
+    + showInventory()
+}
+
+class DialogueView {
+    + showDialogue(npc)
+}
+
+class BattleView {
+    + showBattleState()
+    + showTurn()
+}
+
+class ExplorationView {
+    + renderMap()
+}
+
+class AbilityView {
+    + displayAbilities()
+}
+
+}
+
+' ===========================
+'       RELATIONSHIPS
+' ===========================
+
+' Controllers use Models
+MainMenuController --> GameState
+MainMenuController --> SaveSystem
+
+SaveController --> SaveSystem
+
+GameController --> GameState
+GameController --> World
+GameController --> NPC
+
+InventoryController --> Inventory
+InventoryController --> Player
+
+NPCController --> NPC
+NPCController --> Inventory
+
+MovementController --> Player
+MovementController --> Party
+MovementController --> World
+
+BattleController --> Battle
+BattleController --> Player
+BattleController --> Enemy
+
+AbilityController --> Ability
+AbilityController --> Player
+
+' Controllers update Views
+MainMenuController --> MainMenuView
+SaveController --> SaveMenuView
+InventoryController --> InventoryView
+NPCController --> DialogueView
+GameController --> ExplorationView
+BattleController --> BattleView
+AbilityController --> AbilityView
+
+@enduml
