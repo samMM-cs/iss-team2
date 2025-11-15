@@ -1,0 +1,41 @@
+@startuml MVC
+title MVC Architecture
+
+package "DBMS"{
+    
+}
+package "View" {
+  class MenuUI
+  class CombatUI
+  class InventoryUI
+  class DialogUI
+}
+
+package "Controller" {
+  class GameController
+  class MenuController
+  class CombatController
+  class InputController
+}
+
+package "Model" {
+  class GameState
+  class Player
+  class Party
+  class Enemy
+  class Inventory
+  class SaveData
+  class Story
+}
+
+
+MenuUI --> MenuController : user input
+CombatUI --> CombatController : actions
+InventoryUI --> InputController
+
+MenuController --> GameController
+CombatController --> GameState
+GameController --> SaveData
+GameController --> Story
+GameController --> Party
+@enduml
