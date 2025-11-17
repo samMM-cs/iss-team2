@@ -1,4 +1,5 @@
-REQUISITI FUNZIONALI 
+## REQUISITI FUNZIONALI 
+
 1. Il sistema permette al giocatore di creare e gestire un party di 2–4 personaggi. 
 2. Il gioco genera e gestisce i nemici [Foes] durante l’esplorazione e i combattimenti. 
 3. Il sistema permette al giocatore di combattere i minion della Distruzione e avanzare nella storia. 
@@ -8,12 +9,13 @@ REQUISITI FUNZIONALI
 7. Il gioco aggiorna lo stato del mondo in base al progresso della Distruzione. 
 8. Il sistema gestisce dialoghi, inventario e quest. 
 9. Il sistema gestisce boss fight contro la Distruzione e le sue emanazioni. 
-10.Il sistema permette multiple ending basati sulle decisioni del giocatore.
+10. Il sistema permette multiple ending basati sulle decisioni del giocatore.
 
-REQUISITI NON FUNZIONALI 
+## REQUISITI NON FUNZIONALI 
+
 1. Il gioco deve mantenere 30 FPS nelle aree principali. 
 2. I tempi di caricamento non devono superare 10 secondi. 
-3.Il sistema deve essere compatibile con Windows e Linux. 
+3. Il sistema deve essere compatibile con Windows e Linux. 
 4. I salvataggi devono essere resistenti alla corruzione.
 5. L’interfaccia deve essere semplice e navigabile in pochi passaggi. 
 6. Il codice deve essere modulare per facilitare patch ed espansioni. 
