@@ -8,7 +8,11 @@
 - The main menu is displayed  
 
 ### US2 – Enable/disable auto‑save  
+<<<<<<< HEAD
 **Priority:** 4  
+=======
+**Priority:** Low  
+>>>>>>> 2ae32f8 (update product_backlog)
 **Acceptance Criteria:**  
 - System allows toggling auto‑save  
 
@@ -57,7 +61,11 @@
 - Confirmation on overwrite  
 
 ### US10 – Story choices influence future  
+<<<<<<< HEAD
 **Priority:** 9  
+=======
+**Priority:** Low  
+>>>>>>> 2ae32f8 (update product_backlog)
 **Acceptance Criteria:**  
 - Choices persist  
 - Choices impact future events  
