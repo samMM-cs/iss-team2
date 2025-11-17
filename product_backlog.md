@@ -21,7 +21,8 @@
 ### US4 – Choose character job  
 **Priority:** Medium  
 **Acceptance Criteria:**  
-- All jobs displayed with descriptions  
+- All jobs displayed with descriptions
+- The players can select jobs for their character
 
 ### US5 – Select save slot and continue  
 **Priority:** High  
@@ -33,7 +34,7 @@
 **Acceptance Criteria:**  
 - Game detects corruption  
 - Error message shown  
-- Slot blocked until overwritten  
+- Slot blocked from reading until overwritten  
 
 ---
 
@@ -92,7 +93,7 @@
 - Player can attack or use items  
 
 ### US15 – Damage, effects & healing calculations  
-**Priority:** High  
+**Priority:** Medium  
 **Acceptance Criteria:**  
 - Combat state updated  
 - UI updated  
