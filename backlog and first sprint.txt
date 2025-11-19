@@ -1,0 +1,21 @@
+USER STORY			PRIORITY	STORY POINTS
+ 1 - game launch		10		3
+13 - movement 			10		8
+14 - combat 			10		3
+15 - dmg calc 			10		2
+16 - turn battles 		10		5
+
+ 3 - start continue game 	10
+10 - story choices 		 9
+ 5 - continue from save 	 9
+ 7 - early exit 		 9
+18 - evolution 			 9
+ 4 - character job 		 8
+12 - npc 			 8
+ 6 - corrupted save 		 7
+17 - select new ability 	 7
+19 - update stats 		 7
+ 8 - end of story 		 6
+11 - inventory 			 6
+ 2 - auto save 			 4
+ 9 - manual save 		 4
