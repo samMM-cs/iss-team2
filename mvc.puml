@@ -1,10 +1,6 @@
-@startuml MVC2
+@startuml MVC
 skinparam Linetype polyline
 title MVC Architecture for RPG Game
-
-
-
-
 
 package "Model" {
 
@@ -53,9 +49,13 @@ package "Model" {
         - string name
         - Job job
         - Inventory inventory
+        - Position position
+        - Player follower
         - List<Ability> abilities
         + equipItem(item)
         + learnAbility(ability)
+        + notifyFollower()
+        + subscribeToFollowed(player)
     }
 
     class Job {
@@ -88,6 +88,7 @@ package "Model" {
     }
 
     class Party {
+        - Player mainPlayer
         - List<Player> members
         + updateFollowPositions()
     }
@@ -117,10 +118,6 @@ package "Model" {
     }
 
 }
-
-
-
-
 
 package "Controller" {
 
@@ -169,10 +166,6 @@ package "Controller" {
 
 }
 
-
-
-
-
 package "View" {
 
     class MainMenuView {
@@ -205,11 +198,6 @@ package "View" {
     }
 
 }
-
-
-
-
-
 
 MainMenuController --> GameState
 MainMenuController --> SaveSystem
