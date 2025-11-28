@@ -69,7 +69,6 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>${main.class}</mainClass>
-
                     <module>javafx.controls</module>
                 </configuration>
             </plugin>
