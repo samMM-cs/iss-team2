@@ -26,7 +26,7 @@ public class MainMenu {
         VBox layout = new VBox(10, newGameBtn, exitBtn);
         Scene scene = new Scene(layout, 800, 600);
 
-        stage.setTitle("RPG Game");
+        stage.setTitle("RPG Game bellissimissimo");
         stage.setScene(scene);
         stage.show();
     }
