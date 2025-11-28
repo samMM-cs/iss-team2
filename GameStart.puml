@@ -1,0 +1,62 @@
+/'
+    As a player, I want to start a new game, so that I can play
+    acceptance criteria: the game starts from the beginning
+'/
+@startuml startgame
+/'
+    Use Factory design pattern to instance
+    concrete classes NewGame and ContinueGame
+'/
+
+abstract class GameCreator {
+    + createGame(): Game
+}
+
+class NewGameCreator {
+    + createGame(): Game
+}
+
+class ContinueGameCreator {
+    + createGame(): Game
+}
+
+
+GameCreator -down-> NewGameCreator
+GameCreator -down-> ContinueGameCreator
+GameCreator -right->Game : create
+
+abstract class Game {
+    - GameState: gameState
+}
+
+class NewGame {
+}
+
+class ContinueGame{
+}
+
+Game<|--NewGame
+Game<|--ContinueGame
+
+/'
+    GameCreator has to interacte with other classes in MVC scheme
+    In particular ContinueGameCreator will interact with
+    SaveMenuView to let player choose which game shall be continued
+    and so go on as displayes in MVC
+'/
+
+/'
+        /'
+            It is desirable to have only one GameInstance, so we use
+            design pattern Singletone to achieve this
+
+
+    class GameInstance {
+        + getInstance(): GameInstance
+        - GameCreator: gameCreator
+    }
+
+    GameInstance -down-> GameCreator
+    GameInstance-->GameInstance
+    '/
+@enduml
