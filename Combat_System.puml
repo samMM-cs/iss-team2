@@ -1,0 +1,46 @@
+@startuml Combat_System Strategy + Observer
+
+class Player{
+    - name: String
+    - HP: int
+    - inventory: List<Item>
+}
+
+class Enemy{
+    -name: String
+    - HP: int
+}
+
+interface ActionStrategy{
+    + exectute(user: Character, target: Character)
+}
+
+class AttackAction implements ActionStrategy{
+    - combatStrategy: CombatCalculationStrategy
+    + execute(user,target0)
+}
+
+class ItemAction implements ActionStrategy{
+    - item: Item
+    + execute(user, target)
+}
+
+'interface CombatCalculationStrategy{
+    '+ calculateDamage(attacker: Character, defender: Character): int
+    '+ applyEffects(attacker: Character, defender: Character)
+'}
+
+interface CombatObserver{
+    + update(state: CombatState)
+}
+
+class CombatUI implements CombatObserver{
+    +update(state: CombatState)
+}
+
+Player --> ActionStrategy : user
+Enemy-->ActionStrategy : target
+CombatUI-->Player: update
+
+
+@enduml
