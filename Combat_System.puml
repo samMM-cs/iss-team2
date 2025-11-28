@@ -7,12 +7,12 @@ class Player{
 }
 
 class Enemy{
-    -name: String
+    - name: String
     - HP: int
 }
 
 interface ActionStrategy{
-    + exectute(user: Character, target: Character)
+    + execute(user: Character, target: Character)
 }
 
 class AttackAction implements ActionStrategy{
@@ -25,22 +25,6 @@ class ItemAction implements ActionStrategy{
     + execute(user, target)
 }
 
-'interface CombatCalculationStrategy{
-    '+ calculateDamage(attacker: Character, defender: Character): int
-    '+ applyEffects(attacker: Character, defender: Character)
-'}
-
-interface CombatObserver{
-    + update(state: CombatState)
-}
-
-class CombatUI implements CombatObserver{
-    +update(state: CombatState)
-}
-
 Player --> ActionStrategy : user
 Enemy-->ActionStrategy : target
-CombatUI-->Player: update
-
-
 @enduml

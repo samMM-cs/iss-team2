@@ -1,8 +1,58 @@
 @startuml MVC
-skinparam Linetype polyline
+skinparam Linetype ortho
 title MVC Architecture for RPG Game
+skinparam nodesep 70
+skinparam ranksep 80
+
+class Client{
+    + main(): void
+}
+
+Client-->GameLauncher: calls getIstance()
+
+class GameLauncher {
+    - static instance : GameLauncher
+    - GameLauncher()
+    + static getIstance(): GameLauncher
+    + launch() : void
+}
 
 package "Model" {
+
+    interface ActionStrategy{
+        + execute(user: Character, target: Character)
+    }
+
+    class AttackAction implements ActionStrategy{
+        - combatStrategy: CombatCalculationStrategy
+        + execute(user,target0)
+    }
+
+    class ItemAction implements ActionStrategy{
+        - item: Item
+        + execute(user, target)
+    }
+    
+    abstract class GameCreator {
+        + createGame(): Game
+    }
+
+    class NewGameCreator {
+        + createGame(): Game
+    }
+
+    class ContinueGameCreator {
+        + createGame(): Game
+    }
+    abstract class Game {
+        - GameState: gameState
+    }
+
+    class NewGame {
+    }
+
+    class ContinueGame{
+    }
 
     class Stats {
         - int hp
@@ -27,6 +77,7 @@ package "Model" {
         - string currentScene
         - Map<Event,bool> storyFlags
         - List<string> playerChoices
+        - WorldPosition worldPosition
         + applyChoice(choice)
         + setFlag(flag)
         + getFlag(flag)
@@ -44,7 +95,13 @@ package "Model" {
         - DateTime lastSaved
     }
 
-    class Player {
+    class Character {
+        - string name
+        - List<Ability> abilities
+        - Stats stats
+    }
+
+    class Player extends Character {
         - int xp
         - string name
         - Job job
@@ -113,11 +170,19 @@ package "Model" {
         - StatusType status
     }
 
-    class Enemy {
-        - string name
-        - List<Ability> abilities
+    class Enemy extends Character {
+
     }
 
+    interface TurnIterator {
+        + hasCharacters()
+        + nextCharacter()
+    }
+
+    class ConcreteTurnIterator implements TurnIterator {
+        + hasCharacters()
+        + nextCharacter()
+    }
 }
 
 package "Controller" {
@@ -155,6 +220,7 @@ package "Controller" {
     }
 
     class BattleController {
+        - TurnIterator turnIterator
         + startBattle(enemies)
         + playerTurn(action)
         + enemyTurn()
@@ -197,13 +263,15 @@ package "View" {
     class AbilityView {
         + displayAbilities()
     }
-
 }
 
+
 MainMenuController --> GameState
+MainMenuController --> GameCreator
 MainMenuController --> SaveSystem
 
 SaveController --> SaveSystem
+SaveController --> ContinueGameCreator
 
 GameController --> GameState
 GameController --> WorldMap
@@ -220,13 +288,14 @@ MovementController --> Party
 MovementController --> WorldMap
 
 BattleController --> Battle
-BattleController --> Player
-BattleController --> Enemy
+BattleController --> Character
+
 
 AbilityController --> Ability
 AbilityController --> Player
 
 
+GameLauncher --> MainMenuView: launch
 MainMenuView --> MainMenuController 
 SaveMenuView --> SaveController 
 InventoryView --> InventoryController 
@@ -235,4 +304,19 @@ ExplorationView --> GameController
 BattleView --> BattleController 
 AbilityView --> AbilityController 
 ExplorationView --> MovementController
+
+Character --> ActionStrategy
+BattleView-->Player: update
+
+GameCreator --> NewGameCreator
+GameCreator --> ContinueGameCreator
+GameCreator --> Game : create
+' ContinueGameCreator -[hidden]left-> NewGameCreator
+' NewGameCreator -[hidden]left--> Game
+' SaveController -[hidden]left-> MainMenuController
+' NPCController -[hidden]left-> SaveController
+Game <|-- NewGame
+Game <|-- ContinueGame
+
+MainMenuController -[hidden]left-> SaveController
 @enduml
