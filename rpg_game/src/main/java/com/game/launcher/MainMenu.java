@@ -25,11 +25,11 @@ public class MainMenu {
     public void show() {
 
         // Creo ImageView
-        ImageView imgBtn = new ImageView(new Image(getClass().getResource("Default.png").toExternalForm()));
+        ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream("/Default.png")));
         imgBtn.setFitWidth(50); // larghezza desiderata
         imgBtn.setFitHeight(50); // altezza desiderata
         imgBtn.setPreserveRatio(true); // mantiene proporzioni
-        ImageView imgSfondo = new ImageView(new Image(getClass().getResource("Forest.png").toExternalForm()));
+        ImageView imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
 
         Button newGameBtn = new Button("New Game");
         Button resumeBtn = new Button("Resume");
