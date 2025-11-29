@@ -13,6 +13,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MainMenu {
@@ -26,16 +27,14 @@ public class MainMenu {
 
         // Creo ImageView
         ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream("/Default.png")));
-        imgBtn.setFitWidth(50); // larghezza desiderata
-        imgBtn.setFitHeight(50); // altezza desiderata
-        imgBtn.setPreserveRatio(true); // mantiene proporzioni
+
         ImageView imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
 
         Button newGameBtn = new Button("New Game");
         Button resumeBtn = new Button("Resume");
         Button settingsBtn = new Button("Settings");
         Button exitBtn = new Button("Exit");
-
+        
         BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
@@ -47,14 +46,15 @@ public class MainMenu {
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(newGameBtn, resumeBtn, settingsBtn, exitBtn);
 
-        //Immagine dietro ed i pulsanti sopra
-        StackPane root = new StackPane(imgSfondo,buttons);
+        // Immagine dietro ed i pulsanti sopra
+        StackPane root = new StackPane(imgSfondo, buttons);
+
         Scene scene = new Scene(root, 800, 600);
 
-        //Adatto lo sfondo rispetto alla dimensione della finestra
+        // Adatto lo sfondo rispetto alla dimensione della finestra
         imgSfondo.fitHeightProperty().bind(scene.heightProperty());
         imgSfondo.fitWidthProperty().bind(scene.widthProperty());
-        
+
         // Eventi
         newGameBtn.setOnAction(e -> {
             System.out.println("New Game Started");
@@ -67,7 +67,19 @@ public class MainMenu {
         exitBtn.setOnAction(e -> stage.close());
 
         stage.setTitle("RPG Game");
+        stage.setWidth(Screen.getPrimary().getBounds().getWidth());
+        stage.setHeight(Screen.getPrimary().getBounds().getHeight());
+        stage.centerOnScreen();
+
+        stage.setResizable(true);
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }
+
+    /*private Button createButton(String txt, String path) {
+        Button btn = new Button();
+        btn.setStyle();
+        return btn;
+    }*/
 }
