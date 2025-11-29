@@ -25,4 +25,4 @@ replay_pid*
 
 .vscode
 
-rpg_game/target/*
+**/target/*
