@@ -1,0 +1,76 @@
+/'
+    Party (players) and Enemy(-ies) (CPU) will choose action
+    at the start of the turn through methods in BattleController.
+    Then the model (Battle) actualizes the turn and update view
+'/
+@startuml Turn-based battles
+
+class Battle {
+    - List<Enemy> enemies
+    - List<Player> party
+    - int turnIndex
+    - TurnStrategy turnStrategy
+    - RewardStrategy rewardStrategy
+    + calculateDamage(attacker, defender)
+    + nextTurn()
+    + isBattleOver() : bool
+    + endBattle()
+    + assignRewards()
+}
+
+'Both Turn and Reward implementation use Strategy as design pattern'
+
+interface TurnStrategy {
+    /'
+        method that sort a List of Character ConcreteTurnStrategy-wise
+        BattleController is meant to ask all players which action take,
+        then all players will jump at enemies in a proper order
+        calculated by a ConcredTurnStrategy
+    '/
+    + sortAction(characters: List<Character>) : void
+    + getTurnIterator() : TurnIterator
+}
+
+class StaticSpeedTurn implements TurnStrategy {
+    - List<Character> characterList
+    + sortAction(characters: List<Character>) : void
+    + getTurnIterator() : TurnIterator
+}
+
+interface TurnIterator {
+    + hasCharacters()
+    + nextCharacter()
+}
+
+class ConcreteTurnIterator implements TurnIterator {
+    + hasCharacters()
+    + nextCharacter()
+}
+
+interface RewardStrategy {
+    ' Reward class will get a List<Item> from db through calculateRewards method '
+    + calculateRewards(List<Enemy>): Reward 
+}
+
+class StandardRewardStrategy implements RewardStrategy{
+    + calculateRewards(List<Enemy>): Reward 
+}
+
+class NoRewardStrategy implements RewardStrategy {
+    + calculateRewards(List<Enemy>): Reward 
+}
+
+class Reward {
+    - int xp
+    - List<Item> : drop
+    + assignXP(int: xp)
+    + assignItem(Item : item)
+}
+
+Battle-down-> RewardStrategy
+Battle->TurnStrategy
+
+TurnStrategy->TurnIterator
+
+RewardStrategy-down-> Reward
+@enduml
