@@ -155,8 +155,23 @@ package "Model" {
         - List<Enemy> enemies
         - List<Player> party
         - int turnIndex
+        - RewardStrategy rewardStrategy
         + calculateDamage(attacker, defender)
         + nextTurn()
+        + isBattleOver() : bool
+        + endBattle()
+        + assignRewards()
+    }
+
+    interface TurnStrategy {
+    + sortAction(characters: List<Character>) : void
+    + getTurnIterator() : TurnIterator
+    }
+
+    class StaticSpeedTurn implements TurnStrategy {
+    - List<Character> characterList
+    + sortAction(characters: List<Character>) : void
+    + getTurnIterator() : TurnIterator
     }
 
     class Ability {
@@ -182,6 +197,26 @@ package "Model" {
     class ConcreteTurnIterator implements TurnIterator {
         + hasCharacters()
         + nextCharacter()
+    }
+
+    interface RewardStrategy {
+    ' Reward class will get a List<Item> from db through calculateRewards method '
+    + calculateRewards(List<Enemy>): Reward 
+    }
+
+    class StandardRewardStrategy implements RewardStrategy{
+        + calculateRewards(List<Enemy>): Reward 
+    }
+
+    class NoRewardStrategy implements RewardStrategy {
+        + calculateRewards(List<Enemy>): Reward 
+    }
+
+    class Reward {
+        - int xp
+        - List<Item> : drop
+        + assignXP(int: xp)
+        + assignItem(Item : item)
     }
 }
 
@@ -265,6 +300,12 @@ package "View" {
     }
 }
 
+Battle--> RewardStrategy
+Battle-->TurnStrategy
+
+TurnStrategy-->TurnIterator
+
+RewardStrategy--> Reward
 
 MainMenuController --> GameState
 MainMenuController --> GameCreator
