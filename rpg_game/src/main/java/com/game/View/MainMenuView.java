@@ -1,4 +1,4 @@
-package com.game.launcher;
+package com.game.View;
 
 import com.game.Controller.MainMenuController;
 
@@ -18,11 +18,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class MainMenuUI {
+public class MainMenuView {
     private Stage stage;
     private MainMenuController controller;
 
-    public MainMenuUI(Stage stage) {
+    public MainMenuView(Stage stage) {
         this.stage = stage;
         this.controller = new MainMenuController(stage);
     }
@@ -46,7 +46,7 @@ public class MainMenuUI {
         resumeBtn.setBackground(new Background(bgImgBtn));
         settingsBtn.setBackground(new Background(bgImgBtn));
         exitBtn.setBackground(new Background(bgImgBtn));
-        
+
         VBox buttons = new VBox(15);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(newGameBtn, resumeBtn, settingsBtn, exitBtn);
