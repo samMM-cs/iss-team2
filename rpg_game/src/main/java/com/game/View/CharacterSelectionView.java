@@ -7,7 +7,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import com.game.Controller.CharacterSelectionController;
-import com.game.Controller.MainMenuController;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
