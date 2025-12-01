@@ -1,6 +1,6 @@
-package com.game.View;
+package com.game.view;
 
-import com.game.Controller.MainMenuController;
+import com.game.controller.MainMenuController;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -38,7 +38,7 @@ public class MainMenuView {
         Button resumeBtn = new Button("Resume");
         Button settingsBtn = new Button("Settings");
         Button exitBtn = new Button("Exit");
-        
+
         BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
@@ -76,9 +76,11 @@ public class MainMenuView {
         stage.show();
     }
 
-    /*private Button createButton(String txt, String path) {
-        Button btn = new Button();
-        btn.setStyle();
-        return btn;
-    }*/
+    /*
+     * private Button createButton(String txt, String path) {
+     * Button btn = new Button();
+     * btn.setStyle();
+     * return btn;
+     * }
+     */
 }

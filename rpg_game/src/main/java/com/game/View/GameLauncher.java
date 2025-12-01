@@ -1,4 +1,4 @@
-package com.game.View;
+package com.game.view;
 
 import javafx.stage.Stage;
 
@@ -16,7 +16,7 @@ public class GameLauncher {
 
     public void launch(Stage primaryStage) {
         System.out.println("RGP Game launching...");
-        
+
         MainMenuView menu = new MainMenuView(primaryStage);
         menu.show();
     }

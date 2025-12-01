@@ -1,4 +1,4 @@
-package com.game.View;
+package com.game.view;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import com.game.Controller.CharacterSelectionController;
+import com.game.controller.CharacterSelectionController;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
