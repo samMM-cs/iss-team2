@@ -1,3 +1,4 @@
-com/game/launcher/GameLauncher.class
-com/game/launcher/MainMenu.class
-com/game/App.class
+com\game\App.class
+com\game\launcher\MainMenuUI.class
+com\game\launcher\GameLauncher.class
+com\game\Controller\MainMenuController.class

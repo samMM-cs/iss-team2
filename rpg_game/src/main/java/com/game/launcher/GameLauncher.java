@@ -17,7 +17,7 @@ public class GameLauncher {
     public void launch(Stage primaryStage) {
         System.out.println("RGP Game launching...");
         
-        MainMenu menu = new MainMenu(primaryStage);
+        MainMenuUI menu = new MainMenuUI(primaryStage);
         menu.show();
     }
 }
