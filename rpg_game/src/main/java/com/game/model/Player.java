@@ -21,4 +21,24 @@ public class Player extends Character {
 
   public void unsubscribeFromFollowed(Player player) {
   }
+
+  public final int getXp() {
+    return this.xp;
+  }
+  
+  public final Job getJob() {
+    return this.job;
+  }
+  
+  public final Inventory getInventory() {
+    return this.inventory;
+  }
+  
+  public final Position getPosition() {
+    return this.position;
+  }
+  
+  public final Player getFollower() {
+      return this.follower;
+  }
 }
