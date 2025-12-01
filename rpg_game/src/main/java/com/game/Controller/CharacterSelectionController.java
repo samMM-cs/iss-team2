@@ -1,6 +1,6 @@
-package com.game.Controller;
+package com.game.controller;
 
-import com.game.View.MainMenuView;
+import com.game.view.MainMenuView;
 
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;

@@ -1,6 +1,6 @@
-package com.game.Controller;
+package com.game.controller;
 
-import com.game.View.CharacterSelectionView;
+import com.game.view.CharacterSelectionView;
 
 import javafx.event.ActionEvent;
 import javafx.stage.*;
@@ -13,22 +13,23 @@ public class MainMenuController {
     }
 
     public void onNewGame(ActionEvent event) {
-        //Carica schermata di gioco
+        // Carica schermata di gioco
         System.out.println("Avvio nuova partita");
         CharacterSelectionView character = new CharacterSelectionView(stage);
         character.selectCharacters();
     }
-    
+
     public void resumeGame(ActionEvent event) {
         System.out.println("Seleziona lo slot");
     }
+
     public void onSettings(ActionEvent event) {
-        //Carica la schermata settings
+        // Carica la schermata settings
         System.out.println("Impostazioni");
     }
 
     public void onExit(ActionEvent event) {
-        //Chiusura del gioco
+        // Chiusura del gioco
         stage.close();
     }
 }
