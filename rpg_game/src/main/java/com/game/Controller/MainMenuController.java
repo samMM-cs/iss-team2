@@ -1,5 +1,6 @@
 package com.game.Controller;
 
+import com.game.View.CharacterSelectionView;
 
 import javafx.event.ActionEvent;
 import javafx.stage.*;
@@ -14,6 +15,8 @@ public class MainMenuController {
     public void onNewGame(ActionEvent event) {
         //Carica schermata di gioco
         System.out.println("Avvio nuova partita");
+        CharacterSelectionView character = new CharacterSelectionView(stage);
+        character.selectCharacters();
     }
     
     public void resumeGame(ActionEvent event) {
