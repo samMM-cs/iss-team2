@@ -12,4 +12,16 @@ public class Battle extends Enemy {
         this.enemies = enemies;
         this.turnIndex = turnIndex;
     }
+
+    public final List<Enemy> getEnemies() {
+        return this.enemies;
+    }
+
+    public final List<Player> getParty() {
+        return this.party;
+    }
+
+    public final int getTurnIndex() {
+        return this.turnIndex;
+    }
 }
