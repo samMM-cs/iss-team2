@@ -7,6 +7,11 @@ public class Player extends Character {
   private Position position;
   private Player follower;
 
+  public Player(Job job, Position position) {
+    this.job = job;
+    this.position = position;
+  }
+
   public void equipItem(Item item) {
   }
 
@@ -17,6 +22,7 @@ public class Player extends Character {
   }
 
   public void subscribeToFollowed(Player player) {
+    player.setFollower(this);
   }
 
   public void unsubscribeFromFollowed(Player player) {
@@ -25,20 +31,24 @@ public class Player extends Character {
   public final int getXp() {
     return this.xp;
   }
-  
+
   public final Job getJob() {
     return this.job;
   }
-  
+
   public final Inventory getInventory() {
     return this.inventory;
   }
-  
+
   public final Position getPosition() {
     return this.position;
   }
-  
+
   public final Player getFollower() {
-      return this.follower;
+    return this.follower;
+  }
+
+  public void setFollower(Player follower) {
+    this.follower = follower;
   }
 }

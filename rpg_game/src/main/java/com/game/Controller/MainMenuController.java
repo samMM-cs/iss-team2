@@ -1,7 +1,6 @@
 package com.game.controller;
 
-import com.game.view.CharacterSelectionView;
-import com.game.view.MapView;
+import com.game.view.ExplorationView;
 
 import javafx.event.ActionEvent;
 import javafx.stage.*;
@@ -16,11 +15,7 @@ public class MainMenuController {
     public void onNewGame(ActionEvent event) {
         // Carica schermata di gioco
         System.out.println("Avvio nuova partita");
-        /*
-         * CharacterSelectionView character = new CharacterSelectionView(stage);
-         * character.selectCharacters();
-         */
-        MapView map = new MapView(stage);
+        ExplorationView map = new ExplorationView(stage);
         map.showMap();
     }
 
