@@ -1,6 +1,5 @@
 package com.game.controller;
 
-import com.game.view.CharacterSelectionView;
 import com.game.view.MapView;
 
 import javafx.event.ActionEvent;
