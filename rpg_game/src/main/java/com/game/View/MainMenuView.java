@@ -15,7 +15,9 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -30,23 +32,12 @@ public class MainMenuView {
 
     public void show() {
 
-        // Creo ImageView
-        ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream("/Default.png")));
-
         ImageView imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
 
-        Button newGameBtn = createButton("New Game", "/Default.png");
-        Button resumeBtn = new Button("Resume");
-        Button settingsBtn = new Button("Settings");
-        Button exitBtn = new Button("Exit");
-
-        BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
-        newGameBtn.setBackground(new Background(bgImgBtn));
-        resumeBtn.setBackground(new Background(bgImgBtn));
-        settingsBtn.setBackground(new Background(bgImgBtn));
-        exitBtn.setBackground(new Background(bgImgBtn));
+        Button newGameBtn = createButton("NewGame", "/Default.png");
+        Button resumeBtn = createButton("Resume", "/Default.png");
+        Button settingsBtn = createButton("Settings", "/Default.png");
+        Button exitBtn = createButton("Exit", "/Default.png");
 
         VBox buttons = new VBox(15);
         buttons.setAlignment(Pos.CENTER);
@@ -78,20 +69,14 @@ public class MainMenuView {
     }
 
     private Button createButton(String txt, String path) {
-        final String BUTTON_FONT_FAMILY = "Verdana";
-        final double BUTTON_FONT_SIZE = 20;
-        final double BUTTON_PREF_WIDTH = 260;
-        final double BUTTON_PREF_HEIGHT = 56;
-        Font btnFont = new Font(BUTTON_FONT_FAMILY, BUTTON_FONT_SIZE);
         ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream(path)));
         BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
-        Button btn = new Button(txt, imgBtn);
-        btn.setFont(btnFont);
-        btn.setPrefWidth(BUTTON_PREF_WIDTH);
-        btn.setPrefHeight(BUTTON_PREF_HEIGHT);
+        Button btn = new Button(txt);
         btn.setBackground(new Background(bgImgBtn));
+        btn.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        btn.setPrefSize(200, 70);
         return btn;
     }
 }
