@@ -1,5 +1,6 @@
 package com.game.controller;
 
+import com.game.view.NewGameView;
 import com.game.view.ExplorationView;
 
 import javafx.event.ActionEvent;
@@ -15,8 +16,12 @@ public class MainMenuController {
     public void onNewGame(ActionEvent event) {
         // Carica schermata di gioco
         System.out.println("Avvio nuova partita");
-        ExplorationView map = new ExplorationView(stage);
-        map.showMap();
+
+        NewGameView newGameView= new NewGameView(stage);
+        newGameView.load();
+
+        //ExplorationView map = new ExplorationView(stage);
+        //map.showMap();
     }
 
     public void resumeGame(ActionEvent event) {

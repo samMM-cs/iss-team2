@@ -1,0 +1,11 @@
+package com.game.view;
+
+import com.game.controller.GameController;
+import javafx.stage.Stage;
+
+public abstract class GameView {
+    protected Stage stage;
+    protected GameController controller;
+
+    public abstract void load();
+}

@@ -32,7 +32,7 @@ package "Model" {
         - item: Item
         + execute(user, target)
     }
-    
+
     abstract class GameCreator {
         + createGame(): Game
     }
@@ -73,6 +73,7 @@ package "Model" {
     }
 
     class GameState {
+        - int n_players
         - bool autoSaveEnabled
         - string currentScene
         - Map<Event,bool> storyFlags
@@ -201,15 +202,15 @@ package "Model" {
 
     interface RewardStrategy {
     ' Reward class will get a List<Item> from db through calculateRewards method '
-    + calculateRewards(List<Enemy>): Reward 
+    + calculateRewards(List<Enemy>): Reward
     }
 
     class StandardRewardStrategy implements RewardStrategy{
-        + calculateRewards(List<Enemy>): Reward 
+        + calculateRewards(List<Enemy>): Reward
     }
 
     class NoRewardStrategy implements RewardStrategy {
-        + calculateRewards(List<Enemy>): Reward 
+        + calculateRewards(List<Enemy>): Reward
     }
 
     class Reward {
@@ -337,13 +338,13 @@ AbilityController --> Player
 
 
 GameLauncher --> MainMenuView: launch
-MainMenuView --> MainMenuController 
-SaveMenuView --> SaveController 
-InventoryView --> InventoryController 
-DialogueView --> NPCController 
-ExplorationView --> GameController 
-BattleView --> BattleController 
-AbilityView --> AbilityController 
+MainMenuView --> MainMenuController
+SaveMenuView --> SaveController
+InventoryView --> InventoryController
+DialogueView --> NPCController
+ExplorationView --> GameController
+BattleView --> BattleController
+AbilityView --> AbilityController
 ExplorationView --> MovementController
 
 Character --> ActionStrategy
