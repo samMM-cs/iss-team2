@@ -1,7 +1,7 @@
 package com.game.controller;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.game.model.Party;
 import com.game.model.Player;
@@ -14,8 +14,8 @@ public class MovementController {
   private Party party;
   private float speed = 50;
   private Scene scene;
-
-  private Set<KeyCode> activeKeys = new HashSet<>();
+  private KeyCode prevDirection;
+  private Queue<KeyCode> activeKeys = new LinkedList<>();
 
   public MovementController(Party party, Scene scene) {
     this.scene = scene;
@@ -25,46 +25,49 @@ public class MovementController {
 
   public void setUpKeyReleased() {
     scene.setOnKeyPressed(e -> {
-      activeKeys.add(e.getCode());
+      activeKeys.offer(e.getCode());
     });
-    scene.setOnKeyReleased(e -> {
-      activeKeys.remove(e.getCode());
-    });
+    // scene.setOnKeyReleased(e -> {
+    // activeKeys.remove(e.getCode());
+    // });
   }
 
   public void update() {
     movePlayer();
   }
 
+  private boolean isOpposite(KeyCode key, KeyCode prev) {
+    return switch (key) {
+      case KeyCode.W, KeyCode.UP -> prev == KeyCode.S || prev == KeyCode.DOWN;
+      case KeyCode.A, KeyCode.LEFT -> prev == KeyCode.D || prev == KeyCode.RIGHT;
+      case KeyCode.S, KeyCode.DOWN -> prev == KeyCode.W || prev == KeyCode.UP;
+      case KeyCode.D, KeyCode.RIGHT -> prev == KeyCode.A || prev == KeyCode.LEFT;
+      default -> false;
+    };
+  }
+
   void movePlayer() {
-    // speed *= 1.01;
     Player mainPlayer = party.getMainPlayer();
     int dx = 0;
     int dy = 0;
-    if (activeKeys.contains(KeyCode.W) || activeKeys.contains(KeyCode.UP)) {
-      dy -= speed;
-      activeKeys.remove(KeyCode.W);
-      activeKeys.remove(KeyCode.UP);
-    }
-    if (activeKeys.contains(KeyCode.A) || activeKeys.contains(KeyCode.LEFT)) {
-      dx -= speed;
-      activeKeys.remove(KeyCode.A);
-      activeKeys.remove(KeyCode.LEFT);
-    }
-    if (activeKeys.contains(KeyCode.S) || activeKeys.contains(KeyCode.DOWN)) {
-      dy += speed;
-      activeKeys.remove(KeyCode.S);
-      activeKeys.remove(KeyCode.DOWN);
-    }
-    if (activeKeys.contains(KeyCode.D) || activeKeys.contains(KeyCode.RIGHT)) {
-      dx += speed;
-      activeKeys.remove(KeyCode.D);
-      activeKeys.remove(KeyCode.RIGHT);
+    KeyCode key = activeKeys.poll();
+
+    if (key != null && !isOpposite(key, prevDirection)) {
+      prevDirection = key;
+      if (key == KeyCode.W || key == KeyCode.UP)
+        dy -= speed;
+      if (key == KeyCode.A || key == KeyCode.LEFT)
+        dx -= speed;
+      if (key == KeyCode.S || key == KeyCode.DOWN)
+        dy += speed;
+      if (key == KeyCode.D || key == KeyCode.RIGHT)
+        dx += speed;
     }
 
     if (dx != 0 || dy != 0) {
-      mainPlayer.getPosition().add(dx, dy)
-          .clamp(this.scene.getWidth(), this.scene.getHeight());
+      Position prevPosition = mainPlayer.getPosition();
+      mainPlayer.setPosition(mainPlayer.getPosition().add(dx, dy)
+          .clamp(this.scene.getWidth() - 50, this.scene.getHeight() - 50));
       mainPlayer.notifyFollower();
     }
   }

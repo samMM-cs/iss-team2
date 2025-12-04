@@ -19,6 +19,10 @@ public class Player extends Character {
   }
 
   public void notifyFollower() {
+    if (this.follower != null) {
+      this.follower.setPosition(this.position);
+      this.follower.notifyFollower();
+    }
   }
 
   public void subscribeToFollowed(Player player) {
@@ -26,6 +30,7 @@ public class Player extends Character {
   }
 
   public void unsubscribeFromFollowed(Player player) {
+    player.setFollower(null);
   }
 
   public final int getXp() {
@@ -42,6 +47,10 @@ public class Player extends Character {
 
   public final Position getPosition() {
     return this.position;
+  }
+
+  public final void setPosition(Position position) {
+    this.position = position;
   }
 
   public final Player getFollower() {

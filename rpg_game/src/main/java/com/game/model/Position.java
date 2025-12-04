@@ -18,15 +18,12 @@ public class Position {
   }
 
   public Position add(int x, int y) {
-    this.x += x;
-    this.y += y;
-    return this;
+    return new Position(this.x + x, this.y + y);
   }
 
   public Position clamp(double xLimit, double yLimit) {
-    this.x = (int) Math.round(Math.clamp(x, 0, xLimit));
-    this.y = (int) Math.round(Math.clamp(y, 0, yLimit));
-    return this;
+    return new Position((int) Math.round(Math.clamp(x, 0, xLimit)),
+        (int) Math.round(Math.clamp(y, 0, yLimit)));
   }
 
 }
