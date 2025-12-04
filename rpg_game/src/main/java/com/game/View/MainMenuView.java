@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -77,6 +78,14 @@ public class MainMenuView {
         btn.setBackground(new Background(bgImgBtn));
         btn.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         btn.setPrefSize(200, 70);
+
+        // Effetto click
+        btn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> btn.setScaleX(0.95));
+        btn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> btn.setScaleY(0.95));
+        btn.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+            btn.setScaleX(1);
+            btn.setScaleY(1);
+        });
         return btn;
     }
 }
