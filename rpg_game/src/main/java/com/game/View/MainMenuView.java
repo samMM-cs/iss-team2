@@ -15,6 +15,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -34,7 +35,7 @@ public class MainMenuView {
 
         ImageView imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
 
-        Button newGameBtn = new Button("New Game");
+        Button newGameBtn = createButton("New Game", "/Default.png");
         Button resumeBtn = new Button("Resume");
         Button settingsBtn = new Button("Settings");
         Button exitBtn = new Button("Exit");
@@ -76,11 +77,21 @@ public class MainMenuView {
         stage.show();
     }
 
-    /*
-     * private Button createButton(String txt, String path) {
-     * Button btn = new Button();
-     * btn.setStyle();
-     * return btn;
-     * }
-     */
+    private Button createButton(String txt, String path) {
+        final String BUTTON_FONT_FAMILY = "Verdana";
+        final double BUTTON_FONT_SIZE = 20;
+        final double BUTTON_PREF_WIDTH = 260;
+        final double BUTTON_PREF_HEIGHT = 56;
+        Font btnFont = new Font(BUTTON_FONT_FAMILY, BUTTON_FONT_SIZE);
+        ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream(path)));
+        BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
+        Button btn = new Button(txt, imgBtn);
+        btn.setFont(btnFont);
+        btn.setPrefWidth(BUTTON_PREF_WIDTH);
+        btn.setPrefHeight(BUTTON_PREF_HEIGHT);
+        btn.setBackground(new Background(bgImgBtn));
+        return btn;
+    }
 }
