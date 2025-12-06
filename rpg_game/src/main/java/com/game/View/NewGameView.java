@@ -7,26 +7,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class NewGameView extends GameView{
-    public static final int MAX_PLAYER= 4;
+public class NewGameView extends GameView {
+    public static final int MAX_PLAYER = 4;
 
     public NewGameView(Stage stage) {
-        this.stage= stage;
-        this.controller= new GameController();
+        this.stage = stage;
+        this.controller = new GameController();
     }
-
-
 
     @Override
     public void load() {

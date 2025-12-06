@@ -1,6 +1,5 @@
 package com.game.controller;
 
-import com.game.model.Game;
 import com.game.model.GameState;
 import com.game.view.ExplorationView;
 
@@ -14,11 +13,11 @@ public class GameController {
     }
 
     public GameController(GameState gameState) {
-        this.gameState= gameState;
+        this.gameState = gameState;
     }
 
     public void startExploration(Stage stage) {
-        ExplorationView explorationView= new ExplorationView(stage);
+        ExplorationView explorationView = new ExplorationView(stage);
         explorationView.showMap();
     }
 
@@ -27,5 +26,9 @@ public class GameController {
 
     public void on1player(ActionEvent e) {
 
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 }

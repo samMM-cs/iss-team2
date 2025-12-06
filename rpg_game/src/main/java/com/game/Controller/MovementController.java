@@ -5,7 +5,6 @@ import java.util.Queue;
 
 import com.game.model.Party;
 import com.game.model.Player;
-import com.game.model.Position;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -65,7 +64,6 @@ public class MovementController {
     }
 
     if (dx != 0 || dy != 0) {
-      Position prevPosition = mainPlayer.getPosition();
       mainPlayer.setPosition(mainPlayer.getPosition().add(dx, dy)
           .clamp(this.scene.getWidth() - 50, this.scene.getHeight() - 50));
       mainPlayer.notifyFollower();
