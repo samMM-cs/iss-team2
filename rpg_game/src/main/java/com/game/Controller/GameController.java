@@ -8,15 +8,17 @@ import javafx.event.ActionEvent;
 
 public class GameController {
     private GameState gameState;
+    private Stage stage;
 
-    public GameController() {
+    public GameController(Stage stage) {
+        this.stage = stage;
     }
 
     public GameController(GameState gameState) {
         this.gameState = gameState;
     }
 
-    public void startExploration(Stage stage) {
+    public void startExploration() {
         ExplorationView explorationView = new ExplorationView(stage);
         explorationView.showMap();
     }
@@ -25,7 +27,6 @@ public class GameController {
     }
 
     public void on1player(ActionEvent e) {
-
     }
 
     public GameState getGameState() {

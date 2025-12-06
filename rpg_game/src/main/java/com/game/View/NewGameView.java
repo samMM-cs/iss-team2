@@ -17,7 +17,7 @@ public class NewGameView extends GameView {
 
     public NewGameView(Stage stage) {
         this.stage = stage;
-        this.controller = new GameController();
+        this.controller = new GameController(stage);
     }
 
     @Override

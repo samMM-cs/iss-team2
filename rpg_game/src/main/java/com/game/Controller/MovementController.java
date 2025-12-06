@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import com.game.model.Party;
 import com.game.model.Player;
+import com.game.model.Position;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -15,27 +16,26 @@ public class MovementController {
   private Scene scene;
   private KeyCode prevDirection;
   private Queue<KeyCode> activeKeys = new LinkedList<>();
+  private final Position posLimit;
 
   public MovementController(Party party, Scene scene) {
     this.scene = scene;
     this.party = party;
-    setUpKeyReleased();
-  }
-
-  public void setUpKeyReleased() {
     scene.setOnKeyPressed(e -> {
       activeKeys.offer(e.getCode());
     });
-    // scene.setOnKeyReleased(e -> {
-    // activeKeys.remove(e.getCode());
-    // });
+    this.posLimit = new Position(
+        (int) (this.scene.getWidth() - 100) / 50 * 50,
+        (int) (this.scene.getHeight() - 100) / 50 * 50);
+    System.out.println(this.scene.getWidth() + " " + this.scene.getHeight());
+    System.out.println(posLimit);
   }
 
   public void update() {
     movePlayer();
   }
 
-  private boolean isOpposite(KeyCode key, KeyCode prev) {
+  private static boolean isOpposite(KeyCode key, KeyCode prev) {
     return switch (key) {
       case KeyCode.W, KeyCode.UP -> prev == KeyCode.S || prev == KeyCode.DOWN;
       case KeyCode.A, KeyCode.LEFT -> prev == KeyCode.D || prev == KeyCode.RIGHT;
@@ -64,9 +64,11 @@ public class MovementController {
     }
 
     if (dx != 0 || dy != 0) {
-      mainPlayer.setPosition(mainPlayer.getPosition().add(dx, dy)
-          .clamp(this.scene.getWidth() - 50, this.scene.getHeight() - 50));
-      mainPlayer.notifyFollower();
+      Position nextPosition = mainPlayer.getPosition().add(dx, dy);
+      if (nextPosition.isInside(posLimit)) {
+        mainPlayer.notifyFollower();
+        mainPlayer.setPosition(nextPosition);
+      }
     }
   }
 }

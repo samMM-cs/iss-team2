@@ -26,4 +26,15 @@ public class Position {
         (int) Math.round(Math.clamp(y, 0, yLimit)));
   }
 
+  public boolean isInside(Position posLimit) {
+    int xLimit = posLimit.getX();
+    int yLimit = posLimit.getY();
+    return 0 <= x && x <= xLimit && 0 <= y && y <= yLimit;
+  }
+
+  @Override
+  public String toString() {
+    return "Position(" + x + ", " + y + ")";
+  }
+
 }
