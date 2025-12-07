@@ -1,0 +1,35 @@
+@startuml US14 – Observer
+
+class BattleController {
+    - TurnIterator turnIterator
+    + startBattle(enemies)
+    + playerTurn(action)
+    + enemyTurn()
+}
+
+BattleController --> Battle
+
+class Battle {
+    - List<Enemy> enemies
+    - List<Player> party
+    - int turnIndex
+    - RewardStrategy rewardStrategy
+    - observer : BattleView
+    + calculateDamage(attacker, defender)
+    + nextTurn()
+    + isBattleOver() : bool
+    + endBattle()
+    + assignRewards()
+    + notifyObservers()
+}
+
+class BattleView {
+    + showBattleState()
+    + showTurn()
+    + subscribe(battleController : BattleController)
+    + unsubscribe(battleController : BattleController)
+}
+
+BattleController --> BattleView
+
+@enduml

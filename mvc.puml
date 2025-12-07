@@ -25,7 +25,7 @@ package "Model" {
 
     class AttackAction implements ActionStrategy{
         - combatStrategy: CombatCalculationStrategy
-        + execute(user,target0)
+        + execute(user,target)
     }
 
     class ItemAction implements ActionStrategy{
@@ -157,12 +157,16 @@ package "Model" {
         - List<Player> party
         - int turnIndex
         - RewardStrategy rewardStrategy
+        - observer : BattleView
         + calculateDamage(attacker, defender)
         + nextTurn()
         + isBattleOver() : bool
         + endBattle()
         + assignRewards()
+        + notifyObservers()
     }
+
+    
 
     interface TurnStrategy {
     + sortAction(characters: List<Character>) : void
@@ -290,6 +294,8 @@ package "View" {
     class BattleView {
         + showBattleState()
         + showTurn()
+        + subscribe(battleController : BattleController)
+        + unsubscribe(battleController : BattleController)
     }
 
     class ExplorationView {
