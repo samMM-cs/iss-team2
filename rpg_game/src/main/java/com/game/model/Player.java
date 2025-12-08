@@ -20,8 +20,8 @@ public class Player extends Character {
 
   public void notifyFollower() {
     if (this.follower != null) {
-      this.follower.setPosition(this.position);
       this.follower.notifyFollower();
+      this.follower.setPosition(this.position);
     }
   }
 

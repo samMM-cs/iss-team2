@@ -26,36 +26,32 @@ public class ExplorationView {
     private Pane root;
     private Scene scene;
 
-    private static Party createParty() {
-        Player mainPlayer = new Player(new Job(), new Position(0, 0));
-        Player player2 = new Player(new Job(), new Position(0, 0));
+    private static Party debug__createParty() {
+        Player mainPlayer = new Player(new Job(), new Position(150, 0));
+        Player player2 = new Player(new Job(), new Position(100, 0));
         player2.subscribeToFollowed(mainPlayer);
-        Player player3 = new Player(new Job(), new Position(0, 0));
+        Player player3 = new Player(new Job(), new Position(50, 0));
         player3.subscribeToFollowed(player2);
         Player player4 = new Player(new Job(), new Position(0, 0));
         player4.subscribeToFollowed(player3);
         return new Party(mainPlayer, List.of(player2, player3, player4));
     }
 
-    private static List<Rectangle> createRectangles() {
+    private static List<Rectangle> degub__createRectangles() {
         Rectangle rect0 = new Rectangle(50, 50, Color.BLUE);
-        rect0.setX(50);
         Rectangle rect1 = new Rectangle(50, 50, Color.RED);
-        rect1.setX(100);
         Rectangle rect2 = new Rectangle(50, 50, Color.GREEN);
-        rect2.setX(150);
         Rectangle rect3 = new Rectangle(50, 50, Color.YELLOW);
-        rect3.setX(200);
         return List.of(rect0, rect1, rect2, rect3);
     }
 
     public ExplorationView(Stage stage) {
         this.stage = stage;
         this.tileset = new Image(getClass().getResourceAsStream("/map/background4a.png"));
-        this.playerRectangles = createRectangles();
+        this.playerRectangles = degub__createRectangles();
         this.root = new Pane();
-        this.scene = new Scene(root, tileset.getWidth(), tileset.getHeight());
-        this.party = createParty();
+        this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
+        this.party = debug__createParty();
         this.movementController = new MovementController(party, scene);
     }
 
