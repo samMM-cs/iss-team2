@@ -2,14 +2,11 @@ package com.game.controller;
 
 import com.game.view.NewGameView;
 
-import javax.swing.text.View;
-
 import com.game.view.GameView;
 import com.game.model.GameState;
 import com.game.view.ExplorationView;
 
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.RadioButton;
 
@@ -25,7 +22,7 @@ public class GameController {
         this.gameState = gameState;
     }
 
-    public void startExploration() {
+    public void startExploration(Stage stage) {
         ExplorationView explorationView = new ExplorationView(stage);
         explorationView.showMap();
     }
