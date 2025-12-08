@@ -6,14 +6,16 @@ import java.util.List;
 //May need Builder design pattern
 public class GameState {
     public final int nPlayers;
+    //public final List<Job> jobs;
     public boolean autoSaveEnabled;
     public String currentScene;
     public Map<Event, Boolean> storyFlags;
     public List<String> playerChoices;
     public WorldPosition worldPosition;
 
-    public GameState(int n_players) {
-        this.nPlayers= n_players;
+    public GameState(int nPlayers, boolean autoSaveEnabled) {
+        this.nPlayers= nPlayers;
+        this.autoSaveEnabled= autoSaveEnabled;
     }
 
     public int getNPlayers() {
