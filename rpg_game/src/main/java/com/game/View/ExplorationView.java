@@ -10,21 +10,21 @@ import com.game.model.Position;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 
 public class ExplorationView {
+    private static final String MAP_FILE_PATH = "/maps/samplemap1.tmj";
+    private static final String TILESET_IMAGE_PATH = "/images/punyworld-overworld-tileset.png";
     private MovementController movementController;
     private Stage stage;
-    private Image tileset;
     private List<Rectangle> playerRectangles;
     private Party party;
     private Pane root;
     private Scene scene;
+    private MapView mapView;
 
     private static Party debug__createParty() {
         Player mainPlayer = new Player(new Job(), new Position(150, 0));
@@ -47,23 +47,24 @@ public class ExplorationView {
 
     public ExplorationView(Stage stage) {
         this.stage = stage;
-        this.tileset = new Image(getClass().getResourceAsStream("/map/background4a.png"));
         this.playerRectangles = degub__createRectangles();
+        // Crea la MapView
+        this.mapView = new MapView(MAP_FILE_PATH, TILESET_IMAGE_PATH);
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
         this.party = debug__createParty();
         this.movementController = new MovementController(party, scene);
+        mapView.prefHeightProperty().bind(root.heightProperty());
+        mapView.prefWidthProperty().bind(root.widthProperty());
     }
 
     public void showMap() {
-        // Immagine sfondo
-        ImageView map = new ImageView(tileset);
+        root.getChildren().add(mapView);
 
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long p) {
                 movementController.update();
-                map.setFitWidth(stage.getWidth());
-                map.setFitHeight(stage.getHeight());
+
                 for (int i = 3; i > 0; i--) {
                     playerRectangles.get(i).setX(party.getMembers().get(i - 1).getPosition().getX());
                     playerRectangles.get(i).setY(party.getMembers().get(i - 1).getPosition().getY());
@@ -73,8 +74,6 @@ public class ExplorationView {
             }
         };
 
-        map.setPreserveRatio(false);
-        root.getChildren().add(map);
         playerRectangles.forEach(root.getChildren()::add);
         stage.setScene(scene);
         stage.show();
