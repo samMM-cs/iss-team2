@@ -65,6 +65,11 @@ public class Player extends Character {
     return this.xp;
   }
 
+  public final void addXp(int xp) {
+    this.xp+= xp;
+    return;
+  }
+
   public final Job getJob() {
     return this.job;
   }
