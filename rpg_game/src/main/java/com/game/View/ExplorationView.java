@@ -18,6 +18,7 @@ public class ExplorationView {
     private Pane root;
     private Scene scene;
     private MapView mapView;
+    private long prev_t = 0;
 
     public ExplorationView(Stage stage) {
         this.stage = stage;
@@ -26,8 +27,8 @@ public class ExplorationView {
 
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
-        this.party = new Party(Player.createTestPlayers());
-        this.movementController = new MovementController(party, scene);
+        this.party = new Party(Player.createTestPlayers(mapView.getTileSize()));
+        this.movementController = new MovementController(party, scene, mapView.getTileSize());
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
@@ -35,20 +36,16 @@ public class ExplorationView {
 
     public void showMap() {
         root.getChildren().add(mapView);
-
         AnimationTimer timer = new AnimationTimer() {
-            public void handle(long p) {
+            public void handle(long now) {
+                double fps = 1000000000.0 / (now - prev_t);
+                System.out.println(fps);
+                prev_t = now;
                 movementController.update();
-
-                /*List<Position> oldPositions=party.getMembers().stream().map(Player::getPosition).toList();
-                for (int i = 1; i <party.getMembers().size(); i++) {
-                    party.getMembers().get(i).setPosition(oldPositions.get(i-1));
-                }*/
-               party.updateFollowPosition();
             }
         };
 
-        party.getMembers().forEach(player -> root.getChildren().add(player.getSprite()));
+        party.getMembers().reversed().forEach(player -> root.getChildren().add(player.getSprite()));
         stage.setScene(scene);
         stage.show();
         timer.start();

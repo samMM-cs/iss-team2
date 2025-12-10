@@ -50,16 +50,17 @@ public class Player extends Character {
     player.setFollower(null);
   }
 
-  public static List<Player> createTestPlayers() {
-    Player mainPlayer = new Player(Job.WARRIOR, new Position(150, 0), 0, 2);
-    Player player2 = new Player(Job.MAGE, new Position(100, 0), 1, 2);
+  public static List<Player> createTestPlayers(int posOff) {
+    Player mainPlayer = new Player(Job.WARRIOR, new Position(3 * posOff, 0), 0, 2);
+    Player player2 = new Player(Job.MAGE, new Position(2 * posOff, 0), 1, 2);
     player2.subscribeToFollowed(mainPlayer);
-    Player player3 = new Player(Job.ROGUE, new Position(50, 0), 2, 2);
+    Player player3 = new Player(Job.ROGUE, new Position(posOff, 0), 2, 2);
     player3.subscribeToFollowed(player2);
     Player player4 = new Player(Job.CLERIC, new Position(0, 0), 3, 2);
     player4.subscribeToFollowed(player3);
     return List.of(mainPlayer, player2, player3, player4);
   }
+
   public final int getXp() {
     return this.xp;
   }

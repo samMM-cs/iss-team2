@@ -118,7 +118,7 @@ public class MapView extends Pane {
         // 5. Ridisegna la mappa usando il fattore di scala e l'offset
         drawMap(scale, offsetX, offsetY);
 
-        //Salva lo stato
+        // Salva lo stato
         this.lastScale = scale;
         this.lastOffsetX = offsetX;
         this.lastOffsetY = offsetY;
@@ -219,6 +219,10 @@ public class MapView extends Pane {
     // METODI GETTER (Per accedere alla vista)
     // ----------------------------------------------------------------------
 
+    public int getTileSize() {
+        return TILE_SIZE;
+    }
+
     public double getMapWidth() {
         return mapWidthInTiles * TILE_SIZE;
     }
@@ -234,6 +238,7 @@ public class MapView extends Pane {
     public double getOffsetX() {
         return lastOffsetX;
     }
+
     public double getOffsetY() {
         return lastOffsetY;
     }
