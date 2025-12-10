@@ -30,22 +30,16 @@ public class GameController {
     public void handleStoryChoice(String choice) {
     }
 
-    public void setupGameState(Toggle nPlayers, Toggle autoSaveEnabler) throws ParsingButtonException {
+    public void setupGameState(Toggle nPlayers, boolean autoSaveEnabler) throws ParsingButtonException {
         if (nPlayers == null) {
             gameView.showMessage("How many players want to play?");
             return;
         }
-        if (autoSaveEnabler == null) {
-            gameView.showMessage("Do you want to enable autoSave?");
-            return;
-        }
 
         String nPlayersString = ((RadioButton) nPlayers).getText();
-        String autoSaveEnablerString= ((RadioButton) autoSaveEnabler).getText();
         int nPlayersInt=0;
-        boolean autoSaveEnablerBool=false;
 
-        gameView.showMessage("Hai scelto: " + nPlayersString + " e " + autoSaveEnablerString);
+        gameView.showMessage("Hai scelto: " + nPlayersString + " e " + autoSaveEnabler);
         switch (nPlayersString) {
             case "1 Player":
                 nPlayersInt= 1;
@@ -63,24 +57,11 @@ public class GameController {
                 throw new ParsingButtonException();         
         }
        //nPlayersInt= Integer.parseInt(nPlayersString.split(" ")[0]);
-        try {
-            switch (autoSaveEnablerString) {
-                case "Enable AutoSave":
-                    autoSaveEnablerBool= true;
-                    break;
-                case "Disable AutoSave":
-                    autoSaveEnablerBool= false;
-                    break;
-                default:
-                    throw new ParsingButtonException();
-            }
-            this.gameState= new GameState(nPlayersInt, autoSaveEnablerBool);
+        this.gameState= new GameState(nPlayersInt, autoSaveEnabler);
 
 
-            ExplorationView map = new ExplorationView(this.gameView.getStage());
-            map.showMap();
-        }
-        finally {}
+        ExplorationView map = new ExplorationView(this.gameView.getStage());
+        map.showMap();
     }
 }
 
