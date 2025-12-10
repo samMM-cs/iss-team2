@@ -60,4 +60,11 @@ public class PositionTest {
         Position p = new Position(20, 20);
         assertFalse(p.isInside(new Position(10, 10)));
     }
+
+    @Test
+    void toString_correctFormat() {
+        Position p = new Position(3, 4);
+        assertEquals("Position(3, 4)", p.toString());
+    }
+
 }
