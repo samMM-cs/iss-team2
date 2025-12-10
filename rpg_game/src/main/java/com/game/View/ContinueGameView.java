@@ -1,5 +1,7 @@
 package com.game.view;
 
+import javafx.stage.Stage;
+
 public class ContinueGameView extends GameView{
     @Override
     public void load() {
@@ -7,7 +9,12 @@ public class ContinueGameView extends GameView{
     }
 
     @Override
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    @Override
     public void showMessage(String msg) {
-        return;
+        System.out.println(msg);
     }
 }

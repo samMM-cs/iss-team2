@@ -8,5 +8,6 @@ public abstract class GameView {
     protected GameController controller;
 
     public abstract void load();
+    public abstract Stage getStage();
     public abstract void showMessage(String msg);
 }

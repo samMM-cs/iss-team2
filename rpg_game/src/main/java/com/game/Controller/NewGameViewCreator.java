@@ -6,8 +6,12 @@ import com.game.view.NewGameView;
 import javafx.stage.Stage;
 
 public class NewGameViewCreator extends GameViewCreator{
+    
+    public NewGameViewCreator(Stage stage) {
+        this.stage= stage;
+    }
     @Override
-    public GameView createGameView(Stage stage) {
-        return new NewGameView(stage);
+    public GameView createGameView() {
+        return new NewGameView(this.stage);
     }
 }

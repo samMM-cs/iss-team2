@@ -33,27 +33,6 @@ package "Model" {
         + execute(user, target)
     }
 
-    abstract class GameCreator {
-        + createGame(): Game
-    }
-
-    class NewGameCreator {
-        + createGame(): Game
-    }
-
-    class ContinueGameCreator {
-        + createGame(): Game
-    }
-    abstract class Game {
-        - GameState: gameState
-    }
-
-    class NewGame {
-    }
-
-    class ContinueGame{
-    }
-
     class Stats {
         - int hp
         - int attack
@@ -271,6 +250,18 @@ package "Controller" {
         + learnAbility(ability)
     }
 
+    abstract class GameViewCreator {
+        + createGameView(): Game
+    }
+
+    class NewGameViewCreator implements GameViewCreator {
+        + createGameView(): Game
+    }
+
+    class ContinueGameViewCreator implements GameViewCreator {
+        + createGameView(): Game
+    }
+
 }
 
 package "View" {
@@ -304,6 +295,24 @@ package "View" {
 
     class AbilityView {
         + displayAbilities()
+    }
+
+    abstract class GameView {
+        - Stage stage
+        - GameController GameController
+        + load()
+    }
+
+    class NewGameView implements GameView {
+        - Stage stage
+        - GameController GameController
+        + load()
+    }
+
+    class ContinueGameView implements GameView {
+        - Stage stage
+        - GameController GameController
+        + load()
     }
 }
 
@@ -356,15 +365,11 @@ ExplorationView --> MovementController
 Character --> ActionStrategy
 BattleView-->Player: update
 
-GameCreator --> NewGameCreator
-GameCreator --> ContinueGameCreator
-GameCreator --> Game : create
+GameViewCreator --> GameView : create
 ' ContinueGameCreator -[hidden]left-> NewGameCreator
 ' NewGameCreator -[hidden]left--> Game
 ' SaveController -[hidden]left-> MainMenuController
 ' NPCController -[hidden]left-> SaveController
-Game <|-- NewGame
-Game <|-- ContinueGame
 
 MainMenuController -[hidden]left-> SaveController
 @enduml

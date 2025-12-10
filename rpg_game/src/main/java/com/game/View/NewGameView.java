@@ -73,6 +73,11 @@ public class NewGameView extends GameView{
     }
 
     @Override
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    @Override
     public void showMessage(String msg) {
         System.out.println(msg);
     }

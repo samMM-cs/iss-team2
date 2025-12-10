@@ -75,6 +75,10 @@ public class GameController {
                     throw new ParsingButtonException();
             }
             this.gameState= new GameState(nPlayersInt, autoSaveEnablerBool);
+
+
+            ExplorationView map = new ExplorationView(this.gameView.getStage());
+            map.showMap();
         }
         finally {}
     }
