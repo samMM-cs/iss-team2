@@ -16,14 +16,10 @@ public class LayerData {
     // I numeri sono gli ID delle tessere (ID Globali della Tessera o GID)
     @JsonProperty("data")
     private int[] data; 
-    
-    // Potresti voler includere anche "width" e "height" se il livello non copre l'intera mappa
 
     // Costruttore vuoto (necessario per Jackson)
     public LayerData() {
     }
-
-    // --- Getter per accedere ai dati nella tua MappaView ---
 
     public String getName() {
         return name;
