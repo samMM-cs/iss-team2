@@ -3,6 +3,7 @@ package com.game.model;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.List;
+import javafx.geometry.Rectangle2D;
 
 public class Player extends Character {
   private int xp;
@@ -12,6 +13,7 @@ public class Player extends Character {
   private Player follower;
   private ImageView sprite;
   private final int SPRITE_SIZE = 32;
+
   private static final Image SPRITESHEET = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
 
   public Player(Job job, Position position) {
@@ -24,9 +26,7 @@ public class Player extends Character {
     this.position = position;
     this.sprite = new ImageView(SPRITESHEET);
     this.sprite
-        .setViewport(new javafx.geometry.Rectangle2D(col * SPRITE_SIZE, row * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE));
-    this.sprite.setX(position.getX());
-    this.sprite.setY(position.getY());
+        .setViewport(new Rectangle2D(col * SPRITE_SIZE, row * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE));
   }
 
   public void equipItem(Item item) {
@@ -50,11 +50,11 @@ public class Player extends Character {
     player.setFollower(null);
   }
 
-  public static List<Player> createTestPlayers(int posOff) {
-    Player mainPlayer = new Player(Job.WARRIOR, new Position(3 * posOff, 0), 0, 2);
-    Player player2 = new Player(Job.MAGE, new Position(2 * posOff, 0), 1, 2);
+  public static List<Player> createTestPlayers() {
+    Player mainPlayer = new Player(Job.WARRIOR, new Position(3, 0), 0, 2);
+    Player player2 = new Player(Job.MAGE, new Position(2, 0), 1, 2);
     player2.subscribeToFollowed(mainPlayer);
-    Player player3 = new Player(Job.ROGUE, new Position(posOff, 0), 2, 2);
+    Player player3 = new Player(Job.ROGUE, new Position(1, 0), 2, 2);
     player3.subscribeToFollowed(player2);
     Player player4 = new Player(Job.CLERIC, new Position(0, 0), 3, 2);
     player4.subscribeToFollowed(player3);
@@ -66,8 +66,7 @@ public class Player extends Character {
   }
 
   public final void addXp(int xp) {
-    this.xp+= xp;
-    return;
+    this.xp += xp;
   }
 
   public final Job getJob() {
@@ -84,8 +83,6 @@ public class Player extends Character {
 
   public final void setPosition(Position position) {
     this.position = position;
-    this.sprite.setX(position.getX());
-    this.sprite.setY(position.getY());
   }
 
   public final Player getFollower() {

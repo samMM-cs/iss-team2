@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 
-// Importazioni dei modelli
 import com.game.model.LayerData;
 import com.game.model.TiledMapData;
-// Rimuoviamo l'import di TileSetData perché non è più necessario qui.
 
 public class MapView extends Pane {
     private Canvas canvas;
@@ -21,14 +19,19 @@ public class MapView extends Pane {
     private TiledMapData mapData;
 
     // Variabili dinamiche
-    private int TILE_SIZE = 0;
-    private int mapWidthInTiles = 0;
-    private int mapHeightInTiles = 0;
-    private int tilesetCols = 0; // Contiene le colonne del tileset
+    private int TILE_SIZE;
+    private final int RENDERED_TILE_SIZE = 60;
+    private int mapWidthInTiles;
+    private int mapHeightInTiles;
+    private int tilesetCols; // Contiene le colonne del tileset
 
     private double lastScale = 1.0;
-    private double lastOffsetX = 0.0;
-    private double lastOffsetY = 0.0;
+    private double lastOffsetX;
+    private double lastOffsetY;
+
+    // Variabili per il tracking del player e scrolling della camera
+    private double playerX;
+    private double playerY;
 
     public MapView(String mapFilePath, String tileSetImagePath) {
 
@@ -44,6 +47,7 @@ public class MapView extends Pane {
         // --- 2. Inizializzazione basata sui dati caricati ---
 
         this.TILE_SIZE = mapData.getTilewidth();
+        // Use fixed rendered tile size (override map's tilewidth for display)
         this.mapWidthInTiles = mapData.getWidth();
         this.mapHeightInTiles = mapData.getHeight();
 
@@ -67,9 +71,9 @@ public class MapView extends Pane {
             return;
         }
 
-        // 3. Setup del Canvas
-        double canvasWidth = mapWidthInTiles * TILE_SIZE;
-        double canvasHeight = mapHeightInTiles * TILE_SIZE;
+        // 3. Setup del Canvas (use rendered tile size for canvas dimensions)
+        double canvasWidth = mapWidthInTiles * RENDERED_TILE_SIZE;
+        double canvasHeight = mapHeightInTiles * RENDERED_TILE_SIZE;
 
         this.canvas = new Canvas(canvasWidth, canvasHeight);
         this.gc = canvas.getGraphicsContext2D();
@@ -85,43 +89,51 @@ public class MapView extends Pane {
         final double paneWidth = getWidth();
         final double paneHeight = getHeight();
 
-        // 1. Calcola le dimensioni ideali in pixel della mappa originale
-        final double originalMapWidth = mapWidthInTiles * TILE_SIZE;
-        final double originalMapHeight = mapHeightInTiles * TILE_SIZE;
-
-        // 2. Calcola il fattore di scala per adattarsi al Pane
-        double scaleX = paneWidth / originalMapWidth;
-        double scaleY = paneHeight / originalMapHeight;
-
-        // CAMBIAMENTO CHIAVE: Usa Math.max per riempire completamente il Pane.
-        // Questo garantisce che la mappa sia grande almeno quanto la vista in entrambe
-        // le direzioni,
-        // zoomando in modo proporzionale.
-        double scale = Math.max(scaleX, scaleY);
-
-        // 3. Imposta la dimensione del Canvas alla dimensione attuale del Pane
+        // Ensure canvas matches pane size
         if (canvas.getWidth() != paneWidth || canvas.getHeight() != paneHeight) {
             canvas.setWidth(paneWidth);
             canvas.setHeight(paneHeight);
         }
 
-        // 4. Centra la mappa sul Canvas
-        double renderedWidth = originalMapWidth * scale;
-        double renderedHeight = originalMapHeight * scale;
+        // Compute smoothed offsets toward target
+        double targetOffsetX = calculateCameraOffsetX(paneWidth);
+        double targetOffsetY = calculateCameraOffsetY(paneHeight);
+        final double SMOOTHING = 0.18;
+        double offsetX = lastOffsetX + (targetOffsetX - lastOffsetX) * SMOOTHING;
+        double offsetY = lastOffsetY + (targetOffsetY - lastOffsetY) * SMOOTHING;
 
-        // Se la mappa è più grande della vista in una dimensione (ad esempio,
-        // renderedWidth > paneWidth),
-        // l'offsetX sarà negativo, centrando correttamente la porzione visibile.
-        double offsetX = (paneWidth - renderedWidth) / 2;
-        double offsetY = (paneHeight - renderedHeight) / 2;
+        // Draw map with computed offsets
+        drawMap(offsetX, offsetY);
 
-        // 5. Ridisegna la mappa usando il fattore di scala e l'offset
-        drawMap(scale, offsetX, offsetY);
-
-        // Salva lo stato
-        this.lastScale = scale;
+        // Save state
         this.lastOffsetX = offsetX;
         this.lastOffsetY = offsetY;
+    }
+
+    /**
+     * Calcola l'offset della camera sull'asse Y per mantenere il player al centro,
+     * con limiti ai bordi della mappa.
+     */
+    private double calculateCameraOffsetY(double paneHeight) {
+        double renderedMapHeight = mapHeightInTiles * RENDERED_TILE_SIZE;
+        double renderedPlayerY = playerY; // already in pixels
+
+        double offsetY = paneHeight / 2 - renderedPlayerY;
+        offsetY = Math.max(offsetY, paneHeight - renderedMapHeight);
+        offsetY = Math.min(offsetY, 0);
+
+        return offsetY;
+    }
+
+    private double calculateCameraOffsetX(double paneWidth) {
+        double renderedMapWidth = mapWidthInTiles * RENDERED_TILE_SIZE;
+        double renderedPlayerX = playerX; // already in pixels
+
+        double offsetX = paneWidth / 2 - renderedPlayerX;
+        offsetX = Math.max(offsetX, paneWidth - renderedMapWidth);
+        offsetX = Math.min(offsetX, 0);
+
+        return offsetX;
     }
 
     /** Carica il file TMJ come stream dal classpath. */
@@ -162,8 +174,8 @@ public class MapView extends Pane {
     // METODO DI DISEGNO (RENDERING)
     // ----------------------------------------------------------------------
 
-    private void drawMap(double scale, double offsetX, double offsetY) {
-        if (mapData == null || tileSetImage == null || tilesetCols == 0 || scale <= 0) {
+    private void drawMap(double offsetX, double offsetY) {
+        if (mapData == null || tileSetImage == null || tilesetCols == 0) {
             // Pulisci il Canvas se qualcosa è fallito (lo rende trasparente)
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             return;
@@ -171,8 +183,6 @@ public class MapView extends Pane {
 
         // Pulisci il Canvas prima di disegnare (essenziale se lo ridisegni)
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        final double RENDERED_TILE_SIZE = TILE_SIZE * scale; // La nuova dimensione della tessera
 
         for (LayerData layer : mapData.getLayers()) {
             if (!"tilelayer".equals(layer.getType())) {
@@ -205,10 +215,10 @@ public class MapView extends Pane {
                                 TILE_SIZE, TILE_SIZE, // Dimensione Sorgente (originale)
 
                                 // Coordinate Destinazione (Scala applicata + Offset per centrare)
-                                offsetX + x * RENDERED_TILE_SIZE,
-                                offsetY + y * RENDERED_TILE_SIZE,
+                                offsetX + x * this.RENDERED_TILE_SIZE,
+                                offsetY + y * this.RENDERED_TILE_SIZE,
 
-                                RENDERED_TILE_SIZE, RENDERED_TILE_SIZE // Dimensione Destinazione (scalata)
+                                this.RENDERED_TILE_SIZE, this.RENDERED_TILE_SIZE // Dimensione Destinazione (scalata)
                         );
                     }
                 }
@@ -220,15 +230,15 @@ public class MapView extends Pane {
     // ----------------------------------------------------------------------
 
     public int getTileSize() {
-        return TILE_SIZE;
+        return RENDERED_TILE_SIZE;
     }
 
     public double getMapWidth() {
-        return mapWidthInTiles * TILE_SIZE;
+        return mapWidthInTiles * RENDERED_TILE_SIZE;
     }
 
     public double getMapHeight() {
-        return mapHeightInTiles * TILE_SIZE;
+        return mapHeightInTiles * RENDERED_TILE_SIZE;
     }
 
     public double getMapScale() {
@@ -241,5 +251,15 @@ public class MapView extends Pane {
 
     public double getOffsetY() {
         return lastOffsetY;
+    }
+
+    /**
+     * Aggiorna la posizione del player (in pixel della mappa originale).
+     * Chiama requestLayout() per triggerare il re-rendering.
+     */
+    public void updatePlayerPosition(double x, double y) {
+        this.playerX = x;
+        this.playerY = y;
+        requestLayout(); // Forza il layout e il re-rendering
     }
 }
