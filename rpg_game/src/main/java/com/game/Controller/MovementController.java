@@ -3,10 +3,10 @@ package com.game.controller;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import com.game.model.Party;
-import com.game.model.Player;
 import com.game.model.Position;
-import com.game.view.MapView;
+import com.game.model.character.Party;
+import com.game.model.character.Player;
+import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;

@@ -1,10 +1,9 @@
 package com.game.controller;
 
-import com.game.view.NewGameView;
-
-import com.game.view.GameView;
 import com.game.model.GameState;
-import com.game.view.ExplorationView;
+import com.game.view.gameview.GameView;
+import com.game.view.gameview.NewGameView;
+import com.game.view.mapview.ExplorationView;
 
 import javafx.stage.Stage;
 import javafx.scene.control.Toggle;
@@ -15,7 +14,7 @@ public class GameController {
     private GameView gameView;
 
     public GameController(NewGameView newGameView) {
-        this.gameView= newGameView;
+        this.gameView = newGameView;
     }
 
     public GameController(GameState gameState) {
@@ -37,28 +36,27 @@ public class GameController {
         }
 
         String nPlayersString = ((RadioButton) nPlayers).getText();
-        int nPlayersInt=0;
+        int nPlayersInt = 0;
 
         gameView.showMessage("Hai scelto: " + nPlayersString + " e " + autoSaveEnabler);
         switch (nPlayersString) {
             case "1 Player":
-                nPlayersInt= 1;
+                nPlayersInt = 1;
                 break;
             case "2 Player":
-                nPlayersInt= 2;
+                nPlayersInt = 2;
                 break;
             case "3 Player":
-                nPlayersInt= 3;
+                nPlayersInt = 3;
                 break;
             case "4 Player":
-                nPlayersInt= 4;
+                nPlayersInt = 4;
                 break;
             default:
-                throw new ParsingButtonException();         
+                throw new ParsingButtonException();
         }
-       //nPlayersInt= Integer.parseInt(nPlayersString.split(" ")[0]);
-        this.gameState= new GameState(nPlayersInt, autoSaveEnabler);
-
+        // nPlayersInt= Integer.parseInt(nPlayersString.split(" ")[0]);
+        this.gameState = new GameState(nPlayersInt, autoSaveEnabler);
 
         ExplorationView map = new ExplorationView(this.gameView.getStage());
         map.showMap();

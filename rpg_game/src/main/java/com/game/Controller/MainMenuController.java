@@ -1,7 +1,7 @@
 package com.game.controller;
 
-//import com.game.view.ExplorationView;
-import com.game.view.GameView;
+import com.game.controller.gamecreation.NewGameViewCreator;
+import com.game.view.gameview.GameView;
 
 import javafx.event.ActionEvent;
 import javafx.stage.*;
@@ -17,13 +17,13 @@ public class MainMenuController {
         // Carica schermata di gioco
         System.out.println("Avvio nuova partita");
 
-        NewGameViewCreator newGameViewCreator= new NewGameViewCreator(stage);
+        NewGameViewCreator newGameViewCreator = new NewGameViewCreator(stage);
         GameView newGameView = newGameViewCreator.createGameView();
         newGameView.load();
 
         /*
-         *  ExplorationView map = new ExplorationView(stage);
-         *  map.showMap();
+         * ExplorationView map = new ExplorationView(stage);
+         * map.showMap();
          */
     }
 
