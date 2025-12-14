@@ -1,8 +1,9 @@
 package com.game.view.mapview;
 
+import com.game.controller.GameController;
 import com.game.controller.MovementController;
 import com.game.model.character.Party;
-import com.game.model.character.Player;
+import com.game.model.GameState;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
@@ -19,58 +20,37 @@ public class ExplorationView {
     private Scene scene;
     private MapView mapView;
 
-    public ExplorationView(Stage stage) {
+    public ExplorationView(Stage stage, GameController gameController, GameState gameState) {
         this.stage = stage;
+        if (stage == null)
+            return;
+
+        // Crea la MapView
         this.mapView = new MapView(MAP_FILE_PATH, TILESET_IMAGE_PATH);
 
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
-        this.party = new Party(Player.createTestPlayers());
-        this.movementController = new MovementController(party, scene, mapView.getTileSize(), mapView);
+        this.party = new Party(gameState.createParty());
+        this.movementController = new MovementController(party, scene, mapView.getTileSize());
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
+        root.getChildren().add(mapView);
     }
 
     public void showMap() {
-        root.getChildren().add(mapView);
+        party.getMembers().reversed().forEach(player -> root.getChildren().add(player.getSprite()));
+        
+        stage.setScene(scene);
+        stage.show();
+
+        // Timer per aggiornare il movimento dei personaggi
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
                 movementController.update();
-                // Request MapView layout each frame so the smoothed camera updates over time
-                mapView.requestLayout();
-                // Update sprite positions to match the map's current offset/scale
-                updateSpritePositions();
             }
         };
 
-        party.getMembers().reversed().forEach(player -> {
-            player.getSprite().setPreserveRatio(false);
-            root.getChildren().add(player.getSprite());
-        });
-
-        stage.setScene(scene);
-        stage.show();
         timer.start();
-    }
-
-    private void updateSpritePositions() {
-        double offsetX = mapView.getOffsetX();
-        double offsetY = mapView.getOffsetY();
-        double scale = mapView.getMapScale();
-        int tileSize = mapView.getTileSize();
-
-        final double renderedTile = tileSize * scale;
-        for (Player player : party.getMembers()) {
-            double mapPixelX = player.getPosition().getX() * tileSize;
-            double mapPixelY = player.getPosition().getY() * tileSize;
-            double screenX = offsetX + mapPixelX * scale;
-            double screenY = offsetY + mapPixelY * scale;
-
-            player.getSprite().setFitWidth(renderedTile);
-            player.getSprite().setFitHeight(renderedTile);
-            player.getSprite().setX(screenX);
-            player.getSprite().setY(screenY);
-        }
     }
 }

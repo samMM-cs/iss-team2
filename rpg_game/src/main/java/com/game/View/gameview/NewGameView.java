@@ -7,15 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-/*
- * import javafx.scene.layout.Background;
- * import javafx.scene.layout.BackgroundImage;
- * import javafx.scene.layout.BackgroundPosition;
- * import javafx.scene.layout.BackgroundRepeat;
- * import javafx.scene.layout.BackgroundSize;
- * import javafx.stage.Screen;
- */
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
@@ -26,20 +17,28 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.CheckBox;
 
-public class NewGameView extends GameView {
+public class NewGameView extends GameView{
     public static final int MAX_PLAYER = 4;
+    private GameController gameController;
 
-    public NewGameView(Stage stage) {
-        this.stage = stage;
-        this.controller = new GameController(this);
+    public NewGameView(Stage stage,GameController gameController) {
+        super(stage);
+        this.gameController = gameController;
     }
 
     @Override
-    public void load() {
+    public void show() {
+        if (stage == null) {
+            System.err.println("Stage null in NewGameView");
+            return;
+        }
+        System.out.println("Sei nella newGameView!");
+
         RadioButton player1 = new RadioButton("1 Player");
         RadioButton player2 = new RadioButton("2 Player");
         RadioButton player3 = new RadioButton("3 Player");
         RadioButton player4 = new RadioButton("4 Player");
+        player2.setSelected(true);
 
         ToggleGroup nPlayers = new ToggleGroup();
         player1.setToggleGroup(nPlayers);
@@ -52,16 +51,15 @@ public class NewGameView extends GameView {
         Button confirm = new Button("Confirm");
         confirm.setAlignment(Pos.BOTTOM_CENTER);
 
-        System.out.println("Sei nella newGameView!");
-
         VBox nPlayersButtons = new VBox(15, player1, player2, player3, player4);
         nPlayersButtons.setAlignment(Pos.CENTER_LEFT);
 
         autoSaveEnabler.setAlignment(Pos.CENTER_RIGHT);
 
-        confirm.setOnAction(e -> controller.setupGameState(
-                nPlayers.getSelectedToggle(),
-                autoSaveEnabler.isSelected()));
+        confirm.setOnAction(event -> {
+            int players = getSelectedPlayers(nPlayers);
+            gameController.onNewGameConfirmed(players, autoSaveEnabler.isSelected());
+        });
 
         GridPane availableChoicesGrid = new GridPane();
 
@@ -78,24 +76,14 @@ public class NewGameView extends GameView {
         // Bottone sotto (su 2 colonne)
         availableChoicesGrid.add(confirm, 1, 1, 2, 1);
 
-        ImageView imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
+        ImageView imgSfondo = null;
+        try{
+            imgSfondo=new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
+        } catch (Exception e) {
+            System.err.println("Errore nel caricamento del background, immagine non trovata");
+        }
 
-        /*
-         * Background bg= new Background(
-         * new BackgroundImage(
-         * new Image(getClass().getResourceAsStream("/Forest.png")),
-         * BackgroundRepeat.NO_REPEAT,
-         * BackgroundRepeat.NO_REPEAT,
-         * BackgroundPosition.CENTER,
-         * new BackgroundSize(
-         * 100, 100, true, true, true, false
-         * )
-         * )
-         * );
-         * availableChoicesGrid.setBackground(bg);
-         */
-
-        StackPane root = new StackPane(imgSfondo, availableChoicesGrid);
+        StackPane root = (imgSfondo != null) ? new StackPane(imgSfondo, availableChoicesGrid) : new StackPane(availableChoicesGrid);
 
         Scene scene = new Scene(root, 800, 600);
 
@@ -103,20 +91,17 @@ public class NewGameView extends GameView {
         imgSfondo.fitHeightProperty().bind(scene.heightProperty());
         imgSfondo.fitWidthProperty().bind(scene.widthProperty());
 
-        /*
-         * nPlayersButtons.
-         * setStyle("-fx-border-color: red; -fx-background-color: rgba(255,0,0,0.2);");
-         * autoSaveButtons.
-         * setStyle("-fx-border-color: blue; -fx-background-color: rgba(0,0,255,0.2);");
-         * confirm.setStyle("-fx-border-color: green;");
-         * root.setStyle("-fx-border-color: yellow;");
-         */
-
         stage.setResizable(true);
         stage.setScene(scene);
         stage.show();
     }
 
+    private int getSelectedPlayers(ToggleGroup group) {
+        if (group.getSelectedToggle() == null)
+            return -1;
+        String txt = ((RadioButton) group.getSelectedToggle()).getText();
+        return Integer.parseInt(txt.split(" ")[0]);
+    }
     @Override
     public Stage getStage() {
         return this.stage;

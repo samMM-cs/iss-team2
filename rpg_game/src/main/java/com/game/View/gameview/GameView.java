@@ -1,15 +1,19 @@
 package com.game.view.gameview;
 
-import com.game.controller.GameController;
 import javafx.stage.Stage;
 
 public abstract class GameView {
     protected Stage stage;
-    protected GameController controller;
 
-    public abstract void load();
+    public GameView(Stage stage) {
+        this.stage = stage;
+    }
 
-    public abstract Stage getStage();
+    public Stage getStage()
+    {
+        return this.stage;
+    }
 
-    public abstract void showMessage(String msg);
+    public abstract void show(); //Costruisce e mostra la view
+    public abstract void showMessage(String msg); //Messaggi all'utente (UI)
 }

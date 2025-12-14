@@ -1,8 +1,5 @@
 package com.game.controller;
 
-import com.game.controller.gamecreation.NewGameViewCreator;
-import com.game.view.gameview.GameView;
-
 import javafx.event.ActionEvent;
 import javafx.stage.*;
 
@@ -15,11 +12,20 @@ public class MainMenuController {
 
     public void onNewGame(ActionEvent event) {
         // Carica schermata di gioco
-        System.out.println("Avvio nuova partita");
+        if (stage == null) {
+            System.err.println("Stage null in MainMenuController");
+            return;
+        }
+            System.out.println("Avvio nuova partita");
 
-        NewGameViewCreator newGameViewCreator = new NewGameViewCreator(stage);
-        GameView newGameView = newGameViewCreator.createGameView();
-        newGameView.load();
+            GameController gameController = new GameController(stage);
+            gameController.start();
+
+        /*
+         * NewGameViewCreator newGameViewCreator= new NewGameViewCreator(stage);
+         * GameView newGameView = newGameViewCreator.createGameView();
+         * newGameView.load();
+         */
 
         /*
          * ExplorationView map = new ExplorationView(stage);

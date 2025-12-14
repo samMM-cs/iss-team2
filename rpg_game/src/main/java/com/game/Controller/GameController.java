@@ -1,71 +1,67 @@
 package com.game.controller;
 
-import com.game.model.GameState;
-import com.game.view.gameview.GameView;
 import com.game.view.gameview.NewGameView;
+import com.game.model.GameState;
+import com.game.view.CharacterSelectionView;
 import com.game.view.mapview.ExplorationView;
+import com.game.model.character.Job;
 
 import javafx.stage.Stage;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.RadioButton;
 
 public class GameController {
     private GameState gameState;
-    private GameView gameView;
+    private Stage stage;
 
-    public GameController(NewGameView newGameView) {
-        this.gameView = newGameView;
+
+    public GameController(Stage stage) {
+        this.stage = stage;
     }
 
-    public GameController(GameState gameState) {
-        this.gameState = gameState;
+    public void start() {
+        if (stage == null) {
+            System.err.println("Stage nullo in GameController");
+            return;
+        }
+        NewGameView view = new NewGameView(stage, this);
+        view.show();
     }
 
-    public void startExploration(Stage stage) {
-        ExplorationView explorationView = new ExplorationView(stage);
-        explorationView.showMap();
-    }
-
-    public void handleStoryChoice(String choice) {
-    }
-
-    public void setupGameState(Toggle nPlayers, boolean autoSaveEnabler) throws ParsingButtonException {
-        if (nPlayers == null) {
-            gameView.showMessage("How many players want to play?");
+    public void onNewGameConfirmed(int players, boolean autoSave) {
+        if (players < 1 || players > 4) {
+            System.out.println("Invalid number of players");
             return;
         }
 
-        String nPlayersString = ((RadioButton) nPlayers).getText();
-        int nPlayersInt = 0;
-
-        gameView.showMessage("Hai scelto: " + nPlayersString + " e " + autoSaveEnabler);
-        switch (nPlayersString) {
-            case "1 Player":
-                nPlayersInt = 1;
-                break;
-            case "2 Player":
-                nPlayersInt = 2;
-                break;
-            case "3 Player":
-                nPlayersInt = 3;
-                break;
-            case "4 Player":
-                nPlayersInt = 4;
-                break;
-            default:
-                throw new ParsingButtonException();
-        }
-        // nPlayersInt= Integer.parseInt(nPlayersString.split(" ")[0]);
-        this.gameState = new GameState(nPlayersInt, autoSaveEnabler);
-
-        ExplorationView map = new ExplorationView(this.gameView.getStage());
-        map.showMap();
+        gameState = new GameState(players, autoSave);
+        goToCharacterSelection(); // Passa alla selezione dei personaggi
     }
-}
 
-class ParsingButtonException extends RuntimeException {
-    @Override
-    public String toString() {
-        return "Invalid Button value";
+    // Mostra la schermata per la selezione dei personaggi
+    public void goToCharacterSelection() {
+        if (stage == null)
+            return;
+        CharacterSelectionView charView = new CharacterSelectionView(stage, this);
+        charView.show();
+    }
+
+    // Viene chiamato quando selezioniamo un personaggio
+    public void onCharacterSelected(Job job) {
+        if (gameState != null)
+            gameState.selectCharacter(job);
+        if (gameState.allCharactersSelected()) {
+            gameState.createParty();
+            startExploration();
+        }
+    }
+
+    // Avvia l'esplorazione della mappa
+    public void startExploration() {
+        if (gameState != null) {
+            ExplorationView explorationView = new ExplorationView(stage, this, gameState);
+            explorationView.showMap();
+        }
+    }
+
+    public void handleStoryChoice(String choice) {
     }
 }

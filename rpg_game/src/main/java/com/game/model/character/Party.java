@@ -1,7 +1,6 @@
 package com.game.model.character;
 
 import java.util.List;
-
 import com.game.model.Position;
 
 public class Party {
@@ -12,8 +11,11 @@ public class Party {
     }
 
     public void updateFollowPosition(Position nextPosition) {
-        Player mainPlayer = members.get(0);
-        mainPlayer.notifyFollower();
+        Player mainPlayer = getMainPlayer();
+
+        synchronized (mainPlayer) { //Acquisizione del monitor
+            mainPlayer.notifyFollower();
+        }
         mainPlayer.setPosition(nextPosition);
     }
 

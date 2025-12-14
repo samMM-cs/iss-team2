@@ -3,54 +3,33 @@ package com.game.controller;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import com.game.model.Position;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
-import com.game.view.mapview.MapView;
+import com.game.model.Position;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
 public class MovementController {
   private Party party;
+  private float speed;
   private Scene scene;
   private KeyCode prevDirection;
   private Queue<KeyCode> activeKeys = new LinkedList<>();
-  private Position posLimit;
-  private MapView mapView;
+  private final Position posLimit;
 
-  public MovementController(Party party, Scene scene, float speed, MapView mapView) {
+  public MovementController(Party party, Scene scene, int speed) {
     this.scene = scene;
     this.party = party;
-    this.mapView = mapView;
+    this.speed = speed;
     scene.setOnKeyPressed(e -> {
       activeKeys.offer(e.getCode());
     });
-
-    // Listener to update limits when window gets resized
-    scene.widthProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
-    scene.heightProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
-
-    updatePositionLimit();
-  }
-
-  private void updatePositionLimit() {
-    // Bound positions by map dimensions (in tiles). If mapView is not ready,
-    // fall back to default based on scene size.
-    if (mapView != null && mapView.getTileSize() > 0) {
-      int tileSize = mapView.getTileSize();
-      int maxTilesX = (int) (mapView.getMapWidth() / tileSize);
-      int maxTilesY = (int) (mapView.getMapHeight() / tileSize);
-      // max index is tiles-1, ensure at least 0
-      int maxX = Math.max(0, maxTilesX - 1);
-      int maxY = Math.max(0, maxTilesY - 1);
-      this.posLimit = new Position(maxX, maxY);
-    } else {
-      // fallback: prevent negative or extremely large limits
-      int fallbackX = Math.max(0, (int) this.scene.getWidth() - 2);
-      int fallbackY = Math.max(0, (int) this.scene.getHeight() - 4);
-      this.posLimit = new Position(fallbackX, fallbackY);
-    }
+    this.posLimit = new Position(
+        (int) ((this.scene.getWidth() - 2 * speed) / speed * speed),
+        (int) ((this.scene.getHeight() - 4 * speed) / speed * speed));
+    // System.out.println(this.scene.getWidth() + " " + this.scene.getHeight());
+    // System.out.println(posLimit);
   }
 
   public void update() {
@@ -76,24 +55,21 @@ public class MovementController {
     if (key != null && !isOpposite(key, prevDirection)) {
       prevDirection = key;
       if (key == KeyCode.W || key == KeyCode.UP)
-        dy -= 1;
+        dy -= speed;
       if (key == KeyCode.A || key == KeyCode.LEFT)
-        dx -= 1;
+        dx -= speed;
       if (key == KeyCode.S || key == KeyCode.DOWN)
-        dy += 1;
+        dy += speed;
       if (key == KeyCode.D || key == KeyCode.RIGHT)
-        dx += 1;
+        dx += speed;
     }
 
     if (dx != 0 || dy != 0) {
       Position nextPosition = mainPlayer.getPosition().add(dx, dy);
       if (nextPosition.isInside(posLimit)) {
+        // mainPlayer.notifyFollower();
+        // mainPlayer.setPosition(nextPosition);
         party.updateFollowPosition(nextPosition);
-
-        // Aggiorna la posizione della camera nel MapView (converti da tile a pixel)
-        double playerPixelX = nextPosition.getX() * mapView.getTileSize();
-        double playerPixelY = nextPosition.getY() * mapView.getTileSize();
-        mapView.updatePlayerPosition(playerPixelX, playerPixelY);
       }
     }
   }

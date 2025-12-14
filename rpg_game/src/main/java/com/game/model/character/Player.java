@@ -1,12 +1,13 @@
 package com.game.model.character;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import java.util.List;
-
-import com.game.model.Position;
-
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import com.game.model.Position;
+import com.game.model.GameState;
 
 public class Player extends Character {
   private int xp;
@@ -15,21 +16,21 @@ public class Player extends Character {
   private Position position;
   private Player follower;
   private ImageView sprite;
-  private final int SPRITE_SIZE = 32;
-
-  private static final Image SPRITESHEET = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
+  private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
 
   public Player(Job job, Position position) {
     this.job = job;
     this.position = position;
+    this.sprite = createCharacterSprite(img, job);
   }
 
-  public Player(Job job, Position position, int col, int row) {
-    this.job = job;
-    this.position = position;
-    this.sprite = new ImageView(SPRITESHEET);
-    this.sprite
-        .setViewport(new Rectangle2D(col * SPRITE_SIZE, row * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE));
+  private ImageView createCharacterSprite(Image img, Job job) {
+    ImageView newSprite = new ImageView(img);
+
+    Rectangle2D viewPort = new Rectangle2D(job.getX(), job.getY(), Job.SIZE, Job.SIZE);
+
+    newSprite.setViewport(viewPort);
+    return newSprite;
   }
 
   public void equipItem(Item item) {
@@ -53,15 +54,13 @@ public class Player extends Character {
     player.setFollower(null);
   }
 
-  public static List<Player> createTestPlayers() {
-    Player mainPlayer = new Player(Job.WARRIOR, new Position(3, 0), 0, 2);
-    Player player2 = new Player(Job.MAGE, new Position(2, 0), 1, 2);
-    player2.subscribeToFollowed(mainPlayer);
-    Player player3 = new Player(Job.ROGUE, new Position(1, 0), 2, 2);
-    player3.subscribeToFollowed(player2);
-    Player player4 = new Player(Job.CLERIC, new Position(0, 0), 3, 2);
-    player4.subscribeToFollowed(player3);
-    return List.of(mainPlayer, player2, player3, player4);
+  public static List<Player> createTestPlayers(GameState gameState) {
+    List<Player> playerJob = new ArrayList<>();
+    for (int i = 0; i < gameState.getNPlayers(); i++) {
+      Player p = new Player((Job) gameState.getSelectedCharacters().get(i), new Position(i*Job.SIZE, 0));
+      playerJob.add(p);
+    }
+    return playerJob;
   }
 
   public final int getXp() {
@@ -70,6 +69,7 @@ public class Player extends Character {
 
   public final void addXp(int xp) {
     this.xp += xp;
+    return;
   }
 
   public final Job getJob() {
@@ -86,6 +86,10 @@ public class Player extends Character {
 
   public final void setPosition(Position position) {
     this.position = position;
+    if (this.sprite != null) {
+      this.sprite.setX(position.getX());
+      this.sprite.setY(position.getY());
+    }
   }
 
   public final Player getFollower() {
@@ -98,5 +102,9 @@ public class Player extends Character {
 
   public ImageView getSprite() {
     return sprite;
+  }
+
+  public void setSprite(ImageView sprite) {
+    this.sprite = sprite;
   }
 }
