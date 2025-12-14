@@ -33,10 +33,8 @@ public class GameState {
             Position pos = new Position(i * Job.SIZE, i * Job.SIZE);
 
             Player p = new Player(selectedJob, pos);
-
             if (i > 0) {
-                Player leader = members.get(i - 1);
-                p.setFollower(leader);
+                p.subscribeToFollowed(members.get(i - 1));
             }
             members.add(p);
         }

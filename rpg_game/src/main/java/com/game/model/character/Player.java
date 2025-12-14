@@ -57,7 +57,7 @@ public class Player extends Character {
   public static List<Player> createTestPlayers(GameState gameState) {
     List<Player> playerJob = new ArrayList<>();
     for (int i = 0; i < gameState.getNPlayers(); i++) {
-      Player p = new Player((Job) gameState.getSelectedCharacters().get(i), new Position(i*Job.SIZE, 0));
+      Player p = new Player((Job) gameState.getSelectedCharacters().get(i), new Position(i * Job.SIZE, 0));
       playerJob.add(p);
     }
     return playerJob;
@@ -106,5 +106,10 @@ public class Player extends Character {
 
   public void setSprite(ImageView sprite) {
     this.sprite = sprite;
+  }
+
+  @Override
+  public String toString() {
+    return job.toString();
   }
 }
