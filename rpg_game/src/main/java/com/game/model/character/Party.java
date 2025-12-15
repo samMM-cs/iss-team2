@@ -13,7 +13,7 @@ public class Party {
     public void updateFollowPosition(Position nextPosition) {
         Player mainPlayer = getMainPlayer();
 
-        synchronized (mainPlayer) { //Acquisizione del monitor
+        synchronized (mainPlayer) { // Acquisizione del monitor
             mainPlayer.notifyFollower();
         }
         mainPlayer.setPosition(nextPosition);
@@ -25,6 +25,12 @@ public class Party {
 
     public final Player getMainPlayer() {
         return members.get(0);
+    }
+
+    @Override
+    public String toString() {
+        String out = "Party " + members.toString() + "";
+        return out;
     }
 
 }

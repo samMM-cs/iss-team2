@@ -31,7 +31,8 @@ public class ExplorationView {
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
         this.party = new Party(gameState.createParty());
-        this.movementController = new MovementController(party, scene, mapView.getTileSize());
+        System.out.println(party);
+        this.movementController = new MovementController(party, scene, mapView);
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
@@ -40,14 +41,14 @@ public class ExplorationView {
 
     public void showMap() {
         party.getMembers().reversed().forEach(player -> root.getChildren().add(player.getSprite()));
-        
+
         stage.setScene(scene);
         stage.show();
 
-        // Timer per aggiornare il movimento dei personaggi
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
                 movementController.update();
+                mapView.requestLayout();
             }
         };
 

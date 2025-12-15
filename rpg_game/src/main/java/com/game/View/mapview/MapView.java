@@ -25,7 +25,6 @@ public class MapView extends Pane {
     private int mapHeightInTiles;
     private int tilesetCols; // Contiene le colonne del tileset
 
-    private double lastScale = 1.0;
     private double lastOffsetX;
     private double lastOffsetY;
 
@@ -239,10 +238,6 @@ public class MapView extends Pane {
 
     public double getMapHeight() {
         return mapHeightInTiles * RENDERED_TILE_SIZE;
-    }
-
-    public double getMapScale() {
-        return lastScale;
     }
 
     public double getOffsetX() {
