@@ -5,9 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import com.game.model.Position;
-import com.game.model.GameState;
-import com.game.controller.GameController;
-import javafx.stage.Stage;
 
 public class PlayerTest {
     public Player setUpPlayer(Position pos) {
