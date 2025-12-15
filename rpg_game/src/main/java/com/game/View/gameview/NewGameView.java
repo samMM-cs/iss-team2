@@ -2,6 +2,8 @@ package com.game.view.gameview;
 
 import com.game.controller.GameController;
 
+import javafx.animation.FadeTransition;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,17 +13,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.CheckBox;
 
-public class NewGameView extends GameView{
+public class NewGameView extends GameView {
     public static final int MAX_PLAYER = 4;
     private GameController gameController;
 
-    public NewGameView(Stage stage,GameController gameController) {
+    public NewGameView(Stage stage, GameController gameController) {
         super(stage);
         this.gameController = gameController;
     }
@@ -46,44 +51,78 @@ public class NewGameView extends GameView{
         player3.setToggleGroup(nPlayers);
         player4.setToggleGroup(nPlayers);
 
-        CheckBox autoSaveEnabler = new CheckBox("AutoSave");
+        RadioButton[] players = { player1, player2, player3, player4 };
+        for (RadioButton rb : players) {
+            rb.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
+            rb.setOnMouseEntered(e -> rb.setStyle("-fx-text-fill: gold; -fx-font-size: 16;"));
+            rb.setOnMouseExited(e -> rb.setStyle("-fx-text-fill: white; -fx-font-size: 16;"));
+        }
 
         Button confirm = new Button("Confirm");
         confirm.setAlignment(Pos.BOTTOM_CENTER);
 
-        VBox nPlayersButtons = new VBox(15, player1, player2, player3, player4);
+        VBox nPlayersButtons = new VBox(15, players);
         nPlayersButtons.setAlignment(Pos.CENTER_LEFT);
 
-        autoSaveEnabler.setAlignment(Pos.CENTER_RIGHT);
+        CheckBox autoSaveEnabler = new CheckBox("AutoSave");
+        autoSaveEnabler.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
+        autoSaveEnabler.setOnMouseEntered(e -> autoSaveEnabler.setStyle("-fx-text-fill: gold; -fx-font-size: 16;"));
+        autoSaveEnabler.setOnMouseExited(e -> autoSaveEnabler.setStyle("-fx-text-fill: white; -fx-font-size: 16;"));
+
+        confirm.setStyle("""
+                    -fx-font-size: 18px;
+                    -fx-background-color: linear-gradient(to right, #4CAF50, #2E7D32);
+                    -fx-text-fill: white;
+                    -fx-background-radius: 10;
+                    -fx-padding: 10 30 10 30;
+                """);
+        confirm.setOnMouseEntered(e -> confirm.setStyle("""
+                    -fx-font-size: 18px;
+                    -fx-background-color: linear-gradient(to right, #66BB6A, #388E3C);
+                    -fx-text-fill: white;
+                    -fx-background-radius: 10;
+                    -fx-padding: 10 30 10 30;
+                """));
+        confirm.setOnMouseExited(e -> confirm.setStyle("""
+                    -fx-font-size: 18px;
+                    -fx-background-color: linear-gradient(to right, #4CAF50, #2E7D32);
+                    -fx-text-fill: white;
+                    -fx-background-radius: 10;
+                    -fx-padding: 10 30 10 30;
+                """));
 
         confirm.setOnAction(event -> {
-            int players = getSelectedPlayers(nPlayers);
-            gameController.onNewGameConfirmed(players, autoSaveEnabler.isSelected());
+            int player = getSelectedPlayers(nPlayers);
+            gameController.onNewGameConfirmed(player, autoSaveEnabler.isSelected());
         });
 
         GridPane availableChoicesGrid = new GridPane();
 
         availableChoicesGrid.setHgap(50); // spazio tra colonne
-        availableChoicesGrid.setVgap(15); // spazio tra righe
+        availableChoicesGrid.setVgap(20); // spazio tra righe
         availableChoicesGrid.setAlignment(Pos.CENTER);
 
         // Colonna sinistra (nPlayers)
         availableChoicesGrid.add(nPlayersButtons, 0, 0);
 
         // Colonna destra (autoSave)
-        availableChoicesGrid.add(autoSaveEnabler, 2, 0);
+        availableChoicesGrid.add(autoSaveEnabler, 1, 0);
 
         // Bottone sotto (su 2 colonne)
-        availableChoicesGrid.add(confirm, 1, 1, 2, 1);
+        availableChoicesGrid.add(confirm, 0, 1, 2, 1);
+        GridPane.setHalignment(confirm, HPos.CENTER);
 
         ImageView imgSfondo = null;
-        try{
-            imgSfondo=new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
+        try {
+            imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
         } catch (Exception e) {
             System.err.println("Errore nel caricamento del background, immagine non trovata");
         }
 
-        StackPane root = (imgSfondo != null) ? new StackPane(imgSfondo, availableChoicesGrid) : new StackPane(availableChoicesGrid);
+        Rectangle overlay = new Rectangle(800, 600, Color.rgb(0, 0, 0, 0.4));
+
+        StackPane root = (imgSfondo != null) ? new StackPane(imgSfondo, overlay, availableChoicesGrid)
+                : new StackPane(overlay, availableChoicesGrid);
 
         Scene scene = new Scene(root, 800, 600);
 
@@ -94,6 +133,11 @@ public class NewGameView extends GameView{
         stage.setResizable(true);
         stage.setScene(scene);
         stage.show();
+
+        FadeTransition ft = new FadeTransition(Duration.seconds(1),availableChoicesGrid);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
     }
 
     private int getSelectedPlayers(ToggleGroup group) {
@@ -102,6 +146,7 @@ public class NewGameView extends GameView{
         String txt = ((RadioButton) group.getSelectedToggle()).getText();
         return Integer.parseInt(txt.split(" ")[0]);
     }
+
     @Override
     public Stage getStage() {
         return this.stage;
