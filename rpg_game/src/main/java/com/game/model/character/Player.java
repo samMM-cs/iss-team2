@@ -68,7 +68,9 @@ public class Player extends Character {
   }
 
   public final void addXp(int xp) {
-    this.xp += xp;
+    if (xp>=0) {
+      this.xp += xp;
+    }
     return;
   }
 
