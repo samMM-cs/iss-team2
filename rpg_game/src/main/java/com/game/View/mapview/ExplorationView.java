@@ -1,8 +1,12 @@
 package com.game.view.mapview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.game.controller.GameController;
 import com.game.controller.MovementController;
 import com.game.model.character.Party;
+import com.game.model.character.Enemy;
 import com.game.model.GameState;
 
 import javafx.animation.AnimationTimer;
@@ -16,6 +20,7 @@ public class ExplorationView {
     private MovementController movementController;
     private Stage stage;
     private Party party;
+    private List<Enemy> enemies = new ArrayList<>();
     private Pane root;
     private Scene scene;
     private MapView mapView;
@@ -31,7 +36,8 @@ public class ExplorationView {
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
         this.party = new Party(gameState.createParty());
-        System.out.println(party);
+        this.enemies = gameState.createEnemy();
+        
         this.movementController = new MovementController(party, scene, mapView);
 
         mapView.prefHeightProperty().bind(root.heightProperty());
@@ -40,8 +46,9 @@ public class ExplorationView {
     }
 
     public void showMap() {
-        party.getMembers().reversed().forEach(player -> root.getChildren().add(player.getSprite()));
-
+        this.party.getMembers().forEach(player -> root.getChildren().add(player.getSprite()));
+        this.enemies.forEach(enemy -> root.getChildren().add(enemy.getSprite()));
+        
         stage.setScene(scene);
         stage.show();
 

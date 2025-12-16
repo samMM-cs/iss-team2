@@ -108,8 +108,8 @@ public class PartyTest {
 
         party.updateFollowPosition(p);
 
-        assertEquals(200, party.getMainPlayer().getPosition().getX());
-        assertEquals(50, party.getMainPlayer().getPosition().getY());
+        assertEquals(200, party.getMainPlayer().getPos().getX());
+        assertEquals(50, party.getMainPlayer().getPos().getY());
     }
 
     @Test
@@ -120,8 +120,8 @@ public class PartyTest {
         party.updateFollowPosition(pos);
 
         for (Player p: party.getMembers()) {
-            assertEquals(200, p.getPosition().getX());
-            assertEquals(50, p.getPosition().getY());
+            assertEquals(200, p.getPos().getX());
+            assertEquals(50, p.getPos().getY());
         }
     }
 }

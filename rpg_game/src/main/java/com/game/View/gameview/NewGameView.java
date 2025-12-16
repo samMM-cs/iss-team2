@@ -4,23 +4,34 @@ import com.game.controller.GameController;
 
 import javafx.animation.FadeTransition;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.input.MouseEvent;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContentDisplay;
 
 public class NewGameView extends GameView {
     public static final int MAX_PLAYER = 4;
@@ -68,28 +79,6 @@ public class NewGameView extends GameView {
         autoSaveEnabler.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
         autoSaveEnabler.setOnMouseEntered(e -> autoSaveEnabler.setStyle("-fx-text-fill: gold; -fx-font-size: 16;"));
         autoSaveEnabler.setOnMouseExited(e -> autoSaveEnabler.setStyle("-fx-text-fill: white; -fx-font-size: 16;"));
-
-        confirm.setStyle("""
-                    -fx-font-size: 18px;
-                    -fx-background-color: linear-gradient(to right, #4CAF50, #2E7D32);
-                    -fx-text-fill: white;
-                    -fx-background-radius: 10;
-                    -fx-padding: 10 30 10 30;
-                """);
-        confirm.setOnMouseEntered(e -> confirm.setStyle("""
-                    -fx-font-size: 18px;
-                    -fx-background-color: linear-gradient(to right, #66BB6A, #388E3C);
-                    -fx-text-fill: white;
-                    -fx-background-radius: 10;
-                    -fx-padding: 10 30 10 30;
-                """));
-        confirm.setOnMouseExited(e -> confirm.setStyle("""
-                    -fx-font-size: 18px;
-                    -fx-background-color: linear-gradient(to right, #4CAF50, #2E7D32);
-                    -fx-text-fill: white;
-                    -fx-background-radius: 10;
-                    -fx-padding: 10 30 10 30;
-                """));
 
         confirm.setOnAction(event -> {
             int player = getSelectedPlayers(nPlayers);
@@ -145,6 +134,29 @@ public class NewGameView extends GameView {
             return -1;
         String txt = ((RadioButton) group.getSelectedToggle()).getText();
         return Integer.parseInt(txt.split(" ")[0]);
+    }
+
+    private <T extends ButtonBase> T createButton(T btn, String txt, String path) {
+        ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream(path)));
+        BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
+        btn.setText(txt);
+        btn.setBackground(new Background(bgImgBtn));
+        btn.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        btn.setPrefSize(200, 70);
+        btn.setAlignment(Pos.CENTER);
+        btn.setPadding(new Insets(0));
+        btn.setContentDisplay(ContentDisplay.CENTER);
+
+        // Effetto click
+        btn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> btn.setScaleX(0.95));
+        btn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> btn.setScaleY(0.95));
+        btn.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+            btn.setScaleX(1);
+            btn.setScaleY(1);
+        });
+        return btn;
     }
 
     @Override

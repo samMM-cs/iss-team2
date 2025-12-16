@@ -64,8 +64,8 @@ public class MovementController {
     for (Player player : party.getMembers()) {
       player.getSprite().setFitWidth(tileSize);
       player.getSprite().setFitHeight(tileSize);
-      player.getSprite().setX(mapView.getOffsetX() + player.getPosition().getX() * tileSize);
-      player.getSprite().setY(mapView.getOffsetY() + player.getPosition().getY() * tileSize);
+      player.getSprite().setX(mapView.getOffsetX() + player.getPos().getX() * tileSize);
+      player.getSprite().setY(mapView.getOffsetY() + player.getPos().getY() * tileSize);
     }
   }
 
@@ -98,7 +98,7 @@ public class MovementController {
     }
 
     if (dx != 0 || dy != 0) {
-      Position nextPosition = mainPlayer.getPosition().add(dx, dy);
+      Position nextPosition = mainPlayer.getPos().add(dx, dy);
       if (nextPosition.isInside(posLimit)) {
         party.updateFollowPosition(nextPosition);
 

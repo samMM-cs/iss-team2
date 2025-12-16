@@ -10,13 +10,29 @@ public class Party {
         this.members = members;
     }
 
-    public void updateFollowPosition(Position nextPosition) {
+    public void updateFollowPosition(Position newLeaderPos) {
         Player mainPlayer = getMainPlayer();
+        // Salviamo i valori, non l'oggetto, per evitare problemi di puntatori
+        int prevX = mainPlayer.getPos().getX();
+        int prevY = mainPlayer.getPos().getY();
 
-        synchronized (mainPlayer) { // Acquisizione del monitor
-            mainPlayer.notifyFollower();
+        // Muoviamo il leader: lo sprite scatterà automaticamente nella nuova cella
+        mainPlayer.getPos().setX(newLeaderPos.getX());
+        mainPlayer.getPos().setY(newLeaderPos.getY());
+
+        for (int i = 1; i < members.size(); i++) {
+            Player current = members.get(i);
+
+            int tempX = current.getPos().getX();
+            int tempY = current.getPos().getY();
+
+            // Muoviamo il seguace: lo sprite si sposta da solo
+            current.getPos().setX(prevX);
+            current.getPos().setY(prevY);
+
+            prevX = tempX;
+            prevY = tempY;
         }
-        mainPlayer.setPosition(nextPosition);
     }
 
     public final List<Player> getMembers() {
@@ -25,12 +41,6 @@ public class Party {
 
     public final Player getMainPlayer() {
         return members.get(0);
-    }
-
-    @Override
-    public String toString() {
-        String out = "Party " + members.toString() + "";
-        return out;
     }
 
 }

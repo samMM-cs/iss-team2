@@ -49,8 +49,10 @@ public class CharacterSelectionView extends GameView {
 
         // Creo le card
         for (Job job : Job.values()) {
-            VBox card = createCard(job);
-            container.getChildren().add(card);
+            if (job.getIsPlayable()) {
+                VBox card = createCard(job);
+                container.getChildren().add(card);
+            }
         }
 
         startGameBtn = new Button("Start Game");

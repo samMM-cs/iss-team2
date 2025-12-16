@@ -5,7 +5,7 @@ import java.util.List;
 import com.game.model.character.Enemy;
 import com.game.model.character.Player;
 
-public class Battle extends Enemy {
+public class Battle{
     private List<Player> party;
     private List<Enemy> enemies;
     private int turnIndex;

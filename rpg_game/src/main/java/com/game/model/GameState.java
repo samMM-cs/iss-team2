@@ -11,7 +11,7 @@ public class GameState {
     public final int nPlayers;
     public boolean autoSaveEnabled;
     public List<Job> selectedCharacters = new ArrayList<>();
-    private Party party;
+    public List<Enemy> enemies = new ArrayList<>();
 
     public String currentScene;
     public Map<Event, Boolean> storyFlags;
@@ -24,7 +24,7 @@ public class GameState {
     }
 
     public List<Player> createParty() {
-        if (!allCharactersSelected() || this.party != null)
+        if (!allCharactersSelected())
             return null;
 
         List<Player> members = new ArrayList<>();
@@ -41,12 +41,19 @@ public class GameState {
         return members;
     }
 
+    public List<Enemy> createEnemy() {
+        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.SPIDER);
+        List<Position> pos = List.of(new Position(2, 2), new Position(12, 8));
+        for (int i = 0; i < enemiesJob.size(); i++) {
+            Position newPos = new Position(pos.get(i).getX() * Job.SIZE, pos.get(i).getY() * Job.SIZE);
+            Enemy e = new Enemy(enemiesJob.get(i), newPos);
+
+            enemies.add(e);
+        }
+        return enemies;
+    }
     public int getNPlayers() {
         return this.nPlayers;
-    }
-
-    public Party getParty() {
-        return party;
     }
 
     public boolean isAutoSaveEnable() {
@@ -93,5 +100,9 @@ public class GameState {
 
     public List<Job> getSelectedCharacters() {
         return selectedCharacters;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 }
