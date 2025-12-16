@@ -17,12 +17,9 @@ import javafx.scene.input.KeyCode;
 public class MovementController {
   private Party party;
   private Scene scene;
-<<<<<<< HEAD
   private List<Enemy> enemies = new ArrayList<>();
   private KeyCode prevDirection;
-=======
   // private KeyCode prevDirection;
->>>>>>> 28a2c1609004730c8ca79e4912f1d7f4000da838
   private Queue<KeyCode> activeKeys = new LinkedList<>();
   private Position posLimit;
   private MapView mapView;
