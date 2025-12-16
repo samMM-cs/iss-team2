@@ -126,7 +126,7 @@ public class MovementController {
     }
   }
 
-  private boolean canGoThere(Position nextPosition) {
+  public boolean canGoThere(Position nextPosition) {
     return nextPosition.isInside(posLimit)
         && this.mapView.getWalkableTiles()[nextPosition.getX()][nextPosition.getY()];
   }
