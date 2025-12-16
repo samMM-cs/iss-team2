@@ -42,10 +42,10 @@ public class GameState {
     }
 
     public List<Enemy> createEnemy() {
-        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.SPIDER);
+        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN2);
         List<Position> pos = List.of(new Position(2, 2), new Position(12, 8));
         for (int i = 0; i < enemiesJob.size(); i++) {
-            Position newPos = new Position(pos.get(i).getX() * Job.SIZE, pos.get(i).getY() * Job.SIZE);
+            Position newPos = new Position(pos.get(i).getX(), pos.get(i).getY());
             Enemy e = new Enemy(enemiesJob.get(i), newPos);
 
             enemies.add(e);

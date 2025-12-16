@@ -38,7 +38,7 @@ public class ExplorationView {
         this.party = new Party(gameState.createParty());
         this.enemies = gameState.createEnemy();
         
-        this.movementController = new MovementController(party, scene, mapView);
+        this.movementController = new MovementController(party, scene, mapView,enemies);
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());

@@ -1,11 +1,14 @@
 package com.game.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import com.game.model.Position;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
+import com.game.model.character.Enemy;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -14,15 +17,17 @@ import javafx.scene.input.KeyCode;
 public class MovementController {
   private Party party;
   private Scene scene;
+  private List<Enemy> enemies = new ArrayList<>();
   private KeyCode prevDirection;
   private Queue<KeyCode> activeKeys = new LinkedList<>();
   private Position posLimit;
   private MapView mapView;
 
-  public MovementController(Party party, Scene scene, MapView mapView) {
+  public MovementController(Party party, Scene scene, MapView mapView, List<Enemy> enemies) {
     this.scene = scene;
     this.party = party;
     this.mapView = mapView;
+    this.enemies = enemies;
     scene.setOnKeyPressed(e -> {
       activeKeys.offer(e.getCode());
     });
@@ -62,10 +67,20 @@ public class MovementController {
     int tileSize = mapView.getTileSize();
 
     for (Player player : party.getMembers()) {
-      player.getSprite().setFitWidth(tileSize);
-      player.getSprite().setFitHeight(tileSize);
-      player.getSprite().setX(mapView.getOffsetX() + player.getPos().getX() * tileSize);
-      player.getSprite().setY(mapView.getOffsetY() + player.getPos().getY() * tileSize);
+      if (player.getSprite() != null) {
+        player.getSprite().setFitWidth(tileSize);
+        player.getSprite().setFitHeight(tileSize);
+        player.getSprite().setX(mapView.getOffsetX() + player.getPos().getX() * tileSize);
+        player.getSprite().setY(mapView.getOffsetY() + player.getPos().getY() * tileSize);
+      }
+    }
+    for (Enemy enemy : enemies) {
+      if (enemy.getSprite() != null) {
+        enemy.getSprite().setFitWidth(tileSize);
+        enemy.getSprite().setFitHeight(tileSize);
+        enemy.getSprite().setX(mapView.getOffsetX() + enemy.getPos().getX() * tileSize);
+        enemy.getSprite().setY(mapView.getOffsetY() + enemy.getPos().getY() * tileSize);
+      }
     }
   }
 

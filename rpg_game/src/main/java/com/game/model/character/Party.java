@@ -12,7 +12,7 @@ public class Party {
 
     public void updateFollowPosition(Position newLeaderPos) {
         Player mainPlayer = getMainPlayer();
-        // Salviamo i valori, non l'oggetto, per evitare problemi di puntatori
+        // Salviamo i valori
         int prevX = mainPlayer.getPos().getX();
         int prevY = mainPlayer.getPos().getY();
 

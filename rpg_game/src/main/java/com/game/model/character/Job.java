@@ -8,7 +8,7 @@ public enum Job {
     ARCHER(2, 0, 40, 40, 4,true),
     //Enemy
     GOBLIN(0, 0, 30, 3, 4,false),
-    SPIDER(6,8,20,4,2,false);
+    GOBLIN2(0,1,20,4,2,false);
 
     public static final int SIZE = 32;
 
