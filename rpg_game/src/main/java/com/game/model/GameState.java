@@ -30,7 +30,7 @@ public class GameState {
         List<Player> members = new ArrayList<>();
         for (int i = 0; i < selectedCharacters.size(); i++) {
             Job selectedJob = selectedCharacters.get(i);
-            Position pos = new Position(i * Job.SIZE, i * Job.SIZE);
+            Position pos = new Position(selectedCharacters.size() - i - 1, 7);
 
             Player p = new Player(selectedJob, pos);
             if (i > 0) {
