@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.4" name="punyworld-overworld" tilewidth="16" tileheight="16" tilecount="1755" columns="27">
- <image source="../punyworld-overworld-tileset.png" width="432" height="1040"/>
+<tileset version="1.10" tiledversion="1.11.2" name="punyworld-overworld" tilewidth="16" tileheight="16" tilecount="1755" columns="27">
+ <image source="../../../../../../../../../../../Desktop/Nuova cartella/rpg_game/src/main/resources/images/punyworld-overworld-tileset.png" width="432" height="1040"/>
  <tile id="270">
   <animation>
    <frame tileid="270" duration="100"/>
