@@ -17,8 +17,12 @@ import javafx.scene.input.KeyCode;
 public class MovementController {
   private Party party;
   private Scene scene;
+<<<<<<< HEAD
   private List<Enemy> enemies = new ArrayList<>();
   private KeyCode prevDirection;
+=======
+  // private KeyCode prevDirection;
+>>>>>>> 28a2c1609004730c8ca79e4912f1d7f4000da838
   private Queue<KeyCode> activeKeys = new LinkedList<>();
   private Position posLimit;
   private MapView mapView;
@@ -84,15 +88,15 @@ public class MovementController {
     }
   }
 
-  private static boolean isOpposite(KeyCode key, KeyCode prev) {
-    return switch (key) {
-      case KeyCode.W, KeyCode.UP -> prev == KeyCode.S || prev == KeyCode.DOWN;
-      case KeyCode.A, KeyCode.LEFT -> prev == KeyCode.D || prev == KeyCode.RIGHT;
-      case KeyCode.S, KeyCode.DOWN -> prev == KeyCode.W || prev == KeyCode.UP;
-      case KeyCode.D, KeyCode.RIGHT -> prev == KeyCode.A || prev == KeyCode.LEFT;
-      default -> false;
-    };
-  }
+  // private static boolean isOpposite(KeyCode key, KeyCode prev) {
+  // return switch (key) {
+  // case KeyCode.W, KeyCode.UP -> prev == KeyCode.S || prev == KeyCode.DOWN;
+  // case KeyCode.A, KeyCode.LEFT -> prev == KeyCode.D || prev == KeyCode.RIGHT;
+  // case KeyCode.S, KeyCode.DOWN -> prev == KeyCode.W || prev == KeyCode.UP;
+  // case KeyCode.D, KeyCode.RIGHT -> prev == KeyCode.A || prev == KeyCode.LEFT;
+  // default -> false;
+  // };
+  // }
 
   void movePlayer() {
     Player mainPlayer = party.getMainPlayer();
@@ -100,8 +104,7 @@ public class MovementController {
     int dy = 0;
     KeyCode key = activeKeys.poll();
 
-    if (key != null && !isOpposite(key, prevDirection)) {
-      prevDirection = key;
+    if (key != null) {
       if (key == KeyCode.W || key == KeyCode.UP)
         dy -= 1;
       if (key == KeyCode.A || key == KeyCode.LEFT)
@@ -114,7 +117,8 @@ public class MovementController {
 
     if (dx != 0 || dy != 0) {
       Position nextPosition = mainPlayer.getPos().add(dx, dy);
-      if (nextPosition.isInside(posLimit)) {
+      if (canGoThere(nextPosition)) {
+        // prevDirection = key;
         party.updateFollowPosition(nextPosition);
 
         // Aggiorna la posizione della camera nel MapView (converti da tile a pixel)
@@ -123,5 +127,10 @@ public class MovementController {
         mapView.updatePlayerPosition(playerPixelX, playerPixelY);
       }
     }
+  }
+
+  private boolean canGoThere(Position nextPosition) {
+    return nextPosition.isInside(posLimit)
+        && this.mapView.getWalkableTiles()[nextPosition.getX()][nextPosition.getY()];
   }
 }

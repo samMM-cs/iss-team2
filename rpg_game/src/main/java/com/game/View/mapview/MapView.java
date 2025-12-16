@@ -8,10 +8,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.game.model.map.LayerData;
 import com.game.model.map.TiledMapData;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class MapView extends Pane {
+    private static final List<Integer> WALKABLE_IDS = getWalkableIds();
+
+    private boolean[][] walkableTiles;
+
     private Canvas canvas;
     private GraphicsContext gc;
     private Image tileSetImage;
@@ -20,7 +29,7 @@ public class MapView extends Pane {
 
     // Variabili dinamiche
     private int TILE_SIZE;
-    private final int RENDERED_TILE_SIZE = 60;
+    private final int RENDERED_TILE_SIZE = 40;
     private int mapWidthInTiles;
     private int mapHeightInTiles;
     private int tilesetCols; // Contiene le colonne del tileset
@@ -33,7 +42,6 @@ public class MapView extends Pane {
     private double playerY;
 
     public MapView(String mapFilePath, String tileSetImagePath) {
-
         // 1. Caricamento Dati Mappa e Tileset
         if (!loadMapData(mapFilePath)) {
             System.err.println("FATAL: MapView non inizializzata per errore di parsing dati.");
@@ -49,7 +57,10 @@ public class MapView extends Pane {
         // Use fixed rendered tile size (override map's tilewidth for display)
         this.mapWidthInTiles = mapData.getWidth();
         this.mapHeightInTiles = mapData.getHeight();
-
+        this.walkableTiles = new boolean[mapWidthInTiles][mapWidthInTiles];
+        for (int i = 0; i < mapWidthInTiles; i++)
+            for (int j = 0; j < mapHeightInTiles; j++)
+                walkableTiles[i][j] = true;
         // Verifica se l'immagine è stata caricata e se TILE_SIZE è stato letto
         // correttamente.
         if (tileSetImage != null && tileSetImage.getWidth() > 0 && this.TILE_SIZE > 0) {
@@ -80,6 +91,22 @@ public class MapView extends Pane {
     }
 
     // MapView.java
+
+    private static List<Integer> getWalkableIds() {
+        try {
+            URL url = MapView.class.getResource("/maps/punyworld-overworld-tiles.tsx");
+            String content = new String(((BufferedInputStream) url.getContent()).readAllBytes());
+            return Pattern.compile(
+                    "<tile id=\"(\\d*)\">\\s*<properties>\\s*<property name=\"walkable\" type=\"bool\" value=\"true\"/>\\s*</properties>\\s*</tile>")
+                    .matcher(content)
+                    .results()
+                    .map(m -> Integer.parseInt(m.group(1))).collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("oopsies");
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     protected void layoutChildren() {
@@ -114,25 +141,11 @@ public class MapView extends Pane {
      * con limiti ai bordi della mappa.
      */
     private double calculateCameraOffsetY(double paneHeight) {
-        double renderedMapHeight = mapHeightInTiles * RENDERED_TILE_SIZE;
-        double renderedPlayerY = playerY; // already in pixels
-
-        double offsetY = paneHeight / 2 - renderedPlayerY;
-        offsetY = Math.max(offsetY, paneHeight - renderedMapHeight);
-        offsetY = Math.min(offsetY, 0);
-
-        return offsetY;
+        return Math.clamp(paneHeight / 2 - playerY, paneHeight - mapHeightInTiles * RENDERED_TILE_SIZE, 0);
     }
 
     private double calculateCameraOffsetX(double paneWidth) {
-        double renderedMapWidth = mapWidthInTiles * RENDERED_TILE_SIZE;
-        double renderedPlayerX = playerX; // already in pixels
-
-        double offsetX = paneWidth / 2 - renderedPlayerX;
-        offsetX = Math.max(offsetX, paneWidth - renderedMapWidth);
-        offsetX = Math.min(offsetX, 0);
-
-        return offsetX;
+        return Math.clamp(paneWidth / 2 - playerX, paneWidth - mapWidthInTiles * RENDERED_TILE_SIZE, 0);
     }
 
     /** Carica il file TMJ come stream dal classpath. */
@@ -202,7 +215,7 @@ public class MapView extends Pane {
 
                     if (tileIndex >= TILE_ID_OFFSET) {
                         int tileID = tileIndex - TILE_ID_OFFSET;
-
+                        walkableTiles[x][y] = WALKABLE_IDS.contains(tileID);
                         // 1. Calcolo SourceX e SourceY (rimane fisso, non dipende dalla scala)
                         int sourceX = (tileID % tilesetCols) * TILE_SIZE;
                         int sourceY = (tileID / tilesetCols) * TILE_SIZE;
@@ -246,6 +259,10 @@ public class MapView extends Pane {
 
     public double getOffsetY() {
         return lastOffsetY;
+    }
+
+    public boolean[][] getWalkableTiles() {
+        return walkableTiles;
     }
 
     /**
