@@ -37,8 +37,8 @@ public class ExplorationView {
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
         this.party = new Party(gameState.createParty());
         this.enemies = gameState.createEnemy();
-        
-        this.movementController = new MovementController(party, scene, mapView,enemies);
+
+        this.movementController = new MovementController(party, scene, mapView, enemies);
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
@@ -48,7 +48,7 @@ public class ExplorationView {
     public void showMap() {
         this.party.getMembers().forEach(player -> root.getChildren().add(player.getSprite()));
         this.enemies.forEach(enemy -> root.getChildren().add(enemy.getSprite()));
-        
+
         stage.setScene(scene);
         stage.show();
 

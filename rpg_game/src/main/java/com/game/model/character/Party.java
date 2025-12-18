@@ -11,28 +11,29 @@ public class Party {
     }
 
     public void updateFollowPosition(Position newLeaderPos) {
-        Player mainPlayer = getMainPlayer();
+        getMainPlayer().notifyFollower();
+        getMainPlayer().setPosition(newLeaderPos);
+
         // Salviamo i valori
-        int prevX = mainPlayer.getPos().getX();
-        int prevY = mainPlayer.getPos().getY();
+        // int prevX = mainPlayer.getPos().getX();
+        // int prevY = mainPlayer.getPos().getY();
 
         // Muoviamo il leader: lo sprite scatterà automaticamente nella nuova cella
-        mainPlayer.getPos().setX(newLeaderPos.getX());
-        mainPlayer.getPos().setY(newLeaderPos.getY());
+        // mainPlayer.getPos().setX(newLeaderPos.getX());
+        // mainPlayer.getPos().setY(newLeaderPos.getY());
+        // for (int i = 1; i < members.size(); i++) {
+        // Player current = members.get(i);
 
-        for (int i = 1; i < members.size(); i++) {
-            Player current = members.get(i);
+        // int tempX = current.getPos().getX();
+        // int tempY = current.getPos().getY();
 
-            int tempX = current.getPos().getX();
-            int tempY = current.getPos().getY();
+        // // Muoviamo il seguace: lo sprite si sposta da solo
+        // current.getPos().setX(prevX);
+        // current.getPos().setY(prevY);
 
-            // Muoviamo il seguace: lo sprite si sposta da solo
-            current.getPos().setX(prevX);
-            current.getPos().setY(prevY);
-
-            prevX = tempX;
-            prevY = tempY;
-        }
+        // prevX = tempX;
+        // prevY = tempY;
+        // }
     }
 
     public final List<Player> getMembers() {

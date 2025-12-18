@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.game.model.Position;
 import com.game.model.map.LayerData;
 import com.game.model.map.TiledMapData;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class MapView extends Pane {
     private static final List<Integer> WALKABLE_IDS = getWalkableIds();
+    private static final int RENDERED_TILE_SIZE = 40;
 
     private boolean[][] walkableTiles;
 
@@ -29,17 +31,13 @@ public class MapView extends Pane {
 
     // Variabili dinamiche
     private int TILE_SIZE;
-    private final int RENDERED_TILE_SIZE = 40;
     private int mapWidthInTiles;
     private int mapHeightInTiles;
     private int tilesetCols; // Contiene le colonne del tileset
 
-    private double lastOffsetX;
-    private double lastOffsetY;
-
     // Variabili per il tracking del player e scrolling della camera
-    private double playerX;
-    private double playerY;
+    private Position lastOffset = new Position(0, 0);
+    private Position playerPosition = new Position(0, 0);
 
     public MapView(String mapFilePath, String tileSetImagePath) {
         // 1. Caricamento Dati Mappa e Tileset
@@ -90,8 +88,6 @@ public class MapView extends Pane {
         this.getChildren().add(canvas);
     }
 
-    // MapView.java
-
     private static List<Integer> getWalkableIds() {
         try {
             URL url = MapView.class.getResource("/maps/punyworld-overworld-tiles.tsx");
@@ -122,30 +118,24 @@ public class MapView extends Pane {
         }
 
         // Compute smoothed offsets toward target
-        double targetOffsetX = calculateCameraOffsetX(paneWidth);
-        double targetOffsetY = calculateCameraOffsetY(paneHeight);
+        Position targetOffset = calculateCameraOffset(paneWidth, paneHeight);
+        // double targetOffsetX = calculateCameraOffsetX(paneWidth);
+        // double targetOffsetY = calculateCameraOffsetY(paneHeight);
         final double SMOOTHING = 0.18;
-        double offsetX = lastOffsetX + (targetOffsetX - lastOffsetX) * SMOOTHING;
-        double offsetY = lastOffsetY + (targetOffsetY - lastOffsetY) * SMOOTHING;
-
+        Position offset = lastOffset.scale(1 - SMOOTHING).add(targetOffset.scale(SMOOTHING));
         // Draw map with computed offsets
-        drawMap(offsetX, offsetY);
+        drawMap(offset);
 
         // Save state
-        this.lastOffsetX = offsetX;
-        this.lastOffsetY = offsetY;
+        this.lastOffset = offset;
     }
 
-    /**
-     * Calcola l'offset della camera sull'asse Y per mantenere il player al centro,
-     * con limiti ai bordi della mappa.
-     */
-    private double calculateCameraOffsetY(double paneHeight) {
-        return Math.clamp(paneHeight / 2 - playerY, paneHeight - mapHeightInTiles * RENDERED_TILE_SIZE, 0);
-    }
-
-    private double calculateCameraOffsetX(double paneWidth) {
-        return Math.clamp(paneWidth / 2 - playerX, paneWidth - mapWidthInTiles * RENDERED_TILE_SIZE, 0);
+    private Position calculateCameraOffset(double width, double height) {
+        double x = Math.clamp(width / 2 - playerPosition.getX(), width - mapWidthInTiles * RENDERED_TILE_SIZE,
+                0);
+        double y = Math.clamp(height / 2 - playerPosition.getY(), height - mapHeightInTiles * RENDERED_TILE_SIZE,
+                0);
+        return new Position(x, y);
     }
 
     /** Carica il file TMJ come stream dal classpath. */
@@ -186,7 +176,7 @@ public class MapView extends Pane {
     // METODO DI DISEGNO (RENDERING)
     // ----------------------------------------------------------------------
 
-    private void drawMap(double offsetX, double offsetY) {
+    private void drawMap(Position offset) {
         if (mapData == null || tileSetImage == null || tilesetCols == 0) {
             // Pulisci il Canvas se qualcosa è fallito (lo rende trasparente)
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -227,10 +217,10 @@ public class MapView extends Pane {
                                 TILE_SIZE, TILE_SIZE, // Dimensione Sorgente (originale)
 
                                 // Coordinate Destinazione (Scala applicata + Offset per centrare)
-                                offsetX + x * this.RENDERED_TILE_SIZE,
-                                offsetY + y * this.RENDERED_TILE_SIZE,
+                                offset.getX() + x * RENDERED_TILE_SIZE,
+                                offset.getY() + y * RENDERED_TILE_SIZE,
 
-                                this.RENDERED_TILE_SIZE, this.RENDERED_TILE_SIZE // Dimensione Destinazione (scalata)
+                                RENDERED_TILE_SIZE, RENDERED_TILE_SIZE // Dimensione Destinazione (scalata)
                         );
                     }
                 }
@@ -253,25 +243,16 @@ public class MapView extends Pane {
         return mapHeightInTiles * RENDERED_TILE_SIZE;
     }
 
-    public double getOffsetX() {
-        return lastOffsetX;
-    }
-
-    public double getOffsetY() {
-        return lastOffsetY;
+    public Position getOffset() {
+        return lastOffset;
     }
 
     public boolean[][] getWalkableTiles() {
         return walkableTiles;
     }
 
-    /**
-     * Aggiorna la posizione del player (in pixel della mappa originale).
-     * Chiama requestLayout() per triggerare il re-rendering.
-     */
-    public void updatePlayerPosition(double x, double y) {
-        this.playerX = x;
-        this.playerY = y;
-        requestLayout(); // Forza il layout e il re-rendering
+    public void updatePlayerPosition(Position pos) {
+        this.playerPosition = pos;
+        requestLayout();
     }
 }

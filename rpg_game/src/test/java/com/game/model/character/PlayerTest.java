@@ -13,34 +13,36 @@ public class PlayerTest {
 
     @Test
     public void testAddXp() {
-        int xp= 10;
-        Player player= setUpPlayer(null);
+        int xp = 10;
+        Player player = setUpPlayer(null);
 
         player.addXp(xp);
 
         assertEquals(xp, player.getXp());
     }
 
-    //Passa dalla view
-    /*@Test
-    public void testCreateTestPlayers() {
-        Job j1= Job.ARCHER;
-        Job j2= Job.WARRIOR;
-        Player p1= new Player(j1, new Position(j1.getX(), 0));
-        Player p2= new Player(j2, new Position(j2.getX(), 0));
-        GameState gameState= new GameState(2, false);
-        GameController gameController= new GameController(mock(Stage.class));
+    // Passa dalla view
+    /*
+     * @Test
+     * public void testCreateTestPlayers() {
+     * Job j1= Job.ARCHER;
+     * Job j2= Job.WARRIOR;
+     * Player p1= new Player(j1, new Position(j1.getX(), 0));
+     * Player p2= new Player(j2, new Position(j2.getX(), 0));
+     * GameState gameState= new GameState(2, false);
+     * GameController gameController= new GameController(mock(Stage.class));
+     * 
+     * Player.createTestPlayers(null)
+     * }
+     */
 
-        Player.createTestPlayers(null)
-    }*/
-
-    //Not yet implemented
+    // Not yet implemented
     @Test
     public void testEquipItem() {
 
     }
 
-    //Not yet implemented
+    // Not yet implemented
     @Test
     public void testLearnAbility() {
 
@@ -48,22 +50,22 @@ public class PlayerTest {
 
     @Test
     public void testNotifyFollower() {
-        Position p1pos= new Position(300, 100);
-        Position p2pos= new Position(240,100);
-        Position p3pos= new Position(180,100);
-        Position p4pos= new Position(120,100);
-        Player p1= setUpPlayer(p1pos);
-        Player p2= setUpPlayer(p2pos);
-        Player p3= setUpPlayer(p3pos);
-        Player p4= setUpPlayer(p4pos);
+        Position p1pos = new Position(300, 100);
+        Position p2pos = new Position(240, 100);
+        Position p3pos = new Position(180, 100);
+        Position p4pos = new Position(120, 100);
+        Player p1 = setUpPlayer(p1pos);
+        Player p2 = setUpPlayer(p2pos);
+        Player p3 = setUpPlayer(p3pos);
+        Player p4 = setUpPlayer(p4pos);
         p1.subscribeToFollowed(p2);
         p2.subscribeToFollowed(p3);
         p3.subscribeToFollowed(p4);
 
         p1.notifyFollower();
 
-        assertEquals(240, p2.getPos().getX());
-        assertEquals(180, p3.getPos().getX());
-        assertEquals(120, p4.getPos().getX());
+        assertEquals(240, (int) p2.getPos().getX());
+        assertEquals(180, (int) p3.getPos().getX());
+        assertEquals(120, (int) p4.getPos().getX());
     }
 }

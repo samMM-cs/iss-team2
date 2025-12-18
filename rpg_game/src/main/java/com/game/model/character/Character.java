@@ -9,40 +9,45 @@ import javafx.scene.image.ImageView;
 import com.game.model.Position;
 
 public abstract class Character {
-  private Job job;
-  private Position pos;
-  private ImageView sprite;
-  List<Ability> abilities;
+    private Job job;
+    private Position pos;
 
-  public Character(Job job, Position pos, Image img) {
-    this.job = job;
-    this.pos = pos;
-    this.sprite = createCharacterSprite(img, job);
-  }
+    private ImageView sprite;
+    List<Ability> abilities;
 
-  public ImageView createCharacterSprite(Image img, Job job) {
-    this.sprite = new ImageView(img);
+    public Character(Job job, Position pos, Image img) {
+        this.job = job;
+        this.pos = pos;
+        this.sprite = createCharacterSprite(img, job);
+    }
 
-    Rectangle2D viewPort = new Rectangle2D(job.getX(), job.getY(), Job.SIZE, Job.SIZE);
+    public ImageView createCharacterSprite(Image img, Job job) {
+        this.sprite = new ImageView(img);
 
-    this.sprite.setViewport(viewPort);
-    return this.sprite;
-  }
+        Rectangle2D viewPort = new Rectangle2D(job.getX(), job.getY(), Job.SIZE, Job.SIZE);
 
-  public Job getJob() {
-    return job;
-  }
+        this.sprite.setViewport(viewPort);
+        return this.sprite;
+    }
 
-  public Position getPos() {
-    return pos;
-  }
+    public Job getJob() {
+        return job;
+    }
 
-  public ImageView getSprite() {
-    return sprite;
-  }
+    public Position getPos() {
+        return pos;
+    }
 
-  public final List<Ability> getAbilities() {
-    return this.abilities;
-  }
+    public ImageView getSprite() {
+        return sprite;
+    }
+
+    public final List<Ability> getAbilities() {
+        return this.abilities;
+    }
+
+    protected void setPos(Position pos) {
+        this.pos = pos;
+    }
 
 }

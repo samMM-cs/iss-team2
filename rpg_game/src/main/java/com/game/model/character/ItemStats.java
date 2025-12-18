@@ -1,19 +1,19 @@
 package com.game.model.character;
 
 public class ItemStats {
-  private int damage;
-  private int cure;
-  private int durability;
+    private int damage;
+    private int cure;
+    private int durability;
 
-  public int getCure() {
-    return cure;
-  }
+    public int getCure() {
+        return cure;
+    }
 
-  public int getDamage() {
-    return damage;
-  }
+    public int getDamage() {
+        return damage;
+    }
 
-  public int getDurability() {
-    return durability;
-  }
+    public int getDurability() {
+        return durability;
+    }
 }

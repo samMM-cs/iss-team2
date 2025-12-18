@@ -1,48 +1,60 @@
 package com.game.model;
 
 public class Position {
-  private int x;
-  private int y;
+    private double x;
+    private double y;
 
-  public Position(int x, int y) {
-    this.x = x;
-    this.y = y;
-  }
+    public Position(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
 
-  public int getX() {
-    return x;
-  }
+    public double getX() {
+        return x;
+    }
 
-  public int getY() {
-    return y;
-  }
+    public double getY() {
+        return y;
+    }
 
-  public Position add(int x, int y) {
-    return new Position(this.x + x, this.y + y);
-  }
+    public Position add(double x, double y) {
+        return new Position(this.x + x, this.y + y);
+    }
 
-  public Position clamp(double xLimit, double yLimit) {
-    return new Position((int) Math.round(Math.clamp(x, 0, xLimit)),
-        (int) Math.round(Math.clamp(y, 0, yLimit)));
-  }
+    public Position add(Position pos) {
+        return add(pos.getX(), pos.getY());
+    }
 
-  public boolean isInside(Position posLimit) {
-    int xLimit = posLimit.getX();
-    int yLimit = posLimit.getY();
-    return 0 <= x && x <= xLimit && 0 <= y && y <= yLimit;
-  }
+    public Position scale(double s) {
+        return new Position(x * s, y * s);
+    }
 
-  public void setX(int x) {
-    this.x = x;
-  }
+    public Position clamp(double xLimit, double yLimit) {
+        return clamp(0, 0, xLimit, yLimit);
+    }
 
-  public void setY(int y) {
-    this.y = y;
-  }
+    public Position clamp(double xMin, double xMax, double xLimit, double yLimit) {
+        return new Position(Math.round(Math.clamp(x, xMin, xLimit)),
+                Math.round(Math.clamp(y, xMax, yLimit)));
+    }
 
-  @Override
-  public String toString() {
-    return "Position(" + x + ", " + y + ")";
-  }
+    public boolean isInside(Position posLimit) {
+        double xLimit = posLimit.getX();
+        double yLimit = posLimit.getY();
+        return 0 <= x && x <= xLimit && 0 <= y && y <= yLimit;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "Position(" + x + ", " + y + ")";
+    }
 
 }

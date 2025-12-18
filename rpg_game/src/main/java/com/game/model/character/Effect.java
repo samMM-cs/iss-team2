@@ -1,14 +1,14 @@
 package com.game.model.character;
 
 public class Effect {
-  private int power;
-  private StatusType status;
+   private int power;
+   private StatusType status;
 
-  public int getPower() {
-    return power;
-  }
+   public int getPower() {
+      return power;
+   }
 
-  public StatusType getStatus() {
-    return status;
-  }
+   public StatusType getStatus() {
+      return status;
+   }
 }
