@@ -1,0 +1,79 @@
+@startuml GameLauncher
+
+title GameLauncher
+
+class Client{
+    + main(): void
+}
+Client-->GameLauncher: calls getIstance()
+
+class GameLauncher{
+    - static instance : GameLauncher
+    - GameLauncher()
+    +static getIstance(): GameLauncher
+    + launch() : void
+}
+
+class MainMenu{
+    +show() : void
+}
+
+GameLauncher-->MainMenu: launch
+
+abstract class GameCreator{
+    + createGame(): Game
+}
+
+class NewGameCreator{
+    + createGame(): Game
+}
+
+class ContinueGameCreator{
+    + createGame(): Game
+}
+
+GameCreator -down-> NewGameCreator
+GameCreator -down-> ContinueGameCreator
+GameCreator --> Game : create
+
+abstract class Game{
+    - GameState: gameState
+}
+
+class NewGame{}
+class ContinueGame{}
+
+class NewGame {}
+class ContinueGame {}
+
+Game <|-- NewGame
+Game <|-- ContinueGame
+
+class NewGameView {
+    + render(): void
+}
+class SaveMenuView {
+    + render(): void
+}
+
+NewGame --> NewGameView
+ContinueGameCreator --> SaveMenuView
+
+' ===== Singleton GameInstance =====
+class GameInstance {
+    - static instance: GameInstance
+    - gameCreator: GameCreator
+    + getInstance(): GameInstance
+}
+
+GameInstance --> GameCreator
+GameInstance --> GameInstance
+
+class MainMenuController{
+    + handleSelection(option: String): void
+}
+
+MainMenu --> MainMenuController : user input
+MainMenuController --> GameCreator : createGame()
+MainMenuController --> GameView : render()
+@enduml
