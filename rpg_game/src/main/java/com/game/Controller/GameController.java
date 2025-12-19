@@ -6,15 +6,19 @@ import com.game.model.GameStateBuilder;
 import com.game.view.CharacterSelectionView;
 import com.game.view.mapview.ExplorationView;
 import com.game.model.character.Job;
+import com.game.model.creator.Game;
+import com.game.model.creator.NewGame;
 
 import javafx.stage.Stage;
 
 public class GameController {
     private GameState gameState;
+    private Game game;
     private Stage stage;
 
-    public GameController(Stage stage) {
+    public GameController(Stage stage, Game game) {
         this.stage = stage;
+        this.game = game;
     }
 
     public void start() {
@@ -22,8 +26,11 @@ public class GameController {
             System.err.println("Stage nullo in GameController");
             return;
         }
-        NewGameView view = new NewGameView(stage, this);
-        view.show();
+        if (game instanceof NewGame) {
+            NewGameView view = new NewGameView(stage, this);
+            view.show();
+        } else
+            startExploration();
     }
 
     public void onNewGameConfirmed(int players, boolean autoSave) {

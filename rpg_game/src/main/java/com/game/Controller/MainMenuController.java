@@ -1,5 +1,9 @@
 package com.game.controller;
 
+import com.game.model.creator.GameCreator;
+import com.game.model.creator.NewGameCreator;
+import com.game.model.creator.Game;
+
 import javafx.event.ActionEvent;
 import javafx.stage.*;
 
@@ -16,21 +20,12 @@ public class MainMenuController {
             System.err.println("Stage null in MainMenuController");
             return;
         }
-            System.out.println("Avvio nuova partita");
+        System.out.println("Avvio nuova partita");
 
-            GameController gameController = new GameController(stage);
-            gameController.start();
-
-        /*
-         * NewGameViewCreator newGameViewCreator= new NewGameViewCreator(stage);
-         * GameView newGameView = newGameViewCreator.createGameView();
-         * newGameView.load();
-         */
-
-        /*
-         * ExplorationView map = new ExplorationView(stage);
-         * map.showMap();
-         */
+        GameCreator gameCreator = new NewGameCreator();
+        Game newGame = gameCreator.createGame();
+        GameController gameController = new GameController(stage,newGame);
+        gameController.start();
     }
 
     public void resumeGame(ActionEvent event) {
