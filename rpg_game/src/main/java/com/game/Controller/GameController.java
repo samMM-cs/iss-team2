@@ -2,6 +2,7 @@ package com.game.controller;
 
 import com.game.view.gameview.NewGameView;
 import com.game.model.GameState;
+import com.game.model.GameStateBuilder;
 import com.game.view.CharacterSelectionView;
 import com.game.view.mapview.ExplorationView;
 import com.game.model.character.Job;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 public class GameController {
     private GameState gameState;
     private Stage stage;
-
 
     public GameController(Stage stage) {
         this.stage = stage;
@@ -32,7 +32,7 @@ public class GameController {
             return;
         }
 
-        gameState = new GameState(players, autoSave);
+        gameState = new GameStateBuilder().setNPlayers(players).enableAutoSave(autoSave).build();
         goToCharacterSelection(); // Passa alla selezione dei personaggi
     }
 
@@ -48,20 +48,22 @@ public class GameController {
     public void onCharacterSelected(Job job) {
         if (gameState != null)
             gameState.selectCharacter(job);
-        if (gameState.allCharactersSelected()) {
-            gameState.createParty();
+        if (gameState.allCharactersSelected())
             startExploration();
-        }
     }
 
     // Avvia l'esplorazione della mappa
     public void startExploration() {
-        if (gameState != null) {
+        if (gameState != null && stage != null) {
+            gameState.createEnemy();
+            gameState.createParty();
             ExplorationView explorationView = new ExplorationView(stage, this, gameState);
             explorationView.showMap();
         }
     }
 
     public void handleStoryChoice(String choice) {
+        if (gameState != null)
+            gameState.applyChoices(choice);
     }
 }
