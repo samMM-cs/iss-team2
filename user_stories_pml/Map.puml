@@ -1,0 +1,20 @@
+@startuml Map
+
+  class MapBuilder {
+    - MapView map
+    + addLayer(layer)
+    + build()
+  }
+
+  class ExplorationView {
+    + renderMap()
+  }
+
+  class MovementController {
+    + movePlayer(direction)
+    + updatePartyFollow()
+  }
+
+  ExplorationView --> MovementController
+  ExplorationView --> MapBuilder
+@enduml
