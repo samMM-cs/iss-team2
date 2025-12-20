@@ -1,18 +1,29 @@
 package com.game.view;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import com.game.controller.GameController;
 import com.game.model.character.Job;
 import com.game.view.gameview.*;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -54,12 +65,8 @@ public class CharacterSelectionView extends GameView {
             }
         }
 
-        startGameBtn = new Button("Start Game");
+        startGameBtn = createButton(new Button(), "Start", "/Default.png");
         startGameBtn.setDisable(true);
-        startGameBtn.setStyle("""
-                    -fx-font-size: 16;
-                    -fx-padding: 10 25;
-                """);
         startGameBtn.setOnAction(e -> gameController.startExploration());
 
         ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
@@ -99,11 +106,13 @@ public class CharacterSelectionView extends GameView {
                     -fx-background-radius: 10;
                 """);
 
-        /*Tooltip tool = new Tooltip("Classe: " + job.name() + "\n" +
-                "HP: " + job.getHp() + "\n" +
-                "ATK: " + job.getAttack() + "\n" +
-                "SPD: " + job.getSpeed());
-        Tooltip.install(card, tool);*/
+        /*
+         * Tooltip tool = new Tooltip("Classe: " + job.name() + "\n" +
+         * "HP: " + job.getHp() + "\n" +
+         * "ATK: " + job.getAttack() + "\n" +
+         * "SPD: " + job.getSpeed());
+         * Tooltip.install(card, tool);
+         */
 
         // Hover effect
         card.setOnMouseEntered(e -> {
@@ -149,6 +158,29 @@ public class CharacterSelectionView extends GameView {
                     """);
         startGameBtn.setDisable(false);
         gameController.onCharacterSelected(job);
+    }
+
+    private <T extends ButtonBase> T createButton(T btn, String txt, String path) {
+        ImageView imgBtn = new ImageView(new Image(getClass().getResourceAsStream(path)));
+        BackgroundImage bgImgBtn = new BackgroundImage(imgBtn.getImage(), BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
+        btn.setText(txt);
+        btn.setBackground(new Background(bgImgBtn));
+        btn.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        btn.setPrefSize(200, 70);
+        btn.setAlignment(Pos.CENTER);
+        btn.setPadding(new Insets(0));
+        btn.setContentDisplay(ContentDisplay.CENTER);
+
+        // Effetto click
+        btn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> btn.setScaleX(0.95));
+        btn.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> btn.setScaleY(0.95));
+        btn.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+            btn.setScaleX(1);
+            btn.setScaleY(1);
+        });
+        return btn;
     }
 
     @Override

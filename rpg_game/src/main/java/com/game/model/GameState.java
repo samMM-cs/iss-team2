@@ -64,9 +64,8 @@ public class GameState {
             Position pos = new Position(selectedCharacters.size() - i - 1, 7);
 
             Player p = new Player(selectedJob, pos);
-            if (i > 0) {
+            if (i > 0)
                 p.subscribeToFollowed(players.get(i - 1));
-            }
             players.add(p);
         }
         this.party = new Party(players);
@@ -80,7 +79,6 @@ public class GameState {
         for (int i = 0; i < enemiesJob.size(); i++) {
             Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
             Enemy e = new Enemy(enemiesJob.get(i), newPos);
-
             enemies.add(e);
         }
     }

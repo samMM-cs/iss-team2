@@ -16,7 +16,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.input.MouseEvent;
 
@@ -27,8 +27,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
@@ -48,82 +47,80 @@ public class NewGameView extends GameView {
             System.err.println("Stage null in NewGameView");
             return;
         }
-        System.out.println("Sei nella newGameView!");
 
-        RadioButton player1 = new RadioButton("1 Player");
-        RadioButton player2 = new RadioButton("2 Player");
-        RadioButton player3 = new RadioButton("3 Player");
-        RadioButton player4 = new RadioButton("4 Player");
-        player2.setSelected(true);
+        // ===== PLAYER BUTTONS (GAME STYLE) =====
+        ToggleButton player1 = createButton(new ToggleButton(), "1 PLAYER", "/Default.png");
+        ToggleButton player2 = createButton(new ToggleButton(), "2 PLAYER", "/Default.png");
+        ToggleButton player3 = createButton(new ToggleButton(), "3 PLAYER", "/Default.png");
+        ToggleButton player4 = createButton(new ToggleButton(), "4 PLAYER", "/Default.png");
 
-        ToggleGroup nPlayers = new ToggleGroup();
-        player1.setToggleGroup(nPlayers);
-        player2.setToggleGroup(nPlayers);
-        player3.setToggleGroup(nPlayers);
-        player4.setToggleGroup(nPlayers);
+        player1.setUserData(1);
+        player2.setUserData(2);
+        player3.setUserData(3);
+        player4.setUserData(4);
 
-        RadioButton[] players = { player1, player2, player3, player4 };
-        for (RadioButton rb : players) {
-            rb.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
-            rb.setOnMouseEntered(e -> rb.setStyle("-fx-text-fill: gold; -fx-font-size: 16;"));
-            rb.setOnMouseExited(e -> rb.setStyle("-fx-text-fill: white; -fx-font-size: 16;"));
+        ToggleGroup group = new ToggleGroup();
+        player1.setToggleGroup(group);
+        player2.setToggleGroup(group);
+        player3.setToggleGroup(group);
+        player4.setToggleGroup(group);
+
+        player2.setSelected(true); // default
+
+        ToggleButton[] players = { player1, player2, player3, player4 };
+
+        // Effetto selezione visiva
+        for (ToggleButton btn : players) {
+            btn.setStyle("-fx-text-fill: white;");
+
+            btn.selectedProperty().addListener((obs, oldVal, selected) -> {
+                if (selected) {
+                    btn.setScaleX(1.1);
+                    btn.setScaleY(1.1);
+                    btn.setStyle("-fx-text-fill: black;");
+                } else {
+                    btn.setScaleX(1);
+                    btn.setScaleY(1);
+                    btn.setStyle("-fx-text-fill: white;");
+                }
+            });
         }
 
-        Button confirm = createButton(new Button(), "Confirm", "/Default.png");
-        confirm.setAlignment(Pos.CENTER);
+        HBox playerBox = new HBox(25, players);
+        playerBox.setAlignment(Pos.CENTER);
 
-        VBox nPlayersButtons = new VBox(15, players);
-        nPlayersButtons.setAlignment(Pos.CENTER_LEFT);
+        // ===== AUTOSAVE =====
+        CheckBox autoSave = new CheckBox("AUTO SAVE");
+        autoSave.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
 
-        CheckBox autoSaveEnabler = new CheckBox("AutoSave");
-        autoSaveEnabler.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
-        autoSaveEnabler.setOnMouseEntered(e -> autoSaveEnabler.setStyle("-fx-text-fill: gold; -fx-font-size: 16;"));
-        autoSaveEnabler.setOnMouseExited(e -> autoSaveEnabler.setStyle("-fx-text-fill: white; -fx-font-size: 16;"));
+        // ===== CONFIRM BUTTON =====
+        Button confirm = createButton(new Button(), "START", "/Default.png");
 
-        confirm.setOnAction(event -> {
-            int player = getSelectedPlayers(nPlayers);
-            gameController.onNewGameConfirmed(player, autoSaveEnabler.isSelected());
+        confirm.setOnAction(e -> {
+            int selectedPlayers = getSelectedPlayers(group);
+            gameController.onNewGameConfirmed(selectedPlayers, autoSave.isSelected());
         });
 
-        GridPane availableChoicesGrid = new GridPane();
+        // ===== MAIN MENU LAYOUT =====
+        VBox menu = new VBox(35, playerBox, autoSave, confirm);
+        menu.setAlignment(Pos.CENTER);
 
-        availableChoicesGrid.setHgap(50); // spazio tra colonne
-        availableChoicesGrid.setVgap(20); // spazio tra righe
-        availableChoicesGrid.setAlignment(Pos.CENTER);
+        // ===== BACKGROUND =====
+        ImageView bg = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
+        Rectangle overlay = new Rectangle(800, 600, Color.rgb(0, 0, 0, 0.5));
 
-        // Colonna sinistra (nPlayers)
-        availableChoicesGrid.add(nPlayersButtons, 0, 0);
-
-        // Colonna destra (autoSave)
-        availableChoicesGrid.add(autoSaveEnabler, 1, 0);
-
-        // Bottone sotto (su 2 colonne)
-        availableChoicesGrid.add(confirm, 0, 1, 2, 1);
-        GridPane.setHalignment(confirm, HPos.CENTER);
-
-        ImageView imgSfondo = null;
-        try {
-            imgSfondo = new ImageView(new Image(getClass().getResourceAsStream("/Forest.png")));
-        } catch (Exception e) {
-            System.err.println("Errore nel caricamento del background, immagine non trovata");
-        }
-
-        Rectangle overlay = new Rectangle(800, 600, Color.rgb(0, 0, 0, 0.4));
-
-        StackPane root = (imgSfondo != null) ? new StackPane(imgSfondo, overlay, availableChoicesGrid)
-                : new StackPane(overlay, availableChoicesGrid);
-
+        StackPane root = new StackPane(bg, overlay, menu);
         Scene scene = new Scene(root, 800, 600);
 
-        // Adatto lo sfondo rispetto alla dimensione della finestra
-        imgSfondo.fitHeightProperty().bind(scene.heightProperty());
-        imgSfondo.fitWidthProperty().bind(scene.widthProperty());
+        bg.fitWidthProperty().bind(scene.widthProperty());
+        bg.fitHeightProperty().bind(scene.heightProperty());
+        overlay.widthProperty().bind(scene.widthProperty());
+        overlay.heightProperty().bind(scene.heightProperty());
 
-        stage.setResizable(true);
         stage.setScene(scene);
         stage.show();
 
-        FadeTransition ft = new FadeTransition(Duration.seconds(1),availableChoicesGrid);
+        FadeTransition ft = new FadeTransition(Duration.seconds(1), menu);
         ft.setFromValue(0);
         ft.setToValue(1);
         ft.play();
@@ -132,8 +129,7 @@ public class NewGameView extends GameView {
     private int getSelectedPlayers(ToggleGroup group) {
         if (group.getSelectedToggle() == null)
             return -1;
-        String txt = ((RadioButton) group.getSelectedToggle()).getText();
-        return Integer.parseInt(txt.split(" ")[0]);
+        return (int) group.getSelectedToggle().getUserData();
     }
 
     private <T extends ButtonBase> T createButton(T btn, String txt, String path) {
