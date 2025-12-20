@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MagicAttackMove extends OffensiveMove {
+    public MagicAttackMove(Move move) {
+        this.move= move;
+    }
+    
     @Override
     public List<Integer> calculateDamage(CharacterPG user, List<CharacterPG> target) {
         List<Integer> res= new ArrayList<>(target.size());

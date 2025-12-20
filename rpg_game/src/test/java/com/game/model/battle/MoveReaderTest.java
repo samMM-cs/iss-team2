@@ -17,6 +17,7 @@ public class MoveReaderTest {
         
 
         assertNotNull(moveList);
+        assertEquals(2, moveList.size());
         assertEquals(moveTest1, moveList.get(0));
         assertEquals(moveTest2, moveList.get(1));
     }

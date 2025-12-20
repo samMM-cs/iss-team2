@@ -51,6 +51,7 @@ public class GameStateBuilder {
     }
 
     public GameState build() {
-        return new GameState(this);
+        //return new GameState(this);
+        return null;
     }
 }

@@ -44,8 +44,11 @@ public class ExplorationView {
     }
 
     public void showMap() {
-        this.party.getMembers().forEach(player -> mapView.addSprite(player.getSprite()));
-        this.enemies.forEach(enemy -> mapView.addSprite(enemy.getSprite()));
+        /*this.party.getMembers().forEach(player -> mapView.addSprite(player.getSprite()));
+        this.enemies.forEach(enemy -> mapView.addSprite(enemy.getSprite()));*/
+
+        this.party.getMembers().forEach(player -> root.getChildren().add(player.getSprite()));
+        this.enemies.forEach(enemy -> root.getChildren().add(enemy.getSprite()));
 
         stage.setScene(scene);
         stage.show();
