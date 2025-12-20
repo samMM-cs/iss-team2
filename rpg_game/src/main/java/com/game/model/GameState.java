@@ -3,10 +3,13 @@ package com.game.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import com.game.model.character.Enemy;
 import com.game.model.character.Player;
+//import com.game.model.creator.Game;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
+import com.game.model.character.Inventory;
 
 public class GameState {
     private final int nPlayers;
@@ -14,17 +17,24 @@ public class GameState {
     private final List<Job> selectedCharacters;
     private final List<Enemy> enemies;
     private Party party;
+    private Inventory inventory;
     private final Map<Event, Boolean> storyFlags;
     private final WorldPosition worldPosition;
+    private static GameState instance;
 
     // Costruttore privato, il Builder lo costruisce
-    GameState(GameStateBuilder builder) {
+    private GameState(GameStateBuilder builder) {
         this.nPlayers = builder.nPlayers;
         this.autoSaveEnabled = builder.autoSaveEnabled;
         this.selectedCharacters = builder.selectedCharacters;
+        this.inventory= builder.inventory;
         this.storyFlags = builder.storyFlags;
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
+    }
+
+    public static GameState getInstance() {
+        return GameState.instance;
     }
 
     public int getNPlayers() {
@@ -107,5 +117,63 @@ public class GameState {
 
     public WorldPosition getWorldPosition() {
         return worldPosition;
+    }
+
+    //----------------------------------------------------------------------------------------
+
+    public static class GameStateBuilder {
+        public int nPlayers = 2;
+        public boolean autoSaveEnabled = false;
+        public List<Job> selectedCharacters = new ArrayList<>();
+        public List<Enemy> enemies = new ArrayList<>();
+        public Inventory inventory;
+        public Map<Event, Boolean> storyFlags = new HashMap<>();
+        public WorldPosition worldPosition = new WorldPosition();
+
+        public GameStateBuilder setNPlayers(int nPlayers) {
+            this.nPlayers = nPlayers;
+            return this;
+        }
+
+        public GameStateBuilder enableAutoSave(boolean autoSave) {
+            this.autoSaveEnabled = autoSave;
+            return this;
+        }
+
+        public GameStateBuilder setSelectedCharacters(List<Job> characters) {
+            this.selectedCharacters = characters;
+            return this;
+        }
+
+        public GameStateBuilder setEnemies(List<Enemy> enemies) {
+            this.enemies = enemies;
+            return this;
+        }
+
+        public GameStateBuilder setInventory() {
+            this.inventory= new Inventory();
+            return this;
+        }
+
+        public GameStateBuilder setStoryFlags(Map<Event, Boolean> flags) {
+            this.storyFlags = flags;
+            return this;
+        }
+
+        public GameStateBuilder setWorldPosition(WorldPosition pos) {
+            this.worldPosition = pos;
+            return this;
+        }
+
+        public boolean allCharactersSelected() {
+            return selectedCharacters.size() == nPlayers;
+        }
+
+        public GameState build() {
+            if (GameState.instance== null) {
+                GameState.instance= new GameState(this);
+            }
+            return GameState.instance;
+        }
     }
 }

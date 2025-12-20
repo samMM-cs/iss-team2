@@ -2,29 +2,47 @@ package com.game.model.battle;
 
 import java.util.List;
 
-import com.game.model.character.Enemy;
+import com.game.model.character.CharacterPG;
 import com.game.model.character.Player;
+import com.game.model.GameState;
 
 public class Battle{
-    private List<Player> party;
-    private List<Enemy> enemies;
+    private GameState gameState;
     private int turnIndex;
+    private TurnStrategy turnStrategy;
+    private RewardStrategy rewardStrategy;
 
-    public Battle(List<Player> party, List<Enemy> enemies, int turnIndex) {
-        this.party = party;
-        this.enemies = enemies;
+    public Battle(GameState gameState,
+        int turnIndex,
+        TurnStrategy turnStrategy,
+        RewardStrategy rewardStrategy) {
+        this.gameState= gameState;
         this.turnIndex = turnIndex;
-    }
-
-    public final List<Enemy> getEnemies() {
-        return this.enemies;
-    }
-
-    public final List<Player> getParty() {
-        return this.party;
     }
 
     public final int getTurnIndex() {
         return this.turnIndex;
+    }
+
+    public boolean isBattleOver() {
+        for (CharacterPG player : this.gameState.getParty().getMembers()) {
+            if (player.getCurrentStats().hp() == 0) {
+                return true;
+            }
+        }
+        for (CharacterPG c : this.gameState.getEnemies()) {
+            if (c.getCurrentStats().hp() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void endBattle() {
+
+    }
+
+    public void assignRewards() {
+        rewardStrategy.calculateRewards(this.gameState.getEnemies());
     }
 }
