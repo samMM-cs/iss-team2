@@ -29,14 +29,13 @@ public class ExplorationView {
         this.stage = stage;
         if (stage == null)
             return;
-
         // Crea la MapView
         this.mapView = new MapView(MAP_FILE_PATH, TILESET_IMAGE_PATH);
 
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
-        this.party = new Party(gameState.createParty());
-        this.enemies = gameState.createEnemy();
+        this.party = gameState.getParty();
+        this.enemies = gameState.getEnemies();
 
         this.movementController = new MovementController(party, scene, mapView, enemies);
 

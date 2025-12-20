@@ -2,19 +2,23 @@ package com.game.controller;
 
 import com.game.view.gameview.NewGameView;
 import com.game.model.GameState;
+import com.game.model.GameStateBuilder;
 import com.game.view.CharacterSelectionView;
 import com.game.view.mapview.ExplorationView;
 import com.game.model.character.Job;
+import com.game.model.creator.Game;
+import com.game.model.creator.NewGame;
 
 import javafx.stage.Stage;
 
 public class GameController {
     private GameState gameState;
+    private Game game;
     private Stage stage;
 
-
-    public GameController(Stage stage) {
+    public GameController(Stage stage, Game game) {
         this.stage = stage;
+        this.game = game;
     }
 
     public void start() {
@@ -22,8 +26,11 @@ public class GameController {
             System.err.println("Stage nullo in GameController");
             return;
         }
-        NewGameView view = new NewGameView(stage, this);
-        view.show();
+        if (game instanceof NewGame) {
+            NewGameView view = new NewGameView(stage, this);
+            view.show();
+        } else
+            startExploration();
     }
 
     public void onNewGameConfirmed(int players, boolean autoSave) {
@@ -32,7 +39,7 @@ public class GameController {
             return;
         }
 
-        gameState = new GameState(players, autoSave);
+        gameState = new GameStateBuilder().setNPlayers(players).enableAutoSave(autoSave).build();
         goToCharacterSelection(); // Passa alla selezione dei personaggi
     }
 
@@ -48,20 +55,22 @@ public class GameController {
     public void onCharacterSelected(Job job) {
         if (gameState != null)
             gameState.selectCharacter(job);
-        if (gameState.allCharactersSelected()) {
-            gameState.createParty();
+        if (gameState.allCharactersSelected())
             startExploration();
-        }
     }
 
     // Avvia l'esplorazione della mappa
     public void startExploration() {
-        if (gameState != null) {
+        if (gameState != null && stage != null) {
+            gameState.createEnemy();
+            gameState.createParty();
             ExplorationView explorationView = new ExplorationView(stage, this, gameState);
             explorationView.showMap();
         }
     }
 
     public void handleStoryChoice(String choice) {
+        if (gameState != null)
+            gameState.applyChoices(choice);
     }
 }
