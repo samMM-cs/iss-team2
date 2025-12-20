@@ -76,4 +76,49 @@ class MainMenuController{
 MainMenu --> MainMenuController : user input
 MainMenuController --> GameCreator : createGame()
 MainMenuController --> GameView : render()
+
+'Choose character job'
+abstract class Character{
+    - job: Job
+    -baseStats: Stats
+    -currentStats: Stats
+    -position: Position
+    +createCharacterSprite(): ImageView
+    +takeDamage(int value): void
+    +heal(int value): void
+}
+
+class Player extends Character{
+    - xp: int
+    - follower: Player
+    - imgSprite: Image
+    +notifyFollower(): void
+    +subscribeToFollowed(): void
+    +unsubscribeFromFollowed(): void
+    +addXp(): void
+    +takeDamage(int value): void
+    +heal(int value): void
+}
+class Enemy extends Character{
+    - imgSprite: Image
+    +addXp(): void
+    +takeDamage(int value): void
+    +heal(int value): void
+}
+
+class CharacterSelectionView{
+    +show(): void
+    +createCard(Job job): void
+    +selectCharacter(Job job,VBox card): void
+}
+class CharacterSelectionController{
+    +onNewGameConfirmed(int players,boolean autoSave): void
+    +goToCharacterSelection(): void
+    +onCharacterSelected(Job job): void
+
+}
+enum Job{}
+CharacterSelectionView-->CharacterSelectionController: user selects job
+NewGameView-->CharacterSelectionView: selectJobs()
+Player-->Job
 @enduml

@@ -100,11 +100,11 @@ public class CharacterSelectionView extends GameView {
                     -fx-background-radius: 10;
                 """);
 
-        Tooltip tool = new Tooltip("Classe: " + job.name() + "\n" +
+        /*Tooltip tool = new Tooltip("Classe: " + job.name() + "\n" +
                 "HP: " + job.getHp() + "\n" +
                 "ATK: " + job.getAttack() + "\n" +
                 "SPD: " + job.getSpeed());
-        Tooltip.install(card, tool);
+        Tooltip.install(card, tool);*/
 
         // Hover effect
         card.setOnMouseEntered(e -> {
