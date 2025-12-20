@@ -3,7 +3,6 @@ package com.game.view.gameview;
 import com.game.controller.GameController;
 
 import javafx.animation.FadeTransition;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
