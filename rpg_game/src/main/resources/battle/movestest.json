@@ -1,0 +1,15 @@
+[
+    {
+        "id": "A01",
+        "name": "Basic Attack",
+        "type": "ATTACK",
+        "value": 10
+    },
+
+    {
+        "id": "H01",
+        "name": "Basic Heal",
+        "type": "HEAL",
+        "value": 5
+    }
+]

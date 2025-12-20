@@ -8,14 +8,14 @@ import javafx.scene.image.ImageView;
 
 import com.game.model.Position;
 
-public abstract class Character {
+public abstract class CharacterPG {
     private Job job;
     private Position pos;
 
     private ImageView sprite;
     List<Ability> abilities;
 
-    public Character(Job job, Position pos, Image img) {
+    public CharacterPG(Job job, Position pos, Image img) {
         this.job = job;
         this.pos = pos;
         this.sprite = createCharacterSprite(img, job);
@@ -49,5 +49,9 @@ public abstract class Character {
     protected void setPos(Position pos) {
         this.pos = pos;
     }
+
+    public abstract void takeDamage(int value);
+    
+    public abstract void heal(int value);
 
 }

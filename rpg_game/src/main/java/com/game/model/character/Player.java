@@ -3,11 +3,11 @@ package com.game.model.character;
 import javafx.scene.image.*;
 import com.game.model.Position;
 
-public class Player extends Character {
+public class Player extends CharacterPG {
     private int xp;
     private Inventory inventory;
     private Player follower;
-    private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
+    private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));    
 
     public Player(Job job, Position position) {
         super(job, position, img);
@@ -61,5 +61,15 @@ public class Player extends Character {
 
     public void setPosition(Position pos) {
         this.setPos(pos);
+    }
+
+    @Override
+    public void takeDamage(int value) {
+        //this.hp= Math.max(0, this.hp - value);
+    }
+
+    @Override
+    public void heal(int value) {
+        
     }
 }

@@ -1,6 +1,6 @@
 package com.game.model.battle;
 
-import com.game.model.character.Character;
+import com.game.model.character.CharacterPG;
 
 public class ConcreteTurnIterator implements TurnIterator {
     @Override
@@ -9,7 +9,7 @@ public class ConcreteTurnIterator implements TurnIterator {
     }
 
     @Override
-    public Character nextCharacter() {
+    public CharacterPG nextCharacter() {
         return null;
     }
 

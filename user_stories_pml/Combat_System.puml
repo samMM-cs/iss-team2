@@ -15,9 +15,33 @@ interface ActionStrategy{
     + execute(user: Character, target: Character)
 }
 
-class AttackAction implements ActionStrategy{
+abstract class MoveAction implements ActionStrategy{
+    - move: Move
     - combatStrategy: CombatCalculationStrategy
-    + execute(user,target0)
+    + execute(user,target)
+}
+
+abstract class OffensiveMove extends MoveAction {
+    - move: Move
+    + execute(user,target)
+    + calculateDamage(user,target)
+}
+
+class AttackMove extends OffensiveMove {
+    - move: Move
+    + execute(user,target)
+    + calculateDamage(user,target)
+}
+
+class HealMove extends MoveAction {
+    - move: Move
+    + execute(user,target)
+}
+
+class MagicAttackMove extends OffensiveMove {
+    - move: Move
+    + execute(user,target)
+    + calculateDamage(user,target)
 }
 
 class ItemAction implements ActionStrategy{
