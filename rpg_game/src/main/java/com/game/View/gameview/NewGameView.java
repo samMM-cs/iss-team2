@@ -69,8 +69,8 @@ public class NewGameView extends GameView {
             rb.setOnMouseExited(e -> rb.setStyle("-fx-text-fill: white; -fx-font-size: 16;"));
         }
 
-        Button confirm = new Button("Confirm");
-        confirm.setAlignment(Pos.BOTTOM_CENTER);
+        Button confirm = createButton(new Button(), "Confirm", "/Default.png");
+        confirm.setAlignment(Pos.CENTER);
 
         VBox nPlayersButtons = new VBox(15, players);
         nPlayersButtons.setAlignment(Pos.CENTER_LEFT);

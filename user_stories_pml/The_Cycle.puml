@@ -2,10 +2,10 @@
 
 title GameLauncher
 
-class Client{
+class App{
     + main(): void
 }
-Client-->GameLauncher: calls getIstance()
+App-->GameLauncher: calls getIstance()
 
 class GameLauncher{
     - static instance : GameLauncher
@@ -111,14 +111,19 @@ class CharacterSelectionView{
     +createCard(Job job): void
     +selectCharacter(Job job,VBox card): void
 }
-class CharacterSelectionController{
+class GameController{
     +onNewGameConfirmed(int players,boolean autoSave): void
     +goToCharacterSelection(): void
     +onCharacterSelected(Job job): void
+    +createParty(): void
+    +createEnemy():  void
 
 }
 enum Job{}
-CharacterSelectionView-->CharacterSelectionController: user selects job
+CharacterSelectionView-->GameController: user selects job
 NewGameView-->CharacterSelectionView: selectJobs()
+GameController-->Player:createParty()
+GameController-->Enemy:createEnemy()
 Player-->Job
+Enemy-->Job
 @enduml

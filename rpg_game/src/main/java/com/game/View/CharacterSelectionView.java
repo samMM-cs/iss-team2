@@ -27,7 +27,6 @@ public class CharacterSelectionView extends GameView {
     public CharacterSelectionView(Stage stage, GameController gameController) {
         super(stage);
         this.gameController = gameController;
-
     }
 
     @Override
