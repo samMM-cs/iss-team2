@@ -55,8 +55,6 @@ public class GameController {
     public void onCharacterSelected(Job job) {
         if (gameState != null)
             gameState.selectCharacter(job);
-        if (gameState.allCharactersSelected())
-            startExploration();
     }
 
     // Avvia l'esplorazione della mappa
