@@ -1,4 +1,4 @@
-@startuml
+@startuml US4
 title Choose character job
 'Abstract Factory'
 abstract class Character{
@@ -28,5 +28,36 @@ class Enemy extends Character{
     +takeDamage(int value): void
     +heal(int value): void
 }
+
+class CharacterSelectionView{
+    +show(): void
+    +createCard(Job job): void
+    +selectCharacter(Job job,VBox card): void
+}
+class GameController{
+    +onNewGameConfirmed(int players,boolean autoSave): void
+    +goToCharacterSelection(): void
+    +onCharacterSelected(Job job): void
+    +createParty(): void
+    +createEnemy():  void
+
+}
+enum Job{
+   - col: int
+   - row: int
+   - baseStats: Stats
+   - isPlayable: boolean
+}
+
+class NewGameView{
+    + show(): void
+    + getSelectedPlayers(ToggleGroup gorup): int
+}
+CharacterSelectionView-->GameController: user selects job
+NewGameView-->CharacterSelectionView: selectJobs()
+GameController-->Player:createParty()
+GameController-->Enemy:createEnemy()
+Player-->Job
+Enemy-->Job
 
 @enduml

@@ -1,9 +1,6 @@
 package com.game.model.battle;
 
-import java.util.List;
-
 import com.game.model.character.CharacterPG;
-import com.game.model.character.Player;
 import com.game.model.GameState;
 
 public class Battle{

@@ -2,7 +2,6 @@ package com.game.controller;
 
 import com.game.view.gameview.NewGameView;
 import com.game.model.GameState;
-//import com.game.model.GameStateBuilder;
 import com.game.view.CharacterSelectionView;
 import com.game.view.mapview.ExplorationView;
 import com.game.model.character.Job;
