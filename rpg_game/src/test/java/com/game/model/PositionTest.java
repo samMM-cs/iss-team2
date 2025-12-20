@@ -9,8 +9,8 @@ public class PositionTest {
     @Test
     public void constructor_inizializesCoordinates() {
         Position p = new Position(10, 20);
-        assertEquals(10, (int) p.getX());
-        assertEquals(20, (int) p.getY());
+        assertEquals(10, (int) p.x());
+        assertEquals(20, (int) p.y());
     }
 
     @Test
@@ -18,8 +18,8 @@ public class PositionTest {
         Position p = new Position(10, 10);
         Position result = p.add(3, -1);
 
-        assertEquals(13, (int) result.getX());
-        assertEquals(9, (int) result.getY());
+        assertEquals(13, (int) result.x());
+        assertEquals(9, (int) result.y());
     }
 
     @Test
@@ -27,8 +27,8 @@ public class PositionTest {
         Position p = new Position(5, 5);
         p.add(1, 1);
 
-        assertEquals(5, (int) p.getX());
-        assertEquals(5, (int) p.getY());
+        assertEquals(5, (int) p.x());
+        assertEquals(5, (int) p.y());
     }
 
     @Test
@@ -36,8 +36,8 @@ public class PositionTest {
         Position p = new Position(4, 4);
         Position result = p.clamp(10, 10);
 
-        assertEquals(4, (int) result.getX());
-        assertEquals(4, (int) result.getY());
+        assertEquals(4, (int) result.x());
+        assertEquals(4, (int) result.y());
     }
 
     @Test
@@ -45,8 +45,8 @@ public class PositionTest {
         Position p = new Position(20, -3);
         Position result = p.clamp(10, 10);
 
-        assertEquals(10, (int) result.getX());
-        assertEquals(0, (int) result.getY());
+        assertEquals(10, (int) result.x());
+        assertEquals(0, (int) result.y());
     }
 
     @Test

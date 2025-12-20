@@ -10,6 +10,9 @@ import com.game.model.Position;
 
 public abstract class CharacterPG {
     private Job job;
+    private Stats baseStats;
+
+    private Stats currentStats;
     private Position pos;
 
     private ImageView sprite;
@@ -50,8 +53,20 @@ public abstract class CharacterPG {
         this.pos = pos;
     }
 
+    public Stats getBaseStats() {
+        return baseStats;
+    }
+
+    public Stats getCurrentStats() {
+        return currentStats;
+    }
+
+    public void setCurrentStats(Stats newStats) {
+        currentStats = newStats;
+    }
+
     public abstract void takeDamage(int value);
-    
+
     public abstract void heal(int value);
 
 }

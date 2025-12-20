@@ -14,7 +14,7 @@ import com.game.view.mapview.MapView;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
-public class MovementController {
+public class ExplorationController {
     private Party party;
     private Scene scene;
     private List<Enemy> enemies = new ArrayList<>();
@@ -23,7 +23,7 @@ public class MovementController {
     private Position posLimit;
     private MapView mapView;
 
-    public MovementController(Party party, Scene scene, MapView mapView, List<Enemy> enemies) {
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
@@ -70,19 +70,18 @@ public class MovementController {
             if (player.getSprite() != null) {
                 player.getSprite().setFitWidth(tileSize);
                 player.getSprite().setFitHeight(tileSize);
-                player.getSprite().setX(mapView.getOffset().getX() + player.getPos().getX() * tileSize);
-                player.getSprite().setY(mapView.getOffset().getY() + player.getPos().getY() * tileSize);
+                player.getSprite().setX(mapView.getOffset().x() + player.getPos().x() * tileSize);
+                player.getSprite().setY(mapView.getOffset().y() + player.getPos().y() * tileSize);
             }
         }
         for (Enemy enemy : enemies) {
             if (enemy.getSprite() != null) {
                 enemy.getSprite().setFitWidth(tileSize);
                 enemy.getSprite().setFitHeight(tileSize);
-                enemy.getSprite().setX(mapView.getOffset().getX() + enemy.getPos().getX() * tileSize);
-                enemy.getSprite().setY(mapView.getOffset().getY() + enemy.getPos().getY() * tileSize);
+                enemy.getSprite().setX(mapView.getOffset().x() + enemy.getPos().x() * tileSize);
+                enemy.getSprite().setY(mapView.getOffset().y() + enemy.getPos().y() * tileSize);
             }
         }
-        System.out.println();
     }
 
     void movePlayer() {
@@ -113,6 +112,6 @@ public class MovementController {
 
     public boolean canGoThere(Position nextPosition) {
         return nextPosition.isInside(posLimit)
-                && this.mapView.getWalkableTiles()[(int) nextPosition.getX()][(int) nextPosition.getY()];
+                && this.mapView.getWalkableTiles()[(int) nextPosition.x()][(int) nextPosition.y()];
     }
 }

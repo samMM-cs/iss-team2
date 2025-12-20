@@ -1,28 +1,13 @@
 package com.game.model;
 
-public class Position {
-    private double x;
-    private double y;
-
-    public Position(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
+public record Position(double x, double y) {
 
     public Position add(double x, double y) {
         return new Position(this.x + x, this.y + y);
     }
 
     public Position add(Position pos) {
-        return add(pos.getX(), pos.getY());
+        return add(pos.x, pos.y);
     }
 
     public Position scale(double s) {
@@ -39,17 +24,9 @@ public class Position {
     }
 
     public boolean isInside(Position posLimit) {
-        double xLimit = posLimit.getX();
-        double yLimit = posLimit.getY();
+        double xLimit = posLimit.x;
+        double yLimit = posLimit.y;
         return 0 <= x && x <= xLimit && 0 <= y && y <= yLimit;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
 
     @Override

@@ -7,7 +7,7 @@ public class Player extends CharacterPG {
     private int xp;
     private Inventory inventory;
     private Player follower;
-    private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));    
+    private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
 
     public Player(Job job, Position position) {
         super(job, position, img);
@@ -65,11 +65,11 @@ public class Player extends CharacterPG {
 
     @Override
     public void takeDamage(int value) {
-        //this.hp= Math.max(0, this.hp - value);
+        // this.hp= Math.max(0, this.hp - value);
     }
 
     @Override
     public void heal(int value) {
-        
+
     }
 }

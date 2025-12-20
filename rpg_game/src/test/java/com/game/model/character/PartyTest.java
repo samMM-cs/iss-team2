@@ -89,6 +89,7 @@ public class PartyTest {
     public void testGetMainPlayer_EmptyParty() {
         Party party = setUpEmptyParty();
 
+        @SuppressWarnings("unused")
         Player result = party.getMainPlayer();
     }
 
@@ -112,8 +113,8 @@ public class PartyTest {
 
         party.updateFollowPosition(p);
 
-        assertEquals(200, (int) party.getMainPlayer().getPos().getX());
-        assertEquals(50, (int) party.getMainPlayer().getPos().getY());
+        assertEquals(200, (int) party.getMainPlayer().getPos().x());
+        assertEquals(50, (int) party.getMainPlayer().getPos().y());
     }
 
     @Test
@@ -124,8 +125,8 @@ public class PartyTest {
         party.updateFollowPosition(pos);
 
         for (Player p : party.getMembers()) {
-            assertEquals(200, (int) p.getPos().getX());
-            assertEquals(50, (int) p.getPos().getY());
+            assertEquals(200, (int) p.getPos().x());
+            assertEquals(50, (int) p.getPos().y());
         }
     }
 }

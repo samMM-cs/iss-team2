@@ -68,12 +68,13 @@ public class GameState {
         List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN2);
         List<Position> pos = List.of(new Position(2, 2), new Position(12, 8));
         for (int i = 0; i < enemiesJob.size(); i++) {
-            Position newPos = new Position(pos.get(i).getX(), pos.get(i).getY());
+            Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
             Enemy e = new Enemy(enemiesJob.get(i), newPos);
 
             enemies.add(e);
         }
     }
+
     public void applyChoices(String choice) {
 
     }

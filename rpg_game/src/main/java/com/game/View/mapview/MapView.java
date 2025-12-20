@@ -1,6 +1,7 @@
 package com.game.view.mapview;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ public class MapView extends Pane {
     private static final int RENDERED_TILE_SIZE = 40;
 
     private boolean[][] walkableTiles;
-
+    private List<ImageView> dynamicSprites = new ArrayList<>();
     private Canvas canvas;
     private GraphicsContext gc;
     private Image tileSetImage;
@@ -88,6 +90,21 @@ public class MapView extends Pane {
         this.getChildren().add(canvas);
     }
 
+    public void addSprite(ImageView sprite) {
+        dynamicSprites.add(sprite);
+    }
+
+    public void removeSprite(ImageView sprite) {
+        dynamicSprites.remove(sprite);
+    }
+
+    public void renderSpritesWithLayers() {
+        dynamicSprites.sort((s1, s2) -> Double.compare(s1.getY(), s2.getY()));
+
+        getChildren().removeAll(dynamicSprites);
+        getChildren().addAll(dynamicSprites);
+    }
+
     private static List<Integer> getWalkableIds() {
         try {
             URL url = MapView.class.getResource("/maps/punyworld-overworld-tiles.tsx");
@@ -131,9 +148,9 @@ public class MapView extends Pane {
     }
 
     private Position calculateCameraOffset(double width, double height) {
-        double x = Math.clamp(width / 2 - playerPosition.getX(), width - mapWidthInTiles * RENDERED_TILE_SIZE,
+        double x = Math.clamp(width / 2 - playerPosition.x(), width - mapWidthInTiles * RENDERED_TILE_SIZE,
                 0);
-        double y = Math.clamp(height / 2 - playerPosition.getY(), height - mapHeightInTiles * RENDERED_TILE_SIZE,
+        double y = Math.clamp(height / 2 - playerPosition.y(), height - mapHeightInTiles * RENDERED_TILE_SIZE,
                 0);
         return new Position(x, y);
     }
@@ -185,7 +202,6 @@ public class MapView extends Pane {
 
         // Pulisci il Canvas prima di disegnare (essenziale se lo ridisegni)
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         for (LayerData layer : mapData.getLayers()) {
             if (!"tilelayer".equals(layer.getType())) {
                 continue;
@@ -217,8 +233,8 @@ public class MapView extends Pane {
                                 TILE_SIZE, TILE_SIZE, // Dimensione Sorgente (originale)
 
                                 // Coordinate Destinazione (Scala applicata + Offset per centrare)
-                                offset.getX() + x * RENDERED_TILE_SIZE,
-                                offset.getY() + y * RENDERED_TILE_SIZE,
+                                offset.x() + x * RENDERED_TILE_SIZE,
+                                offset.y() + y * RENDERED_TILE_SIZE,
 
                                 RENDERED_TILE_SIZE, RENDERED_TILE_SIZE // Dimensione Destinazione (scalata)
                         );

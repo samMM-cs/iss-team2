@@ -8,7 +8,7 @@
    1. acceptance criteria: see user story
 3. As a player, I want to start a new game or continue from a previous save, so that I can play
    1. acceptance criteria: the game starts from the beginning or loads the previous saved state
-Start the game
+      Start the game
 4. As a player, I want to choose my character’s job, so that I can custom the gameplay
    1. acceptance criteria: the system displays available jobs with descriptions.
 5. As a player, I want to select a save slot and continue from where I left off, so that I don’t lose my previous progress.
@@ -40,6 +40,8 @@ Start the game
        3. the player can take part in the event
 13. As a player, I want to control the main character during exploration, so that the rest of the party follows my movements.
     1. acceptance criteria: the game allows the main character to move around the map, with the rest of the party following behind
+14. As a player, I want the system to easily switch the map being displayed and correctly render tiles at different levels.
+    1. acceptance criteria: the system allows to show different maps and render the layers correctly
 
 ## Fighting Enemies
 
@@ -48,9 +50,8 @@ Start the game
 15. As a player, I want the system to calculate damage, effects and healing so that I can see the results of each turn.
     1. acceptance criteria: the game calculates correctly the new combat state
     2. the game properly shows the new combat state
-16. As a player, I want battles to proceed in alternating turns until one side is defeated so that the fight resolves fairly.
-    1. acceptance criteria: turns alternate between player and enemy and rewards (XP, items) are assigned after victory.
-Learning New Abilities
+16. As a player, I want battles to proceed in alternating turns until one side is defeated so that the fight resolves fairly. 1. acceptance criteria: turns alternate between player and enemy and rewards (XP, items) are assigned after victory.
+    Learning New Abilities
 17. As a player, I want to select which new ability to learn so that I can improve my character's skills.
     1. acceptance criteria: when a new ability is available, the system notifies the player.
 18. As a player, I want to evolve my character, so that I progress in the game.

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.game.controller.GameController;
-import com.game.controller.MovementController;
+import com.game.controller.ExplorationController;
 import com.game.model.character.Party;
 import com.game.model.character.Enemy;
 import com.game.model.GameState;
@@ -17,7 +17,7 @@ import javafx.stage.*;
 public class ExplorationView {
     private static final String MAP_FILE_PATH = "/maps/samplemap1.tmj";
     private static final String TILESET_IMAGE_PATH = "/images/punyworld-overworld-tileset.png";
-    private MovementController movementController;
+    private ExplorationController movementController;
     private Stage stage;
     private Party party;
     private List<Enemy> enemies = new ArrayList<>();
@@ -29,7 +29,6 @@ public class ExplorationView {
         this.stage = stage;
         if (stage == null)
             return;
-        // Crea la MapView
         this.mapView = new MapView(MAP_FILE_PATH, TILESET_IMAGE_PATH);
 
         this.root = new Pane();
@@ -37,7 +36,7 @@ public class ExplorationView {
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
 
-        this.movementController = new MovementController(party, scene, mapView, enemies);
+        this.movementController = new ExplorationController(party, scene, mapView, enemies);
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
@@ -45,8 +44,8 @@ public class ExplorationView {
     }
 
     public void showMap() {
-        this.party.getMembers().forEach(player -> root.getChildren().add(player.getSprite()));
-        this.enemies.forEach(enemy -> root.getChildren().add(enemy.getSprite()));
+        this.party.getMembers().forEach(player -> mapView.addSprite(player.getSprite()));
+        this.enemies.forEach(enemy -> mapView.addSprite(enemy.getSprite()));
 
         stage.setScene(scene);
         stage.show();

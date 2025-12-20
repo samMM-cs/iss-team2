@@ -64,8 +64,8 @@ public class PlayerTest {
 
         p1.notifyFollower();
 
-        assertEquals(240, (int) p2.getPos().getX());
-        assertEquals(180, (int) p3.getPos().getX());
-        assertEquals(120, (int) p4.getPos().getX());
+        assertEquals(240, (int) p2.getPos().x());
+        assertEquals(180, (int) p3.getPos().x());
+        assertEquals(120, (int) p4.getPos().x());
     }
 }
