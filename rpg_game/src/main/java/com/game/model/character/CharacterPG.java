@@ -1,5 +1,6 @@
 package com.game.model.character;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.geometry.Rectangle2D;
@@ -7,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import com.game.model.Position;
+import com.game.model.ability.Ability;
 
 public abstract class CharacterPG {
     private Job job;
@@ -16,7 +18,7 @@ public abstract class CharacterPG {
     private Position pos;
 
     private ImageView sprite;
-    List<Ability> abilities;
+    private List<Ability> abilities = new ArrayList<>();
 
     public CharacterPG(Job job, Position pos, Image img) {
         this.job = job;
@@ -33,6 +35,17 @@ public abstract class CharacterPG {
         return this.sprite;
     }
 
+    public void addAbility(Ability ability) {
+        this.abilities.add(ability);
+    }
+
+    //Metodo per usare tutte le abilità
+    public void useAbility() {
+        for (Ability a : abilities) {
+            System.out.println("Using ability: " + a.getName());
+            a.apply(this);
+        }
+    }
     public Job getJob() {
         return job;
     }

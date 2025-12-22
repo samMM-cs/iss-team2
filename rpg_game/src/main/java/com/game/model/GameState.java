@@ -9,6 +9,7 @@ import com.game.model.character.Player;
 //import com.game.model.creator.Game;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
+import com.game.model.character.NPC;
 import com.game.model.character.Inventory;
 
 public class GameState {
@@ -16,6 +17,7 @@ public class GameState {
     private final boolean autoSaveEnabled;
     private final List<Job> selectedCharacters;
     private final List<Enemy> enemies;
+    private final List<NPC> npc;
     private Party party;
     private Inventory inventory;
     private final Map<Event, Boolean> storyFlags;
@@ -27,10 +29,11 @@ public class GameState {
         this.nPlayers = builder.nPlayers;
         this.autoSaveEnabled = builder.autoSaveEnabled;
         this.selectedCharacters = builder.selectedCharacters;
-        this.inventory= builder.inventory;
+        this.inventory = builder.inventory;
         this.storyFlags = builder.storyFlags;
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
+        this.npc = new ArrayList<>();
     }
 
     public static GameState getInstance() {
@@ -78,9 +81,16 @@ public class GameState {
         List<Position> pos = List.of(new Position(2, 2), new Position(12, 8));
         for (int i = 0; i < enemiesJob.size(); i++) {
             Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
-            Enemy e = new Enemy(enemiesJob.get(i), newPos);
-            enemies.add(e);
+            enemies.add(new Enemy(enemiesJob.get(i), newPos));
         }
+    }
+
+    public void createNpc() {
+        this.npc.clear();
+
+        List<Job> jobs = List.of(Job.FARMER);
+        List<Position> pos = List.of(new Position(7, 7));
+        this.npc.add(new NPC(jobs.get(0), pos.get(0)));
     }
 
     public void applyChoices(String choice) {
@@ -107,6 +117,10 @@ public class GameState {
         return this.enemies;
     }
 
+    public List<NPC> getNpc() {
+        return npc;
+    }
+
     public Party getParty() {
         return party;
     }
@@ -119,13 +133,14 @@ public class GameState {
         return worldPosition;
     }
 
-    //----------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
     public static class GameStateBuilder {
         public int nPlayers = 2;
         public boolean autoSaveEnabled = false;
         public List<Job> selectedCharacters = new ArrayList<>();
         public List<Enemy> enemies = new ArrayList<>();
+        public List<NPC> npc = new ArrayList<>();
         public Inventory inventory;
         public Map<Event, Boolean> storyFlags = new HashMap<>();
         public WorldPosition worldPosition = new WorldPosition();
@@ -150,8 +165,13 @@ public class GameState {
             return this;
         }
 
+        public GameStateBuilder setNpc(List<NPC> nps) {
+            this.npc = npc;
+            return this;
+        }
+
         public GameStateBuilder setInventory() {
-            this.inventory= new Inventory();
+            this.inventory = new Inventory();
             return this;
         }
 
@@ -170,8 +190,8 @@ public class GameState {
         }
 
         public GameState build() {
-            if (GameState.instance== null) {
-                GameState.instance= new GameState(this);
+            if (GameState.instance == null) {
+                GameState.instance = new GameState(this);
             }
             return GameState.instance;
         }

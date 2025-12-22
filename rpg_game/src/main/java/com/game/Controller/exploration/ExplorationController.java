@@ -9,6 +9,7 @@ import com.game.model.Position;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.Enemy;
+import com.game.model.character.NPC;
 import com.game.view.mapview.MapView2;
 
 import javafx.scene.Scene;
@@ -18,16 +19,18 @@ public class ExplorationController {
     private Party party;
     private Scene scene;
     private List<Enemy> enemies = new ArrayList<>();
+    private List<NPC> npc = new ArrayList<>();
 
     private Queue<KeyCode> activeKeys = new LinkedList<>();
     private Position posLimit;
     private MapView2 mapView;
 
-    public ExplorationController(Party party, Scene scene, MapView2 mapView, List<Enemy> enemies) {
+    public ExplorationController(Party party, Scene scene, MapView2 mapView, List<Enemy> enemies,List<NPC> npc) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
         this.enemies = enemies;
+        this.npc = npc;
         scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -81,6 +84,14 @@ public class ExplorationController {
                 enemy.getSprite().setFitHeight(tileSize);
                 enemy.getSprite().setX(mapView.getOffset().x() + enemy.getPos().x() * tileSize);
                 enemy.getSprite().setY(mapView.getOffset().y() + enemy.getPos().y() * tileSize);
+            }
+        }
+        for (NPC n : npc) {
+            if (n.getSprite() != null) {
+                n.getSprite().setFitWidth(tileSize);
+                n.getSprite().setFitHeight(tileSize);
+                n.getSprite().setX(mapView.getOffset().x() + n.getPos().x() * tileSize);
+                n.getSprite().setY(mapView.getOffset().y() + n.getPos().y() * tileSize);
             }
         }
     }

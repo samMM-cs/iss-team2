@@ -77,8 +77,11 @@ MainMenu --> MainMenuController : user input
 MainMenuController --> GameCreator : createGame()
 MainMenuController --> GameView : render()
 
-'Choose character job'
+'Choose character job, uso Abstract Factory'
 abstract class Character{
+    -abilities: List<Ability>
+    +addAbility(a: Ability): void
+    +getAbilities(): List<Ability>
     - job: Job
     -baseStats: Stats
     -currentStats: Stats
@@ -86,6 +89,7 @@ abstract class Character{
     +createCharacterSprite(): ImageView
     +takeDamage(int value): void
     +heal(int value): void
+    +useAbilities(): void
 }
 
 class Player extends Character{
@@ -126,4 +130,27 @@ GameController-->Player:createParty()
 GameController-->Enemy:createEnemy()
 Player-->Job
 Enemy-->Job
+
+'Character Evolution, Decorator'
+interface Ability{
+    +getName(): String
+    +apply(c: Character): void
+}
+abstract class AbilityDecorator implements Ability{
+    -wrapped: Ability
+    +getName(): String
+    +apply(c: Character): void
+}
+
+class FireballAbility implements Ability{
+    +getName(): String
+    +apply(c: Character): void
+}
+
+class HealAbility implements Ability{
+    +getName(): String
+    +apply(c: Character): void
+}
+
+Character->Ability
 @enduml

@@ -61,6 +61,7 @@ public class GameController {
         if (gameState != null && stage != null) {
             gameState.createEnemy();
             gameState.createParty();
+            gameState.createNpc();
             ExplorationView explorationView = new ExplorationView(stage, this, gameState);
             explorationView.showMap();
         }

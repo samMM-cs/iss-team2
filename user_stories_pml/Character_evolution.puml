@@ -1,0 +1,32 @@
+@startuml US18
+title Character Evolution
+'Uso il pattern Decorator per estendere dinamicamente la capacità del personaggio senza modificare la classe base. Le nuove abilità verranno aggiunte alla lista'
+interface Ability{
+    +getName(): void
+    +apply(c: Character): void
+}
+
+abstract class Character{
+    - abilities: List<Ability>
+    +addAbility(a: Ability): void
+    +getAbilities(): List<Ability>
+    +useAbilities(): void
+}
+abstract class AbilityDecorator implements Ability{
+    -wrapped: Ability
+    +getName(): String
+    +apply(c: Character): void
+}
+
+class FireballAbility implements Ability{
+    +getName(): String
+    +apply(c: Character): void
+}
+
+class HealAbility implements Ability{
+    +getName(): String
+    +apply(c: Character): void
+}
+
+Character->Ability: apply()
+@enduml

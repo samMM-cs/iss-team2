@@ -8,6 +8,7 @@ import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
+import com.game.model.character.NPC;
 import com.game.model.map.TiledMapData;
 import com.game.model.character.Enemy;
 import com.game.model.GameState;
@@ -25,6 +26,7 @@ public class ExplorationView {
     private Stage stage;
     private Party party;
     private List<Enemy> enemies = new ArrayList<>();
+    private List<NPC> npc = new ArrayList<>();
     private Pane root;
     private Scene scene;
     private MapView2 mapView;
@@ -46,16 +48,20 @@ public class ExplorationView {
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
+        this.npc = gameState.getNpc();
         for (Player player : this.party.getMembers()) {
             builder = builder.addSprite(player.getSprite(), player.getPos());
         }
         for (Enemy enemy : this.enemies) {
             builder = builder.addSprite(enemy.getSprite(), enemy.getPos());
         }
+        for (NPC n : npc) {
+            builder = builder.addSprite(n.getSprite(), n.getPos());
+        }
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(2))
                 .build();
-        this.movementController = new ExplorationController(party, scene, mapView, enemies);
+        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc);
 
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());

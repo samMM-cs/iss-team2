@@ -2,6 +2,7 @@ package com.game.model.character;
 
 import javafx.scene.image.*;
 import com.game.model.Position;
+import com.game.model.ability.Ability;
 
 public class Player extends CharacterPG {
     private int xp;
