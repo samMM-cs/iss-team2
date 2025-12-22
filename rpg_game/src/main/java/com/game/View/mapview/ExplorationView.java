@@ -27,7 +27,7 @@ public class ExplorationView {
     private List<Enemy> enemies = new ArrayList<>();
     private Pane root;
     private Scene scene;
-    private MapView2 mapView;
+    private MapView mapView;
 
     public ExplorationView(Stage stage, GameController gameController, GameState gameState) {
         this.stage = stage;
@@ -38,6 +38,7 @@ public class ExplorationView {
         MapBuilder builder = new MapBuilder()
                 .addLayer(mapData.getLayers().get(0))
                 .addLayer(mapData.getLayers().get(1))
+                .addLayer(mapData.getLayers().get(2))
                 .setDimensions(mapData.getTileheight(), mapData.getWidth(), mapData.getHeight())
                 .setWalkableIds(TILESET_DATA_PATH)
                 .setTileSetImageFromPath(TILESET_IMAGE_PATH);
@@ -53,19 +54,17 @@ public class ExplorationView {
             builder = builder.addSprite(enemy.getSprite(), enemy.getPos());
         }
         this.mapView = builder.showSprites()
-                .addLayer(mapData.getLayers().get(2))
+                .addLayer(mapData.getLayers().get(3))
                 .build();
         this.movementController = new ExplorationController(party, scene, mapView, enemies);
 
+        this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
     }
 
     public void showMap() {
-        // this.party.getMembers().forEach(player ->
-        // mapView.addSprite(player.getSprite()));
-        // this.enemies.forEach(enemy -> mapView.addSprite(enemy.getSprite()));
 
         stage.setScene(scene);
         stage.show();

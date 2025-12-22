@@ -27,7 +27,7 @@ public class GameState {
         this.nPlayers = builder.nPlayers;
         this.autoSaveEnabled = builder.autoSaveEnabled;
         this.selectedCharacters = builder.selectedCharacters;
-        this.inventory= builder.inventory;
+        this.inventory = builder.inventory;
         this.storyFlags = builder.storyFlags;
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
@@ -119,7 +119,7 @@ public class GameState {
         return worldPosition;
     }
 
-    //----------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------
 
     public static class GameStateBuilder {
         public int nPlayers = 2;
@@ -151,7 +151,7 @@ public class GameState {
         }
 
         public GameStateBuilder setInventory() {
-            this.inventory= new Inventory();
+            this.inventory = new Inventory();
             return this;
         }
 
@@ -170,8 +170,8 @@ public class GameState {
         }
 
         public GameState build() {
-            if (GameState.instance== null) {
-                GameState.instance= new GameState(this);
+            if (GameState.instance == null) {
+                GameState.instance = new GameState(this);
             }
             return GameState.instance;
         }

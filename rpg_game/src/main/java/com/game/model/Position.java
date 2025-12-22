@@ -24,9 +24,13 @@ public record Position(double x, double y) {
         return clamp(0, 0, xLimit, yLimit);
     }
 
-    public Position clamp(double xMin, double yMin, double xLimit, double yLimit) {
-        return new Position(Math.round(Math.clamp(x, xMin, xLimit)),
-                Math.round(Math.clamp(y, yMin, yLimit)));
+    public Position clamp(double xMin, double yMin, double xMax, double yMax) {
+        double xMin_ = Math.min(xMin, xMax);
+        double yMin_ = Math.min(yMin, yMax);
+        double xMax_ = Math.max(xMin, xMax);
+        double yMax_ = Math.max(yMin, yMax);
+        return new Position(Math.round(Math.clamp(x, xMin_, xMax_)),
+                Math.round(Math.clamp(y, yMin_, yMax_)));
     }
 
     public Position clamp(Position posMin, Position posMax) {
