@@ -9,8 +9,12 @@ import com.game.model.Position;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.Enemy;
+<<<<<<< HEAD
 import com.game.model.character.NPC;
 import com.game.view.mapview.MapView2;
+=======
+import com.game.view.mapview.MapView;
+>>>>>>> 27ee27a82d8bb7e5538d42cbdd474399bcc6363e
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -23,9 +27,13 @@ public class ExplorationController {
 
     private Queue<KeyCode> activeKeys = new LinkedList<>();
     private Position posLimit;
-    private MapView2 mapView;
+    private MapView mapView;
 
+<<<<<<< HEAD
     public ExplorationController(Party party, Scene scene, MapView2 mapView, List<Enemy> enemies,List<NPC> npc) {
+=======
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies) {
+>>>>>>> 27ee27a82d8bb7e5538d42cbdd474399bcc6363e
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;

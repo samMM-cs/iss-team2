@@ -13,8 +13,8 @@ import com.game.model.Position;
 import com.game.model.map.LayerData;
 import com.game.model.map.SpritePosition;
 import com.game.model.map.TiledMapData;
+import com.game.view.mapview.MapView___UNUSED;
 import com.game.view.mapview.MapView;
-import com.game.view.mapview.MapView2;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,7 +26,7 @@ public class MapBuilder {
     private int spriteLayerIndex;
     private int tileSize, width, height;
     private boolean[][] walkableTiles;
-    private int renderedTileSize = 40;
+    private int renderedTileSize = 50;
     private Image tileSet;
 
     public static TiledMapData loadRawMapData(String mapFilePath) {
@@ -59,7 +59,7 @@ public class MapBuilder {
 
     public MapBuilder setWalkableIds(String path) {
         try {
-            URL url = MapView.class.getResource(path);
+            URL url = MapView___UNUSED.class.getResource(path);
             String regex = "<tile id=\"(\\d*)\">\\s*<properties>\\s*<property name=\"walkable\" type=\"bool\" value=\"true\"/>\\s*</properties>\\s*</tile>";
             String content = new String(((BufferedInputStream) url.getContent()).readAllBytes());
             walkableId = Pattern.compile(regex)
@@ -101,7 +101,7 @@ public class MapBuilder {
         return this;
     }
 
-    public MapView2 build() {
+    public MapView build() {
         walkableTiles = new boolean[this.width][this.height];
         for (int i = 0; i < this.spriteLayerIndex; i++) {
             int[] tiles = layers.get(i).getData();
@@ -116,7 +116,7 @@ public class MapBuilder {
                 }
             }
         }
-        return new MapView2(layers, sprites, spriteLayerIndex, tileSize, width, height, walkableTiles,
+        return new MapView(layers, sprites, spriteLayerIndex, tileSize, width, height, walkableTiles,
                 renderedTileSize, tileSet);
     }
 }
