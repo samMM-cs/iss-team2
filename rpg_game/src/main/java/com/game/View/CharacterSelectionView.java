@@ -107,11 +107,11 @@ public class CharacterSelectionView extends GameView {
                 """);
 
         Tooltip tool = new Tooltip("Classe: " + job.name() + "\n" +
-                "HP: " + job.getBaseStats().hp() + "\n" +
-                "ATK: " + job.getBaseStats().attack() + "\n" +
-                "DEF: " + job.getBaseStats().defense() + "\n" +
-                "SPE: " + job.getBaseStats().special() + "\n" +
-                "SPD: " + job.getBaseStats().speed());
+                "HP: " + job.getBaseStats().getHp() + "\n" +
+                "ATK: " + job.getBaseStats().getAttack() + "\n" +
+                "DEF: " + job.getBaseStats().getDefense() + "\n" +
+                "SPE: " + job.getBaseStats().getSpecial() + "\n" +
+                "SPD: " + job.getBaseStats().getSpeed());
         Tooltip.install(card, tool);
 
         // Hover effect
