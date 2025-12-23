@@ -24,6 +24,8 @@ public abstract class CharacterPG {
         this.job = job;
         this.pos = pos;
         this.sprite = createCharacterSprite(img, job);
+        this.baseStats= job.getBaseStats().copy();
+        this.currentStats= this.getBaseStats().copy();
     }
 
     public ImageView createCharacterSprite(Image img, Job job) {

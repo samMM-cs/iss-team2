@@ -23,12 +23,12 @@ public class Battle{
 
     public boolean isBattleOver() {
         for (CharacterPG player : this.gameState.getParty().getMembers()) {
-            if (player.getCurrentStats().hp() == 0) {
+            if (player.getCurrentStats().getHp() == 0) {
                 return true;
             }
         }
         for (CharacterPG c : this.gameState.getEnemies()) {
-            if (c.getCurrentStats().hp() == 0) {
+            if (c.getCurrentStats().getHp() == 0) {
                 return true;
             }
         }
