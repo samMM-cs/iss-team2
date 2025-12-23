@@ -36,7 +36,6 @@ public class ExplorationView {
         if (stage == null)
             return;
         TiledMapData mapData = MapBuilder.loadRawMapData(MAP_FILE_PATH);
-        // this.mapView = new MapView(MAP_FILE_PATH, TILESET_IMAGE_PATH);
         MapBuilder builder = new MapBuilder()
                 .addLayer(mapData.getLayers().get(0))
                 .addLayer(mapData.getLayers().get(1))
@@ -62,7 +61,7 @@ public class ExplorationView {
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc);
+        this.movementController = new ExplorationController(party, scene, mapView, enemies);
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());

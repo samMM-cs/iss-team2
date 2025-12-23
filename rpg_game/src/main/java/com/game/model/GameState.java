@@ -89,8 +89,8 @@ public class GameState {
         this.npc.clear();
 
         List<Job> jobs = List.of(Job.FARMER);
-        List<Position> pos = List.of(new Position(7, 7));
-        this.npc.add(new NPC(jobs.get(0), pos.get(0)));
+        Position pos = new Position(7,7);
+        this.npc.add(new NPC(jobs.get(0), new Position(pos.x(),pos.y())));
     }
 
     public void applyChoices(String choice) {
