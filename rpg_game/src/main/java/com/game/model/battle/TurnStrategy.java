@@ -5,8 +5,10 @@ import java.util.List;
 import com.game.model.character.CharacterPG;
 
 public interface TurnStrategy {
-    // Works in-place
-    public abstract void sortAction(List<CharacterPG> characters);
+    /**
+     * Sort List characters in place based on chosen TurnStrategy
+     */
+    public abstract void sortAction();
 
     public abstract TurnIterator getTurnIterator();
 }

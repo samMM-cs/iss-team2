@@ -97,6 +97,10 @@ public class GameState {
 
     }
 
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
     public void setFlag(Event flag) {
         this.storyFlags.replace(flag, true);
     }

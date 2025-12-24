@@ -8,6 +8,7 @@ import com.game.model.character.Player;
 import com.game.model.character.Job;
 import com.game.model.Position;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -17,15 +18,11 @@ import org.junit.Test;
 public class StaticSpeedTurnTest {
     StaticSpeedTurn sst;
     Position pos;
+    List<CharacterPG> list;
 
     @Before
     public void setUp() {
         Position pos= mock(Position.class);
-        sst= new StaticSpeedTurn();
-    }
-
-    @Test
-    public void testGetTurnIterator() {
         List<CharacterPG> list= new ArrayList<>();
         CharacterPG p1= new Player (Job.ARCHER, pos);
         CharacterPG p2= new Player(Job.MAGE, pos);
@@ -35,13 +32,18 @@ public class StaticSpeedTurnTest {
         list.add(p2);
         list.add(e1);
         list.add(e2);
+        sst= new StaticSpeedTurn(list);
+    }
 
-        sst.sortAction(list);
+    @Test
+    public void testGetTurnIterator() {
+        sst.sortAction();
 
-        for (int i=0; i<list.size()-1; i++) {
-            assertTrue(list.get(i).getCurrentStats().getSpeed() >= list.get(i+1).getCurrentStats().getSpeed());
+        List<CharacterPG> res= sst.getCharacters();
+        assertNotNull(res);
+        for (int i=0; i<res.size()-1; i++) {
+            assertTrue(res.get(i).getCurrentStats().getSpeed() >= res.get(i+1).getCurrentStats().getSpeed());
         }
-        
     }
 
     @Test
