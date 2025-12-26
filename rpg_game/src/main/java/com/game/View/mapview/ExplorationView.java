@@ -63,7 +63,7 @@ public class ExplorationView {
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc);
+        this.movementController = new ExplorationController(party, scene, mapView, enemies);
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
