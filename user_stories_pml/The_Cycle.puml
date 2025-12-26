@@ -153,4 +153,26 @@ class HealAbility implements Ability{
 }
 
 Character->Ability
+
+'Builder'
+
+class MapBuilder{
+    - MapView map
+    + addLayer(layer)
+    + build()
+}
+
+  class ExplorationView {
+    + renderMap()
+  }
+
+  class MovementController {
+    + movePlayer(direction)
+    + updatePartyFollow()
+  }
+
+  ExplorationView --> MovementController
+  ExplorationView --> MapBuilder
+
+  CharacterSelectionView-->ExplorationView: startExploration()
 @enduml

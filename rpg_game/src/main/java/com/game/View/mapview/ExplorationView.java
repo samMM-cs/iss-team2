@@ -10,6 +10,7 @@ import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.map.TiledMapData;
+import com.game.view.PlayerHud;
 import com.game.model.character.Enemy;
 import com.game.model.GameState;
 
@@ -30,6 +31,7 @@ public class ExplorationView {
     private Pane root;
     private Scene scene;
     private MapView mapView;
+    private PlayerHud hud;
 
     public ExplorationView(Stage stage, GameController gameController, GameState gameState) {
         this.stage = stage;
@@ -67,6 +69,10 @@ public class ExplorationView {
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
+
+        root.getChildren().add(party.getMainPlayer().getHud());
+        party.getMainPlayer().exitCombat();
+
     }
 
     public void showMap() {
@@ -78,6 +84,10 @@ public class ExplorationView {
             public void handle(long now) {
                 movementController.update();
                 mapView.requestLayout();
+                for (Player player : party.getMembers()) {
+                    if (player.isInCombat())
+                        hud.update();
+                }
             }
         };
 

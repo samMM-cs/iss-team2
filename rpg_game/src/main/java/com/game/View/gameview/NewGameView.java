@@ -52,11 +52,13 @@ public class NewGameView extends GameView {
         ToggleButton player2 = createButton(new ToggleButton(), "2 PLAYER", "/Default.png");
         ToggleButton player3 = createButton(new ToggleButton(), "3 PLAYER", "/Default.png");
         ToggleButton player4 = createButton(new ToggleButton(), "4 PLAYER", "/Default.png");
+        ToggleButton autoSave = createButton(new ToggleButton(), "Auto save", "/Default.png");
 
         player1.setUserData(1);
         player2.setUserData(2);
         player3.setUserData(3);
         player4.setUserData(4);
+        autoSave.setUserData(true);
 
         ToggleGroup group = new ToggleGroup();
         player1.setToggleGroup(group);
@@ -64,12 +66,10 @@ public class NewGameView extends GameView {
         player3.setToggleGroup(group);
         player4.setToggleGroup(group);
 
-        player2.setSelected(true); // default
-
-        ToggleButton[] players = { player1, player2, player3, player4 };
+        ToggleButton[] buttons = { player1, player2, player3, player4, autoSave };
 
         // Effetto selezione visiva
-        for (ToggleButton btn : players) {
+        for (ToggleButton btn : buttons) {
             btn.setStyle("-fx-text-fill: white;");
 
             btn.selectedProperty().addListener((obs, oldVal, selected) -> {
@@ -85,12 +85,8 @@ public class NewGameView extends GameView {
             });
         }
 
-        HBox playerBox = new HBox(25, players);
+        HBox playerBox = new HBox(25, buttons);
         playerBox.setAlignment(Pos.CENTER);
-
-        // ===== AUTOSAVE =====
-        CheckBox autoSave = new CheckBox("AUTO SAVE");
-        autoSave.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
 
         // ===== CONFIRM BUTTON =====
         Button confirm = createButton(new Button(), "START", "/Default.png");

@@ -13,13 +13,11 @@ public class Enemy extends CharacterPG {
     @Override
     public void takeDamage(int value) {
         this.getCurrentStats().setHp(
-            Math.max(0, this.getCurrentStats().getHp() - value));
+                Math.max(0, this.getCurrentStats().getHp() - value));
     }
 
     @Override
     public void heal(int value) {
-        this.getCurrentStats().setHp(
-            Math.min(this.getBaseStats().getHp(), this.getCurrentStats().getHp() + value));
     }
 
 }

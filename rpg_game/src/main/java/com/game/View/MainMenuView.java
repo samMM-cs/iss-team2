@@ -36,12 +36,11 @@ public class MainMenuView {
 
         Button newGameBtn = createButton("NewGame", "/Default.png");
         Button resumeBtn = createButton("Resume", "/Default.png");
-        Button settingsBtn = createButton("Settings", "/Default.png");
         Button exitBtn = createButton("Exit", "/Default.png");
 
         VBox buttons = new VBox(15);
         buttons.setAlignment(Pos.CENTER);
-        buttons.getChildren().addAll(newGameBtn, resumeBtn, settingsBtn, exitBtn);
+        buttons.getChildren().addAll(newGameBtn, resumeBtn, exitBtn);
 
         // Immagine dietro ed i pulsanti sopra
         StackPane root = new StackPane(imgSfondo, buttons);
@@ -54,9 +53,8 @@ public class MainMenuView {
 
         // Eventi
         newGameBtn.setOnAction(controller::onNewGame);
-
-        settingsBtn.setOnAction(controller::onSettings);
         exitBtn.setOnAction(controller::onExit);
+
         stage.setTitle("RPG Game");
         stage.setWidth(Screen.getPrimary().getBounds().getWidth());
         stage.setHeight(Screen.getPrimary().getBounds().getHeight());
