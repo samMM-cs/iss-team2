@@ -6,14 +6,12 @@
 @startuml Turn-based battles
 
 class Battle {
-    - List<Enemy> enemies
-    - List<Player> party
+    - GameState gameState
     - int turnIndex
     - TurnStrategy turnStrategy
     - RewardStrategy rewardStrategy
-    + calculateDamage(attacker, defender)
     + nextTurn()
-    + isBattleOver() : bool
+    + isBattleOver() : BattleResult
     + endBattle()
     + assignRewards()
 }
@@ -27,13 +25,13 @@ interface TurnStrategy {
         then all players will jump at enemies in a proper order
         calculated by a ConcredTurnStrategy
     '/
-    + sortAction(characters: List<Character>) : void
+    + sortAction() : void
     + getTurnIterator() : TurnIterator
 }
 
 class StaticSpeedTurn implements TurnStrategy {
     - List<Character> characterList
-    + sortAction(characters: List<Character>) : void
+    + sortAction() : void
     + getTurnIterator() : TurnIterator
 }
 
@@ -67,8 +65,15 @@ class Reward {
     + assignItem(Item : item)
 }
 
+enum BattleResult {
+    + ONGOING
+    + PARTY_WON
+    + PARTY_DEFEATED
+}
+
 Battle-down-> RewardStrategy
 Battle->TurnStrategy
+Battle -left->BattleResult
 
 TurnStrategy->TurnIterator
 

@@ -8,8 +8,13 @@ import java.util.Queue;
 import com.game.model.Position;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
+<<<<<<< HEAD
 import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
+=======
+import com.game.model.character.Enemy;
+import com.game.model.character.NPC;
+>>>>>>> b7af3032de0c01273ed1728d378d2c87c3506b41
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -25,7 +30,11 @@ public class ExplorationController {
     private Position posLimit;
     private MapView mapView;
 
+<<<<<<< HEAD
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies) {
+=======
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc) {
+>>>>>>> b7af3032de0c01273ed1728d378d2c87c3506b41
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
