@@ -169,7 +169,7 @@ public class GameState {
             return this;
         }
 
-        public GameStateBuilder setNpc(List<NPC> nps) {
+        public GameStateBuilder setNpc(List<NPC> npc) {
             this.npc = npc;
             return this;
         }

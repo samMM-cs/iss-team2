@@ -31,6 +31,7 @@ public abstract class CharacterPG {
     private Label nameLabel;
     private Label hpLabel;
     private Label levelLabel;
+
     private boolean inCombat; // Stato del combattimento
 
     public CharacterPG(Job job, Position pos, Image img) {
@@ -44,7 +45,7 @@ public abstract class CharacterPG {
         hpLabel = new Label("HP");
         hpBar = new ProgressBar(1);
         expBar = new ProgressBar(0);
-        levelLabel = new Label("Lv " + baseStats.getLevel());
+        levelLabel = new Label("Level " + baseStats.getLevel());
 
         HBox hpBox = new HBox(5, hpLabel, hpBar);
         hud = new VBox(5, nameLabel, hpBox, levelLabel, expBar);
