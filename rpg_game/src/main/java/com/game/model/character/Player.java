@@ -55,11 +55,6 @@ public class Player extends CharacterPG {
         this.follower = follower;
     }
 
-    @Override
-    public String toString() {
-        return this.getJob().toString();
-    }
-
     public void setPosition(Position pos) {
         this.setPos(pos);
     }

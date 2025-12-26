@@ -23,7 +23,6 @@ public class NPC implements Interactable {
         this.sprite = new ImageView(img);
 
         Rectangle2D viewPort = new Rectangle2D(job.getX(), job.getY(), Job.SIZE, Job.SIZE);
-
         this.sprite.setViewport(viewPort);
         return this.sprite;
     }
@@ -44,7 +43,11 @@ public class NPC implements Interactable {
     public void interact(Player player) {
 
     }
-    
+
+    @Override
+    public String toString() {
+        return "NPC (" + this.job + ", " + this.pos + ")";
+    }
     /*
      * private String name;
      * private List<Item> shopItems;

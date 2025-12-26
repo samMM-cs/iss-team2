@@ -9,8 +9,8 @@ public enum Job {
     // Enemy
     GOBLIN(0, 0, 30, 3, 3, 0, 4, false),
     GOBLIN2(0, 1, 20, 4, 3, 0, 2, false),
-    //NPC
-    FARMER(6, 0, 0, 0, 0, 0, 0, false);
+    // NPC
+    FARMER(0, 6, 0, 0, 0, 0, 0, false);
 
     public static final int SIZE = 32;
 

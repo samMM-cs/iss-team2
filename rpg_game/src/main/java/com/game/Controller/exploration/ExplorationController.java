@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 import com.game.model.Position;
 import com.game.model.character.Party;
@@ -19,17 +20,21 @@ public class ExplorationController {
     private Party party;
     private Scene scene;
     private List<Enemy> enemies = new ArrayList<>();
-    private List<NPC> npc = new ArrayList<>();
+    private List<NPC> npcs = new ArrayList<>();
 
     private Queue<KeyCode> activeKeys = new LinkedList<>();
     private Position posLimit;
     private MapView mapView;
+    private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
+            KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
+    private Position prevPosition = Position.Origin;
 
-    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies) {
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
         this.enemies = enemies;
+        this.npcs = npc;
         scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -61,8 +66,51 @@ public class ExplorationController {
     }
 
     public void update() {
-        movePlayer();
+        if (this.enemies.stream().anyMatch(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())))
+            handleBattle();
+        KeyCode key = activeKeys.poll();
+        if (key != null) {
+            if (movementKeys.contains(key))
+                movePlayer(key);
+            if (key == KeyCode.E)
+                handlePossibleInteractions();
+        }
         updateSpritePositions();
+    }
+
+    private void handlePossibleInteractions() {
+        NPC target = null;
+        Player mainPlayer = party.getMainPlayer();
+        for (NPC npc : npcs) {
+            if (Math.abs(npc.getPos().sub(mainPlayer.getPos()).max()) <= 1) {
+                target = npc;
+                break;
+            }
+        }
+
+        if (target != null) {
+            // TODO: switch to npc view
+            System.out.println("interacting with: " + target.toString());
+            target.interact(mainPlayer);
+        }
+    }
+
+    private void handleBattle() {
+        Enemy target = null;
+        Player mainPlayer = party.getMainPlayer();
+        for (Enemy enemy : enemies) {
+            if (enemy.getPos().equals(mainPlayer.getPos())) {
+                target = enemy;
+                break;
+            }
+        }
+
+        if (target != null) {
+            // TODO: switch to battle view
+            party.updateFollowPosition(prevPosition);
+            System.out.println("starting battle with: " + target.toString());
+
+        }
     }
 
     private void updateSpritePositions() {
@@ -85,7 +133,7 @@ public class ExplorationController {
                 enemy.getSprite().setY(mapView.getOffset().y() + enemy.getPos().y() * tileSize);
             }
         }
-        for (NPC n : npc) {
+        for (NPC n : npcs) {
             if (n.getSprite() != null) {
                 n.getSprite().setFitWidth(tileSize);
                 n.getSprite().setFitHeight(tileSize);
@@ -95,26 +143,24 @@ public class ExplorationController {
         }
     }
 
-    void movePlayer() {
+    void movePlayer(KeyCode key) {
         Player mainPlayer = party.getMainPlayer();
         int dx = 0;
         int dy = 0;
-        KeyCode key = activeKeys.poll();
 
-        if (key != null) {
-            if (key == KeyCode.W || key == KeyCode.UP)
-                dy -= 1;
-            if (key == KeyCode.A || key == KeyCode.LEFT)
-                dx -= 1;
-            if (key == KeyCode.S || key == KeyCode.DOWN)
-                dy += 1;
-            if (key == KeyCode.D || key == KeyCode.RIGHT)
-                dx += 1;
-        }
+        if (key == KeyCode.W || key == KeyCode.UP)
+            dy -= 1;
+        if (key == KeyCode.A || key == KeyCode.LEFT)
+            dx -= 1;
+        if (key == KeyCode.S || key == KeyCode.DOWN)
+            dy += 1;
+        if (key == KeyCode.D || key == KeyCode.RIGHT)
+            dx += 1;
 
         if (dx != 0 || dy != 0) {
             Position nextPosition = mainPlayer.getPos().add(dx, dy);
             if (canGoThere(nextPosition)) {
+                prevPosition = mainPlayer.getPos();
                 party.updateFollowPosition(nextPosition);
                 mapView.updatePlayerPosition(nextPosition.scale(mapView.getTileSize()));
             }
@@ -122,7 +168,10 @@ public class ExplorationController {
     }
 
     public boolean canGoThere(Position nextPosition) {
-        return nextPosition.isInside(posLimit)
-                && this.mapView.getWalkableTiles()[(int) nextPosition.x()][(int) nextPosition.y()];
+        return nextPosition.isInside(posLimit) // player isn't going outside the map
+                // player isn't walking on some obstacle
+                && this.mapView.getWalkableTiles()[(int) nextPosition.x()][(int) nextPosition.y()]
+                // prevent player from trampling npcs
+                && !this.npcs.stream().anyMatch(npc -> npc.getPos().equals(nextPosition));
     }
 }

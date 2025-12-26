@@ -78,7 +78,7 @@ public class GameState {
         enemies.clear();
 
         List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN2);
-        List<Position> pos = List.of(new Position(2, 2), new Position(12, 8));
+        List<Position> pos = List.of(new Position(3, 2), new Position(6, 8));
         for (int i = 0; i < enemiesJob.size(); i++) {
             Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
             enemies.add(new Enemy(enemiesJob.get(i), newPos));
@@ -89,8 +89,8 @@ public class GameState {
         this.npc.clear();
 
         List<Job> jobs = List.of(Job.FARMER);
-        Position pos = new Position(7,7);
-        this.npc.add(new NPC(jobs.get(0), new Position(pos.x(),pos.y())));
+        Position pos = new Position(4, 7);
+        this.npc.add(new NPC(jobs.get(0), new Position(pos.x(), pos.y())));
     }
 
     public void applyChoices(String choice) {

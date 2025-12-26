@@ -103,7 +103,7 @@ public abstract class CharacterPG {
     public boolean isInCombat() {
         return this.inCombat;
     }
-    
+
     public Job getJob() {
         return job;
     }
@@ -143,5 +143,10 @@ public abstract class CharacterPG {
     public abstract void takeDamage(int value);
 
     public abstract void heal(int value);
+
+    @Override
+    public String toString() {
+        return this.getJob().toString();
+    }
 
 }
