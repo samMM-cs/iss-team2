@@ -52,4 +52,13 @@ public record Position(double x, double y) {
         return "Position(" + x + ", " + y + ")";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Position)) return false;
+        Position pos= (Position) obj;
+        return pos.x()== this.x() &&
+            pos.y() == this.y();
+    }
+
 }

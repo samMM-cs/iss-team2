@@ -66,8 +66,15 @@ public class ExplorationController {
     }
 
     public void update() {
-        if (this.enemies.stream().anyMatch(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())))
-            handleBattle();
+        /*  if (this.enemies.stream().anyMatch(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())))
+         *      handleBattle();
+         */
+
+        this.enemies.stream().
+            filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).
+            findFirst().
+            ifPresent(this::handleBattle);
+
         KeyCode key = activeKeys.poll();
         if (key != null) {
             if (movementKeys.contains(key))
@@ -111,6 +118,12 @@ public class ExplorationController {
             System.out.println("starting battle with: " + target.toString());
 
         }
+    }
+
+    private void handleBattle(Enemy e) {
+        // TODO: switch to battle view
+        party.updateFollowPosition(prevPosition);
+        System.out.println("starting battle with: " + e.toString());
     }
 
     private void updateSpritePositions() {

@@ -1,9 +1,7 @@
 package com.game.model.battle;
 
 public class MoveFactory {
-
-    public static ActionStrategy createMove(
-            Move move) {
+    public static ActionStrategy createMove(Move move) {
 
         return switch (move.getType()) {
             case "ATTACK" -> new AttackMove(

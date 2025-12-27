@@ -1,26 +1,28 @@
 package com.game.model.battle;
 
 import com.game.model.character.CharacterPG;
+import com.game.model.character.Enemy;
+
+import java.util.List;
 
 import com.game.model.GameState;
 
 public class Battle{
     private GameState gameState;
+    private List<Enemy> enemies;
     private int turnIndex;
     private TurnStrategy turnStrategy;
     private RewardStrategy rewardStrategy;
 
-    public Battle(GameState gameState) {
-        this.gameState= gameState;
+    public Battle() {
+        this.gameState= GameState.getInstance();
         this.turnIndex= 0;
-        this.turnStrategy= new StaticSpeedTurn(gameState.getParty(), gameState.getEnemies());
+        this.turnStrategy= new StaticSpeedTurn(gameState.getParty(), enemies);
         this.rewardStrategy= new StandardRewardStrategy();
     }
-    public Battle(GameState gameState,
-        int turnIndex,
-        TurnStrategy turnStrategy,
-        RewardStrategy rewardStrategy) {
-        this.gameState= gameState;
+    
+    public Battle(int turnIndex, TurnStrategy turnStrategy, RewardStrategy rewardStrategy) {
+        this.gameState= GameState.getInstance();
         this.turnIndex = turnIndex;
         this.turnStrategy= turnStrategy;
         this.rewardStrategy= rewardStrategy;
@@ -54,7 +56,7 @@ public class Battle{
             }
         }
         boolean enemydead= true;
-        for (CharacterPG c : this.gameState.getEnemies()) {
+        for (CharacterPG c : enemies) {
             if (c.getCurrentStats().getHp() > 0) {
                 enemydead= false;
             }
@@ -87,7 +89,7 @@ public class Battle{
     }
 
     public void assignRewards() {
-        Reward reward= rewardStrategy.calculateRewards(this.gameState.getEnemies());
+        Reward reward= rewardStrategy.calculateRewards(enemies);
         reward.assignXP(this.gameState.getParty());
         reward.assignItem(this.gameState.getInventory());
     }

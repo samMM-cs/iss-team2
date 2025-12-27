@@ -3,7 +3,6 @@ package com.game.view.mapview;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.game.controller.GameController;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Party;
@@ -31,7 +30,7 @@ public class ExplorationView {
     private Scene scene;
     private MapView mapView;
 
-    public ExplorationView(Stage stage, GameController gameController, GameState gameState) {
+    public ExplorationView(Stage stage) {
         this.stage = stage;
         if (stage == null)
             return;
@@ -46,6 +45,7 @@ public class ExplorationView {
 
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
+        GameState gameState= GameState.getInstance();
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
         this.npc = gameState.getNpc();

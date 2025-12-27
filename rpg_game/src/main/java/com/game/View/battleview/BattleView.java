@@ -1,6 +1,9 @@
 package com.game.view.battleview;
 
 import javafx.scene.control.ListView;
+
+import com.game.model.character.Enemy;
+
 import javafx.geometry.Orientation;
 
 import javafx.stage.Stage;
@@ -8,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 public class BattleView {
+    private Enemy enemy;
+
     private Pane root;
     private Scene scene;
     private Stage stage;
@@ -20,7 +25,7 @@ public class BattleView {
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
     }
 
-    public void show() {
+    public void showBattle() {
         
         listView.getItems().addAll("Move", "Item", "Flee");
 
