@@ -61,7 +61,7 @@ public class ExplorationView {
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc);
+        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, stage);
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
@@ -80,12 +80,14 @@ public class ExplorationView {
 
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
+                this.stop();
                 movementController.update();
+                this.start();
                 mapView.requestLayout();
-                for (Player player : party.getMembers()) {
+                /*for (Player player : party.getMembers()) {
                     if (player.isInCombat())
                         player.enterCombat();
-                }
+                }*/
             }
         };
 

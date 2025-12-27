@@ -3,18 +3,23 @@ package com.game.controller.exploration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
 import com.game.model.Position;
+import com.game.model.battle.Battle;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
+import com.game.view.battleview.BattleView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+
+import javafx.stage.Stage;
 
 public class ExplorationController {
     private Party party;
@@ -28,8 +33,12 @@ public class ExplorationController {
     private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = Position.Origin;
+    
+    private Stage stage;
+    private boolean battleStarted= false;
 
-    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc) {
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc, Stage stage) {
+        this.stage=stage;
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
@@ -70,10 +79,13 @@ public class ExplorationController {
          *      handleBattle();
          */
 
-        this.enemies.stream().
+        Optional<Enemy> optEnemy= this.enemies.stream().
             filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).
-            findFirst().
-            ifPresent(this::handleBattle);
+            findFirst();
+        if (!battleStarted && optEnemy.isPresent()) {
+            battleStarted= true;
+            optEnemy.ifPresent(this::handleBattle);
+        }
 
         KeyCode key = activeKeys.poll();
         if (key != null) {
@@ -121,7 +133,13 @@ public class ExplorationController {
     }
 
     private void handleBattle(Enemy e) {
-        // TODO: switch to battle view
+        //Versatile for multiple enemy
+        List<Enemy> enemiesList= new ArrayList<>();
+        enemiesList.add(e);
+        Battle battle= new Battle(enemiesList);
+        BattleView battleView= new BattleView(this.stage, battle);
+        battleView.showBattle();
+
         party.updateFollowPosition(prevPosition);
         System.out.println("starting battle with: " + e.toString());
     }

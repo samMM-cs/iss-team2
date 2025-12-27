@@ -14,10 +14,11 @@ public class Battle{
     private TurnStrategy turnStrategy;
     private RewardStrategy rewardStrategy;
 
-    public Battle() {
+    public Battle(List<Enemy> enemies) {
         this.gameState= GameState.getInstance();
         this.turnIndex= 0;
-        this.turnStrategy= new StaticSpeedTurn(gameState.getParty(), enemies);
+        this.enemies= enemies;
+        this.turnStrategy= new StaticSpeedTurn(gameState.getParty(), this.enemies);
         this.rewardStrategy= new StandardRewardStrategy();
     }
     
