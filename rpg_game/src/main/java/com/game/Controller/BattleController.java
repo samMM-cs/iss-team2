@@ -6,6 +6,6 @@ public class BattleController {
     private Stage stage;
 
     public BattleController(Stage stage) {
-        this.stage= stage;
+        this.stage = stage;
     }
 }

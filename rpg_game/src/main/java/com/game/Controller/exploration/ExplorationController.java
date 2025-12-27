@@ -33,12 +33,13 @@ public class ExplorationController {
     private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = Position.Origin;
-    
-    private Stage stage;
-    private boolean battleStarted= false;
 
-    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc, Stage stage) {
-        this.stage=stage;
+    private Stage stage;
+    private boolean battleStarted = false;
+
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
+            Stage stage) {
+        this.stage = stage;
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
@@ -75,15 +76,16 @@ public class ExplorationController {
     }
 
     public void update() {
-        /*  if (this.enemies.stream().anyMatch(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())))
-         *      handleBattle();
+        /*
+         * if (this.enemies.stream().anyMatch(enemy ->
+         * enemy.getPos().equals(party.getMainPlayer().getPos())))
+         * handleBattle();
          */
 
-        Optional<Enemy> optEnemy= this.enemies.stream().
-            filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).
-            findFirst();
+        Optional<Enemy> optEnemy = this.enemies.stream()
+                .filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).findFirst();
         if (!battleStarted && optEnemy.isPresent()) {
-            battleStarted= true;
+            battleStarted = true;
             optEnemy.ifPresent(this::handleBattle);
         }
 
@@ -114,30 +116,12 @@ public class ExplorationController {
         }
     }
 
-    private void handleBattle() {
-        Enemy target = null;
-        Player mainPlayer = party.getMainPlayer();
-        for (Enemy enemy : enemies) {
-            if (enemy.getPos().equals(mainPlayer.getPos())) {
-                target = enemy;
-                break;
-            }
-        }
-
-        if (target != null) {
-            // TODO: switch to battle view
-            party.updateFollowPosition(prevPosition);
-            System.out.println("starting battle with: " + target.toString());
-
-        }
-    }
-
     private void handleBattle(Enemy e) {
-        //Versatile for multiple enemy
-        List<Enemy> enemiesList= new ArrayList<>();
+        // Versatile for multiple enemy
+        List<Enemy> enemiesList = new ArrayList<>();
         enemiesList.add(e);
-        Battle battle= new Battle(enemiesList);
-        BattleView battleView= new BattleView(this.stage, battle);
+        Battle battle = new Battle(enemiesList);
+        BattleView battleView = new BattleView(this.stage, battle);
         battleView.showBattle();
 
         party.updateFollowPosition(prevPosition);

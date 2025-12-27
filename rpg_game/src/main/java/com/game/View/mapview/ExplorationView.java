@@ -45,7 +45,7 @@ public class ExplorationView {
 
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
-        GameState gameState= GameState.getInstance();
+        GameState gameState = GameState.getInstance();
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
         this.npc = gameState.getNpc();
@@ -68,8 +68,8 @@ public class ExplorationView {
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
 
-        root.getChildren().add(party.getMainPlayer().getHud());
-        party.getMainPlayer().exitCombat();
+        // root.getChildren().add(party.getMainPlayer().getHud());
+        // party.getMainPlayer().exitCombat();
 
     }
 
@@ -84,10 +84,12 @@ public class ExplorationView {
                 movementController.update();
                 this.start();
                 mapView.requestLayout();
-                /*for (Player player : party.getMembers()) {
-                    if (player.isInCombat())
-                        player.enterCombat();
-                }*/
+                /*
+                 * for (Player player : party.getMembers()) {
+                 * if (player.isInCombat())
+                 * player.enterCombat();
+                 * }
+                 */
             }
         };
 
