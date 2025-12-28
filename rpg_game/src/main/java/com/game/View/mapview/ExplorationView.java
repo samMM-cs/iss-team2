@@ -13,6 +13,7 @@ import com.game.view.DialogueView;
 import com.game.view.ShopView;
 import com.game.model.character.Enemy;
 import com.game.model.GameState;
+import com.game.view.HUD;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
@@ -33,6 +34,7 @@ public class ExplorationView {
     private MapView mapView;
     private DialogueView dialogueView;
     private ShopView shopView;
+    private HUD hud;
 
     public ExplorationView(Stage stage) {
         this.stage = stage;
@@ -53,6 +55,8 @@ public class ExplorationView {
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
         this.npc = gameState.getNpc();
+        this.hud = new HUD(party.getMainPlayer());
+        hud.setVisible(false);
         this.dialogueView = new DialogueView();
         dialogueView.setVisible(false);
         this.shopView = new ShopView(party.getMainPlayer());
@@ -69,27 +73,16 @@ public class ExplorationView {
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
-<<<<<<< HEAD
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, dialogueView,shopView);
-=======
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, stage);
->>>>>>> a61ac39fb8f4c61a0cba392c0eeae337acd7011f
+        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, dialogueView,
+                shopView);
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
-<<<<<<< HEAD
+        root.getChildren().add(hud);
         root.getChildren().add(dialogueView);
         root.getChildren().add(shopView);
-        root.getChildren().add(party.getMainPlayer().getHud());
-        party.getMainPlayer().exitCombat();
-=======
-
-        // root.getChildren().add(party.getMainPlayer().getHud());
-        // party.getMainPlayer().exitCombat();
->>>>>>> a61ac39fb8f4c61a0cba392c0eeae337acd7011f
-
     }
 
     public void showMap() {
@@ -103,12 +96,16 @@ public class ExplorationView {
                 movementController.update();
                 this.start();
                 mapView.requestLayout();
-                /*
-                 * for (Player player : party.getMembers()) {
-                 * if (player.isInCombat())
-                 * player.enterCombat();
-                 * }
-                 */
+
+                for (Player player : party.getMembers()) {
+                    if (player.isInCombat()) {
+                        hud.setVisible(true);
+                        hud.update();
+                    } else
+                        hud.setVisible(false);
+
+                }
+
             }
         };
 

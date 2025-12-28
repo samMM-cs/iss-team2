@@ -22,6 +22,7 @@ public abstract class CharacterPG {
 
     private boolean inCombat; // Stato del combattimento
 
+
     public CharacterPG(Job job, Position pos, Image img) {
         this.job = job;
         this.pos = pos;
@@ -51,24 +52,6 @@ public abstract class CharacterPG {
     protected void refreshCurrentStats() {
         this.currentStats = this.baseStats.copy();
     }
-
-    // public void enterCombat() {
-    // inCombat = true;
-    // hud.setVisible(inCombat);
-    // updateHud();
-    // }
-
-    // public void exitCombat() {
-    // inCombat = false;
-    // hud.setVisible(inCombat);
-    // updateHud();
-    // }
-
-    // public void updateHud() {
-    // hpBar.setProgress((double) currentStats.getHp() / baseStats.getHp());
-    // expBar.setProgress(baseStats.getXpPerc());
-    // levelLabel.setText("Lv " + baseStats.getLevel());
-    // }
 
     public boolean isInCombat() {
         return this.inCombat;

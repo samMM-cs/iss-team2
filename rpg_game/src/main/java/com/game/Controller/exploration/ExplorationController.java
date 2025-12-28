@@ -15,6 +15,7 @@ import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
 import com.game.view.DialogueView;
 import com.game.view.ShopView;
+import com.game.view.battleview.BattleView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -36,6 +37,8 @@ public class ExplorationController {
     private Position prevPosition = Position.Origin;
     private DialogueView dialogueView;
     private ShopView shopView;
+    private boolean battleStarted = false;
+    private BattleView battleView;
 
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
             DialogueView dialogueView, ShopView shopView) {
@@ -133,7 +136,7 @@ public class ExplorationController {
         List<Enemy> enemiesList = new ArrayList<>();
         enemiesList.add(e);
         Battle battle = new Battle(enemiesList);
-        BattleView battleView = new BattleView(this.stage, battle);
+        battleView = new BattleView(this.stage, battle);
         battleView.showBattle();
 
         if (target != null) {
