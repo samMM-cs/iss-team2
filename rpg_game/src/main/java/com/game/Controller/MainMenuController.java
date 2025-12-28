@@ -5,26 +5,18 @@ import com.game.model.creator.NewGameCreator;
 import com.game.model.creator.Game;
 
 import javafx.event.ActionEvent;
-import javafx.stage.*;
 
 public class MainMenuController {
-    private Stage stage;
 
-    public MainMenuController(Stage stage) {
-        this.stage = stage;
+    public MainMenuController() {
     }
 
     public void onNewGame(ActionEvent event) {
-        // Carica schermata di gioco
-        if (stage == null) {
-            System.err.println("Stage null in MainMenuController");
-            return;
-        }
         System.out.println("Avvio nuova partita");
 
         GameCreator gameCreator = new NewGameCreator();
         Game newGame = gameCreator.createGame();
-        GameController gameController = new GameController(stage,newGame);
+        GameController gameController = new GameController(newGame);
         gameController.start();
     }
 
@@ -39,6 +31,6 @@ public class MainMenuController {
 
     public void onExit(ActionEvent event) {
         // Chiusura del gioco
-        stage.close();
+        ViewManager.getInstance().exit();
     }
 }

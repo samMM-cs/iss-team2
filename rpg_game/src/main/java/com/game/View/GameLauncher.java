@@ -1,5 +1,7 @@
 package com.game.view;
 
+import com.game.controller.ViewManager;
+
 import javafx.stage.Stage;
 
 public class GameLauncher {
@@ -16,8 +18,8 @@ public class GameLauncher {
 
     public void launch(Stage primaryStage) {
         System.out.println("RGP Game launching...");
+        ViewManager.ViewManagerBuilder.build(primaryStage);
 
-        MainMenuView menu = new MainMenuView(primaryStage);
-        menu.show();
+        ViewManager.getInstance().showMainMenu();
     }
 }

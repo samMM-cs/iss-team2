@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
+import com.game.controller.ViewManager;
 import com.game.model.Position;
 import com.game.model.battle.Battle;
 import com.game.model.character.Party;
@@ -15,13 +16,10 @@ import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
 import com.game.view.DialogueView;
 import com.game.view.ShopView;
-import com.game.view.battleview.BattleView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-
-import javafx.stage.Stage;
 
 public class ExplorationController {
     private Party party;
@@ -38,11 +36,9 @@ public class ExplorationController {
     private DialogueView dialogueView;
     private ShopView shopView;
     private boolean battleStarted = false;
-    private BattleView battleView;
-    private Stage stage;
 
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
-            DialogueView dialogueView, ShopView shopView, Stage stage) {
+            DialogueView dialogueView, ShopView shopView) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
@@ -50,44 +46,27 @@ public class ExplorationController {
         this.npcs = npc;
         this.dialogueView = dialogueView;
         this.shopView = shopView;
-        this.stage= stage;
-        scene.setOnKeyPressed(e -> {
+        this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
 
         // Listener to update limits when window gets resized
-        scene.widthProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
-        scene.heightProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
+        this.scene.widthProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
+        this.scene.heightProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
 
         updatePositionLimit();
     }
 
     private void updatePositionLimit() {
-        // Bound positions by map dimensions (in tiles). If mapView is not ready,
-        // fall back to default based on scene size.
-        if (mapView != null && mapView.getTileSize() > 0) {
-            int tileSize = mapView.getTileSize();
-            int maxTilesX = (int) (mapView.getMapWidth() / tileSize);
-            int maxTilesY = (int) (mapView.getMapHeight() / tileSize);
-            // max index is tiles-1, ensure at least 0
-            int maxX = Math.max(0, maxTilesX - 1);
-            int maxY = Math.max(0, maxTilesY - 1);
-            this.posLimit = new Position(maxX, maxY);
-        } else {
-            // fallback: prevent negative or extremely large limits
-            int fallbackX = Math.max(0, (int) this.scene.getWidth() - 2);
-            int fallbackY = Math.max(0, (int) this.scene.getHeight() - 4);
-            this.posLimit = new Position(fallbackX, fallbackY);
-        }
+        int tileSize = mapView.getTileSize();
+        int maxTilesX = (int) (mapView.getMapWidth() / tileSize);
+        int maxTilesY = (int) (mapView.getMapHeight() / tileSize);
+        int maxX = Math.max(0, maxTilesX - 1);
+        int maxY = Math.max(0, maxTilesY - 1);
+        this.posLimit = new Position(maxX, maxY);
     }
 
     public void update() {
-        /*
-         * if (this.enemies.stream().anyMatch(enemy ->
-         * enemy.getPos().equals(party.getMainPlayer().getPos())))
-         * handleBattle();
-         */
-
         Optional<Enemy> optEnemy = this.enemies.stream()
                 .filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).findFirst();
         if (!battleStarted && optEnemy.isPresent()) {
@@ -121,11 +100,11 @@ public class ExplorationController {
             }
         }
 
-        final NPC nerabyNPC = target;
+        final NPC nearbyNPC = target;
         if (target != null) {
             dialogueView.showDialogue(target.getDialogue());
             dialogueView.setOnCloseClick(() -> {
-                shopView.open(nerabyNPC);
+                shopView.open(nearbyNPC);
             });
 
             target.interact(mainPlayer);
@@ -138,8 +117,7 @@ public class ExplorationController {
         List<Enemy> enemiesList = new ArrayList<>();
         enemiesList.add(e);
         Battle battle = new Battle(enemiesList);
-        battleView = new BattleView(this.stage, battle);
-        battleView.showBattle();
+        ViewManager.getInstance().showBattleView(battle);
 
         party.updateFollowPosition(prevPosition);
         System.out.println("starting battle with: " + e.toString());

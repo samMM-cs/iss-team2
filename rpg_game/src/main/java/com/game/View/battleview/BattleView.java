@@ -4,17 +4,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 
+import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 import com.game.model.character.Party;
-import com.game.view.mapview.ExplorationView;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -27,15 +26,13 @@ public class BattleView {
 
     private Pane root;
     private Scene scene;
-    private Stage stage;
     ListView<String> listView = new ListView<>();
     private Party party;
 
-    public BattleView(Stage stage, Battle battle) {
-        // this.root = root;
+    public BattleView(Battle battle) {
         this.root = new Pane();
-        this.stage = stage;
-        this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
+        this.scene = new Scene(root, ViewManager.getInstance().getWidth(),
+                ViewManager.getInstance().getHeight());
         this.party = GameState.getInstance().getParty();
         this.battle = battle;
     }
@@ -76,7 +73,7 @@ public class BattleView {
         listView.setOnMouseClicked(e -> {
             String selectedItem = listView.getSelectionModel().getSelectedItem();
             if (selectedItem != null && selectedItem.equals("Flee")) {
-                new ExplorationView(stage).showMap();
+                ViewManager.getInstance().showExplorationView();
             }
         });
         HBox bottomBox = new HBox(listView);
@@ -87,7 +84,6 @@ public class BattleView {
         bp.setBottom(bottomBox);
 
         root.getChildren().add(bp);
-        this.stage.setScene(scene);
-        this.stage.show();
+        ViewManager.getInstance().setAndShowScene(scene);
     }
 }

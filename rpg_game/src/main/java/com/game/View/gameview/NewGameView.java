@@ -1,6 +1,7 @@
 package com.game.view.gameview;
 
 import com.game.controller.GameController;
+import com.game.controller.ViewManager;
 
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -24,7 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -34,18 +34,12 @@ public class NewGameView extends GameView {
     public static final int MAX_PLAYER = 4;
     private GameController gameController;
 
-    public NewGameView(Stage stage, GameController gameController) {
-        super(stage);
+    public NewGameView(GameController gameController) {
         this.gameController = gameController;
     }
 
     @Override
     public void show() {
-        if (stage == null) {
-            System.err.println("Stage null in NewGameView");
-            return;
-        }
-
         // ===== PLAYER BUTTONS (GAME STYLE) =====
         ToggleButton player1 = createButton(new ToggleButton(), "1 PLAYER", "/Default.png");
         ToggleButton player2 = createButton(new ToggleButton(), "2 PLAYER", "/Default.png");
@@ -111,8 +105,7 @@ public class NewGameView extends GameView {
         overlay.widthProperty().bind(scene.widthProperty());
         overlay.heightProperty().bind(scene.heightProperty());
 
-        stage.setScene(scene);
-        stage.show();
+        ViewManager.getInstance().setAndShowScene(scene);
 
         FadeTransition ft = new FadeTransition(Duration.seconds(1), menu);
         ft.setFromValue(0);
@@ -147,11 +140,6 @@ public class NewGameView extends GameView {
             btn.setScaleY(1);
         });
         return btn;
-    }
-
-    @Override
-    public Stage getStage() {
-        return this.stage;
     }
 
     @Override
