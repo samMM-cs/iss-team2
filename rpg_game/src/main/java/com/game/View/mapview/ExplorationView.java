@@ -3,7 +3,6 @@ package com.game.view.mapview;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.game.controller.GameController;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Party;
@@ -35,7 +34,7 @@ public class ExplorationView {
     private DialogueView dialogueView;
     private ShopView shopView;
 
-    public ExplorationView(Stage stage, GameController gameController, GameState gameState) {
+    public ExplorationView(Stage stage) {
         this.stage = stage;
         if (stage == null)
             return;
@@ -50,6 +49,7 @@ public class ExplorationView {
 
         this.root = new Pane();
         this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
+        GameState gameState = GameState.getInstance();
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
         this.npc = gameState.getNpc();
@@ -69,16 +69,26 @@ public class ExplorationView {
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
+<<<<<<< HEAD
         this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, dialogueView,shopView);
+=======
+        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, stage);
+>>>>>>> a61ac39fb8f4c61a0cba392c0eeae337acd7011f
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
+<<<<<<< HEAD
         root.getChildren().add(dialogueView);
         root.getChildren().add(shopView);
         root.getChildren().add(party.getMainPlayer().getHud());
         party.getMainPlayer().exitCombat();
+=======
+
+        // root.getChildren().add(party.getMainPlayer().getHud());
+        // party.getMainPlayer().exitCombat();
+>>>>>>> a61ac39fb8f4c61a0cba392c0eeae337acd7011f
 
     }
 
@@ -89,12 +99,16 @@ public class ExplorationView {
 
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
+                this.stop();
                 movementController.update();
+                this.start();
                 mapView.requestLayout();
-                for (Player player : party.getMembers()) {
-                    if (player.isInCombat())
-                        player.enterCombat();
-                }
+                /*
+                 * for (Player player : party.getMembers()) {
+                 * if (player.isInCombat())
+                 * player.enterCombat();
+                 * }
+                 */
             }
         };
 

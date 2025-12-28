@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 import com.game.model.Position;
 import com.game.model.ability.Ability;
@@ -24,14 +20,6 @@ public abstract class CharacterPG {
     private ImageView sprite;
     private List<Ability> abilities = new ArrayList<>();
 
-    // Per l'HUD
-    private VBox hud;
-    private ProgressBar hpBar;
-    private ProgressBar expBar;
-    private Label nameLabel;
-    private Label hpLabel;
-    private Label levelLabel;
-
     private boolean inCombat; // Stato del combattimento
 
     public CharacterPG(Job job, Position pos, Image img) {
@@ -40,16 +28,6 @@ public abstract class CharacterPG {
         this.sprite = createCharacterSprite(img, job);
         this.baseStats = job.getBaseStats().copy();
         this.currentStats = this.getBaseStats().copy();
-        // HUD
-        nameLabel = new Label(job.name());
-        hpLabel = new Label("HP");
-        hpBar = new ProgressBar(1);
-        expBar = new ProgressBar(0);
-        levelLabel = new Label("Level " + baseStats.getLevel());
-
-        HBox hpBox = new HBox(5, hpLabel, hpBar);
-        hud = new VBox(5, nameLabel, hpBox, levelLabel, expBar);
-        hud.setVisible(false); // HUD invisibile di default
     }
 
     public ImageView createCharacterSprite(Image img, Job job) {
@@ -74,23 +52,23 @@ public abstract class CharacterPG {
         this.currentStats = this.baseStats.copy();
     }
 
-    public void enterCombat() {
-        inCombat = true;
-        hud.setVisible(inCombat);
-        updateHud();
-    }
+    // public void enterCombat() {
+    // inCombat = true;
+    // hud.setVisible(inCombat);
+    // updateHud();
+    // }
 
-    public void exitCombat() {
-        inCombat = false;
-        hud.setVisible(inCombat);
-        updateHud();
-    }
+    // public void exitCombat() {
+    // inCombat = false;
+    // hud.setVisible(inCombat);
+    // updateHud();
+    // }
 
-    public void updateHud() {
-        hpBar.setProgress((double) currentStats.getHp() / baseStats.getHp());
-        expBar.setProgress(baseStats.getXpPerc());
-        levelLabel.setText("Lv " + baseStats.getLevel());
-    }
+    // public void updateHud() {
+    // hpBar.setProgress((double) currentStats.getHp() / baseStats.getHp());
+    // expBar.setProgress(baseStats.getXpPerc());
+    // levelLabel.setText("Lv " + baseStats.getLevel());
+    // }
 
     public boolean isInCombat() {
         return this.inCombat;
@@ -128,9 +106,9 @@ public abstract class CharacterPG {
         currentStats = newStats;
     }
 
-    public VBox getHud() {
-        return hud;
-    }
+    // public VBox getHud() {
+    // return hud;
+    // }
 
     public abstract void takeDamage(int value);
 

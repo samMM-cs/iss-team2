@@ -62,7 +62,7 @@ public class GameController {
             gameState.createEnemy();
             gameState.createParty();
             gameState.createNpc();
-            ExplorationView explorationView = new ExplorationView(stage, this, gameState);
+            ExplorationView explorationView = new ExplorationView(stage);
             explorationView.showMap();
         }
     }

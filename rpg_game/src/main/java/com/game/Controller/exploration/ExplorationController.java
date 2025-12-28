@@ -3,10 +3,12 @@ package com.game.controller.exploration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
 import com.game.model.Position;
+import com.game.model.battle.Battle;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
@@ -17,6 +19,8 @@ import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+
+import javafx.stage.Stage;
 
 public class ExplorationController {
     private Party party;
@@ -73,8 +77,19 @@ public class ExplorationController {
     }
 
     public void update() {
-        if (this.enemies.stream().anyMatch(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())))
-            handleBattle();
+        /*
+         * if (this.enemies.stream().anyMatch(enemy ->
+         * enemy.getPos().equals(party.getMainPlayer().getPos())))
+         * handleBattle();
+         */
+
+        Optional<Enemy> optEnemy = this.enemies.stream()
+                .filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).findFirst();
+        if (!battleStarted && optEnemy.isPresent()) {
+            battleStarted = true;
+            optEnemy.ifPresent(this::handleBattle);
+        }
+
         KeyCode key = activeKeys.poll();
         if (key != null) {
             if (movementKeys.contains(key))
@@ -113,15 +128,13 @@ public class ExplorationController {
         }
     }
 
-    private void handleBattle() {
-        Enemy target = null;
-        Player mainPlayer = party.getMainPlayer();
-        for (Enemy enemy : enemies) {
-            if (enemy.getPos().equals(mainPlayer.getPos())) {
-                target = enemy;
-                break;
-            }
-        }
+    private void handleBattle(Enemy e) {
+        // Versatile for multiple enemy
+        List<Enemy> enemiesList = new ArrayList<>();
+        enemiesList.add(e);
+        Battle battle = new Battle(enemiesList);
+        BattleView battleView = new BattleView(this.stage, battle);
+        battleView.showBattle();
 
         if (target != null) {
             // TODO: switch to battle view
