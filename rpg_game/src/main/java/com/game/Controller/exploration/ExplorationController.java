@@ -39,9 +39,10 @@ public class ExplorationController {
     private ShopView shopView;
     private boolean battleStarted = false;
     private BattleView battleView;
+    private Stage stage;
 
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
-            DialogueView dialogueView, ShopView shopView) {
+            DialogueView dialogueView, ShopView shopView, Stage stage) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
@@ -49,6 +50,7 @@ public class ExplorationController {
         this.npcs = npc;
         this.dialogueView = dialogueView;
         this.shopView = shopView;
+        this.stage= stage;
         scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -139,11 +141,8 @@ public class ExplorationController {
         battleView = new BattleView(this.stage, battle);
         battleView.showBattle();
 
-        if (target != null) {
-            // TODO: switch to battle view
-            party.updateFollowPosition(prevPosition);
-            System.out.println("starting battle with: " + target.toString());
-        }
+        party.updateFollowPosition(prevPosition);
+        System.out.println("starting battle with: " + e.toString());
     }
 
     private void updateSpritePositions() {
