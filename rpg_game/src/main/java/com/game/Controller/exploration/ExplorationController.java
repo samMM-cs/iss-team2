@@ -11,6 +11,8 @@ import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
+import com.game.view.DialogueView;
+import com.game.view.ShopView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -28,13 +30,18 @@ public class ExplorationController {
     private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = Position.Origin;
+    private DialogueView dialogueView;
+    private ShopView shopView;
 
-    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc) {
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
+            DialogueView dialogueView, ShopView shopView) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
         this.enemies = enemies;
         this.npcs = npc;
+        this.dialogueView = dialogueView;
+        this.shopView = shopView;
         scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -72,6 +79,12 @@ public class ExplorationController {
         if (key != null) {
             if (movementKeys.contains(key))
                 movePlayer(key);
+
+            if (dialogueView.isVisible()) {
+                if (key == KeyCode.E)
+                    dialogueView.handleAdvance();
+                return;
+            }
             if (key == KeyCode.E)
                 handlePossibleInteractions();
         }
@@ -88,10 +101,15 @@ public class ExplorationController {
             }
         }
 
+        final NPC nerabyNPC = target;
         if (target != null) {
-            // TODO: switch to npc view
-            System.out.println("interacting with: " + target.toString());
+            dialogueView.showDialogue(target.getDialogue());
+            dialogueView.setOnCloseClick(() -> {
+                shopView.open(nerabyNPC);
+            });
+
             target.interact(mainPlayer);
+
         }
     }
 
@@ -109,7 +127,6 @@ public class ExplorationController {
             // TODO: switch to battle view
             party.updateFollowPosition(prevPosition);
             System.out.println("starting battle with: " + target.toString());
-
         }
     }
 

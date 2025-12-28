@@ -1,5 +1,9 @@
 package com.game.model.character;
 
+import com.game.model.ability.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Stats {
   int xp;
   int level;
@@ -9,6 +13,8 @@ public class Stats {
   int defense;
   int special;
   int speed;
+  List<Ability> abilities;
+  int money;
 
   public Stats(int hp, int attack, int defense, int special, int speed) {
     this.hp = hp;
@@ -20,6 +26,8 @@ public class Stats {
     this.level = 1;
     this.xp = 0;
     this.maxXp = 100;
+    this.abilities = new ArrayList<>();
+    this.money = 1;
   }
 
   public Stats(Stats newStats) {
@@ -32,6 +40,18 @@ public class Stats {
     this.xp = newStats.xp;
     this.level = newStats.level;
     this.maxXp = newStats.maxXp;
+
+    this.abilities = new ArrayList<>(newStats.abilities);
+    this.money = newStats.money;
+  }
+
+  public void addAbility(Ability ability) {
+    if (!abilities.contains(ability))
+      abilities.add(ability);
+  }
+
+  public List<Ability> getAbilities() {
+    return abilities;
   }
 
   public void addExp(int amount) {
@@ -100,8 +120,9 @@ public class Stats {
   }
 
   public int getMaxXp() {
-      return maxXp;
+    return maxXp;
   }
+
   public int getLevel() {
     return level;
   }
@@ -110,6 +131,17 @@ public class Stats {
     this.level = level;
   }
 
+  public void addMoney(int amount) {
+    this.money += amount;
+  }
+
+  public void removeMoney(int amount) {
+    this.money -= amount;
+  }
+
+  public int getMoney() {
+      return money;
+  }
   public Stats copy() {
     return new Stats(this);
   }

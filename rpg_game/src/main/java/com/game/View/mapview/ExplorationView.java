@@ -10,6 +10,8 @@ import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.map.TiledMapData;
+import com.game.view.DialogueView;
+import com.game.view.ShopView;
 import com.game.model.character.Enemy;
 import com.game.model.GameState;
 
@@ -30,6 +32,8 @@ public class ExplorationView {
     private Pane root;
     private Scene scene;
     private MapView mapView;
+    private DialogueView dialogueView;
+    private ShopView shopView;
 
     public ExplorationView(Stage stage, GameController gameController, GameState gameState) {
         this.stage = stage;
@@ -49,6 +53,10 @@ public class ExplorationView {
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
         this.npc = gameState.getNpc();
+        this.dialogueView = new DialogueView();
+        dialogueView.setVisible(false);
+        this.shopView = new ShopView(party.getMainPlayer());
+        shopView.setVisible(false);
         for (Player player : this.party.getMembers()) {
             builder = builder.addSprite(player.getSprite(), player.getPos());
         }
@@ -61,13 +69,14 @@ public class ExplorationView {
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc);
+        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, dialogueView,shopView);
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
-
+        root.getChildren().add(dialogueView);
+        root.getChildren().add(shopView);
         root.getChildren().add(party.getMainPlayer().getHud());
         party.getMainPlayer().exitCombat();
 

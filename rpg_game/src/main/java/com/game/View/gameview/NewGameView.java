@@ -28,7 +28,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
 
 public class NewGameView extends GameView {

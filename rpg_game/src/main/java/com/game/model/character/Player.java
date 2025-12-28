@@ -1,6 +1,10 @@
 package com.game.model.character;
 
 import javafx.scene.image.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import com.game.model.Position;
 import com.game.model.ability.Ability;
 
@@ -9,6 +13,7 @@ public class Player extends CharacterPG {
     private Inventory inventory;
     private Player follower;
     private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
+    private Set<Integer> learnedAbilities = new HashSet<>();
 
     public Player(Job job, Position position) {
         super(job, position, img);
@@ -18,6 +23,13 @@ public class Player extends CharacterPG {
     }
 
     public void learnAbility(Ability ability) {
+        if (ability == null)
+            return;
+
+        if (hasAbility(ability))
+            return;
+        learnedAbilities.add(ability.getId());
+        ability.apply(this);
     }
 
     public void notifyFollower() {
@@ -43,6 +55,10 @@ public class Player extends CharacterPG {
         this.xp += xp;
     }
 
+    public final void setXp(int xp) {
+        this.xp = xp;
+    }
+
     public final Inventory getInventory() {
         return this.inventory;
     }
@@ -57,6 +73,10 @@ public class Player extends CharacterPG {
 
     public void setPosition(Position pos) {
         this.setPos(pos);
+    }
+
+    public boolean hasAbility(Ability ability) {
+        return learnedAbilities.contains(ability.getId());
     }
 
     @Override

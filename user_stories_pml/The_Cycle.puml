@@ -80,32 +80,41 @@ MainMenuController --> GameView : render()
 'Choose character job, uso Abstract Factory'
 abstract class Character{
     -abilities: List<Ability>
-    +addAbility(a: Ability): void
-    +getAbilities(): List<Ability>
     - job: Job
     -baseStats: Stats
     -currentStats: Stats
     -position: Position
+    -inCombat: boolean
+    +refreshCurrentStats(): void
+    +enterCombat(): void
+    +exitCombat(): void
+    +isInCombat(): boolean
     +createCharacterSprite(): ImageView
+    +useAbilities(): void
+    +addAbility(a: Ability): void
+    +getAbilities(): List<Ability>
     +takeDamage(int value): void
     +heal(int value): void
-    +useAbilities(): void
 }
 
 class Player extends Character{
     - xp: int
     - follower: Player
     - imgSprite: Image
+    - abilities: List<Ability>
     +notifyFollower(): void
     +subscribeToFollowed(): void
     +unsubscribeFromFollowed(): void
     +addXp(): void
     +takeDamage(int value): void
     +heal(int value): void
+    +addAbility(a: Ability): void
+    +getAbilities(): List<Ability>
+    +useAbilities(): void
+    +hasAbility(): boolean
 }
 class Enemy extends Character{
     - imgSprite: Image
-    +addXp(): void
     +takeDamage(int value): void
     +heal(int value): void
 }
@@ -121,6 +130,7 @@ class GameController{
     +onCharacterSelected(Job job): void
     +createParty(): void
     +createEnemy():  void
+    +createNPC(): void
 
 }
 enum Job{}
@@ -131,28 +141,29 @@ GameController-->Enemy:createEnemy()
 Player-->Job
 Enemy-->Job
 
-'Character Evolution, Decorator'
+'Character Evolution, Strategy'
 interface Ability{
     +getName(): String
-    +apply(c: Character): void
-}
-abstract class AbilityDecorator implements Ability{
-    -wrapped: Ability
-    +getName(): String
-    +apply(c: Character): void
+    +getDescription(): String
+    +getCost(): int
+    +apply(player: Player): void
 }
 
 class FireballAbility implements Ability{
     +getName(): String
-    +apply(c: Character): void
+    +getDescription(): String
+    +getCost(): int
+    +apply(player: Player): void
 }
 
 class HealAbility implements Ability{
     +getName(): String
-    +apply(c: Character): void
+    +getDescription(): String
+    +getCost(): int
+    +apply(player: Player): void
 }
 
-Character->Ability
+Player->Ability: apply()
 
 'Builder'
 
@@ -166,12 +177,12 @@ class MapBuilder{
     + renderMap()
   }
 
-  class MovementController {
+  class ExplorationController {
     + movePlayer(direction)
     + updatePartyFollow()
   }
 
-  ExplorationView --> MovementController
+  ExplorationView --> ExplorationController
   ExplorationView --> MapBuilder
 
   CharacterSelectionView-->ExplorationView: startExploration()

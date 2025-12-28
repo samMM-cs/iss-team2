@@ -4,19 +4,30 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.game.model.Position;
+import com.game.model.character.dialogue.Interactable;
+import com.game.view.DialogueView;
+import com.game.model.character.dialogue.Dialogue;
+import com.game.model.ability.*;
 
-public class NPC implements Interactable {
-
-    private static final Image img = new Image(NPC.class.getResourceAsStream("/characters/rogues.png"));
+public abstract class NPC implements Interactable {
     private ImageView sprite;
     private final Job job;
     private final Position pos;
 
-    public NPC(Job job, Position pos) {
+    private final Dialogue dialogue;
+
+    private final List<Ability> shopAbilities;
+
+    public NPC(Job job, Position pos, Image img, Dialogue dialogue) {
         this.job = job;
         this.pos = pos;
         this.sprite = createCharacterSprite(img, job);
+        this.dialogue = dialogue;
+        this.shopAbilities = new ArrayList<>();
     }
 
     private ImageView createCharacterSprite(Image img, Job job) {
@@ -39,31 +50,21 @@ public class NPC implements Interactable {
         return this.sprite;
     }
 
+    public Dialogue getDialogue() {
+        return dialogue;
+    }
+
+    public void addShopAbility(Ability ability) {
+        this.shopAbilities.add(ability);
+    }
+
+    public List<Ability> getShopAbilities() {
+        return shopAbilities;
+    }
+
     @Override
     public void interact(Player player) {
-
+        DialogueView view = new DialogueView();
+        view.showDialogue(this.getDialogue());
     }
-
-    @Override
-    public String toString() {
-        return "NPC (" + this.job + ", " + this.pos + ")";
-    }
-    /*
-     * private String name;
-     * private List<Item> shopItems;
-     * 
-     * public NPC(String name, List<Item> shopItems) {
-     * this.name = name;
-     * this.shopItems = shopItems;
-     * }
-     * 
-     * public final String getName() {
-     * return this.name;
-     * }
-     * 
-     * public final List<Item> getShopItems() {
-     * return this.shopItems;
-     * }
-     */
-
 }

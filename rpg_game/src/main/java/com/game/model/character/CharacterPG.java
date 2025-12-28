@@ -65,14 +65,6 @@ public abstract class CharacterPG {
         this.abilities.add(ability);
     }
 
-    // Metodo per usare tutte le abilità
-    public void useAbility() {
-        for (Ability a : abilities) {
-            System.out.println("Using ability: " + a.getName());
-            a.apply(this);
-        }
-    }
-
     public void gainExp(int amount) {
         baseStats.addExp(amount);
         refreshCurrentStats();

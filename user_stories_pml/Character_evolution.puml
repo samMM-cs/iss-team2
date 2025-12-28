@@ -1,32 +1,33 @@
 @startuml US18
 title Character Evolution
-'Uso il pattern Decorator per estendere dinamicamente la capacità del personaggio senza modificare la classe base. Le nuove abilità verranno aggiunte alla lista'
+'Il Strategy Pattern è utilizzato per modellare le abilità come comportamenti intercambiabili, permettendo al Player di variare dinamicamente il proprio comportamento senza modificare la sua struttura.'
+
 interface Ability{
-    +getName(): void
-    +apply(c: Character): void
+    +getName(): String
+    +getDescription(): String
+    +getCost(): int
+    +apply(player: Player): void
 }
 
-abstract class Character{
+class Player{
     - abilities: List<Ability>
     +addAbility(a: Ability): void
     +getAbilities(): List<Ability>
     +useAbilities(): void
 }
-abstract class AbilityDecorator implements Ability{
-    -wrapped: Ability
-    +getName(): String
-    +apply(c: Character): void
-}
-
 class FireballAbility implements Ability{
     +getName(): String
-    +apply(c: Character): void
+    +getDescription(): String
+    +getCost(): int
+    +apply(player: Player): void
 }
 
 class HealAbility implements Ability{
     +getName(): String
+    +getDescription(): String
+    +getCost(): int
     +apply(c: Character): void
 }
 
-Character->Ability: apply()
+Player->Ability: apply()
 @enduml
