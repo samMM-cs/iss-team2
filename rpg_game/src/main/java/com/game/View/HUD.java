@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -19,6 +20,11 @@ public class HUD extends VBox {
     private Label xpLabel;
     private Label playerName;
     private Stats statsCharacter;
+
+    private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
+            new Image("/battle/icons/heart/Sprite_heart_2.png"),
+            new Image("/battle/icons/heart/Sprite_heart_3.png"),
+            new Image("/battle/icons/heart/Sprite_heart_4.png") };
 
     public HUD(CharacterPG c) {
         this.statsCharacter = c.getCurrentStats();

@@ -3,30 +3,28 @@ package com.game.model.battle;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 
-import java.util.List;
-
 import com.game.model.GameState;
 
-public class Battle{
+public class Battle {
     private GameState gameState;
-    private List<Enemy> enemies;
+    private Enemy enemy;
     private int turnIndex;
     private TurnStrategy turnStrategy;
     private RewardStrategy rewardStrategy;
 
-    public Battle(List<Enemy> enemies) {
-        this.gameState= GameState.getInstance();
-        this.turnIndex= 0;
-        this.enemies= enemies;
-        this.turnStrategy= new StaticSpeedTurn(gameState.getParty(), this.enemies);
-        this.rewardStrategy= new StandardRewardStrategy();
+    public Battle(Enemy enemy) {
+        this.gameState = GameState.getInstance();
+        this.turnIndex = 0;
+        this.enemy = enemy;
+        this.turnStrategy = new StaticSpeedTurn(gameState.getParty(), this.enemy);
+        this.rewardStrategy = new StandardRewardStrategy();
     }
-    
+
     public Battle(int turnIndex, TurnStrategy turnStrategy, RewardStrategy rewardStrategy) {
-        this.gameState= GameState.getInstance();
+        this.gameState = GameState.getInstance();
         this.turnIndex = turnIndex;
-        this.turnStrategy= turnStrategy;
-        this.rewardStrategy= rewardStrategy;
+        this.turnStrategy = turnStrategy;
+        this.rewardStrategy = rewardStrategy;
     }
 
     public final int getTurnIndex() {
@@ -35,11 +33,11 @@ public class Battle{
 
     public void nextTurn() {
         this.turnStrategy.sortAction();
-        TurnIterator it= turnStrategy.getTurnIterator();
+        TurnIterator it = turnStrategy.getTurnIterator();
         while (it.hasCharacters()) {
-            CharacterPG character= it.nextCharacter();
+            CharacterPG character = it.nextCharacter();
             if (character.getCurrentStats().getHp() > 0) {
-                //PerformAction
+                // PerformAction
             }
         }
         this.turnIndex++;
@@ -47,39 +45,47 @@ public class Battle{
 
     /**
      *
-     * @return 0 if Battle is still ongoing, 1 if the party won, 2 if the party got wiped
+     * @return 0 if Battle is still ongoing, 1 if the party won, 2 if the party got
+     *         wiped
      */
     public BattleResult isBattleOver() {
-        boolean partyWiped= true;
+        boolean partyWiped = true;
         for (CharacterPG player : this.gameState.getParty().getMembers()) {
             if (player.getCurrentStats().getHp() > 0) {
-                partyWiped= false;
+                partyWiped = false;
             }
         }
-        boolean enemydead= true;
-        for (CharacterPG c : enemies) {
-            if (c.getCurrentStats().getHp() > 0) {
-                enemydead= false;
-            }
-        }
-        if (partyWiped) return BattleResult.PARTY_DEFEATED;
-        if (enemydead) return BattleResult.PARTY_WON;
+        boolean enemydead = true;
+        if (enemy.getCurrentStats().getHp() > 0)
+            enemydead = false;
+        /*
+         * for (CharacterPG c : enemies) {
+         * if (c.getCurrentStats().getHp() > 0) {
+         * enemydead= false;
+         * }
+         * }
+         */
+        if (partyWiped)
+            return BattleResult.PARTY_DEFEATED;
+        if (enemydead)
+            return BattleResult.PARTY_WON;
         return BattleResult.ONGOING;
     }
 
     public void endBattle() {
-        BattleResult flag= this.isBattleOver();
+        BattleResult flag = this.isBattleOver();
         switch (flag) {
-            case BattleResult.ONGOING: break;
+            case BattleResult.ONGOING:
+                break;
             case BattleResult.PARTY_WON: {
                 System.out.println("ggwp");
-                //Notify controller
+                // Notify controller
                 this.assignRewards();
                 break;
             }
             case BattleResult.PARTY_DEFEATED: {
                 System.out.println("Party got wiped out");
-                //Notify controller
+                // Notify controller
                 break;
             }
             default: {
@@ -90,8 +96,12 @@ public class Battle{
     }
 
     public void assignRewards() {
-        Reward reward= rewardStrategy.calculateRewards(enemies);
+        Reward reward = rewardStrategy.calculateRewards(enemy);
         reward.assignXP(this.gameState.getParty());
         reward.assignItem(this.gameState.getInventory());
+    }
+
+    public Enemy getEnemy() {
+        return enemy;
     }
 }

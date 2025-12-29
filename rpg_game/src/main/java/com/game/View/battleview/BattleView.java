@@ -1,93 +1,270 @@
 package com.game.view.battleview;
 
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
-
-import com.game.model.GameState;
-import com.game.model.battle.Battle;
-import com.game.model.character.CharacterPG;
-import com.game.model.character.Enemy;
-import com.game.model.character.Party;
-import com.game.view.mapview.ExplorationView;
-
+import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class BattleView {
-    private Enemy enemy;
-    private Battle battle;
+import com.game.model.GameState;
+import com.game.model.battle.Battle;
+import com.game.model.character.Player;
+import com.game.model.character.Enemy;
+import com.game.model.character.Job;
+import com.game.model.character.Party;
+import com.game.view.HUD;
+import com.game.view.mapview.ExplorationView;
 
-    private Pane root;
-    private Scene scene;
-    private Stage stage;
-    ListView<String> listView = new ListView<>();
-    private Party party;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
+
+import java.util.List;
+
+public class BattleView extends Pane {
+
+    private final Battle battle;
+    private final Party party;
+    private final Stage stage;
+
+    private final Canvas canvas;
+    private final GraphicsContext gc;
+
+    private final BorderPane uiOverlay;
+    private final ListView<String> actionList = new ListView<>();
+
+    private Image backgroundImage;
+    private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
+            new Image("/battle/icons/heart/Sprite_heart_2.png"),
+            new Image("/battle/icons/heart/Sprite_heart_3.png"),
+            new Image("/battle/icons/heart/Sprite_heart_4.png") };
+
+    // ---- Stato animazioni ----
+    private double playerAttackOffset = 0;
 
     public BattleView(Stage stage, Battle battle) {
-        // this.root = root;
-        this.root = new Pane();
         this.stage = stage;
-        this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
-        this.party = GameState.getInstance().getParty();
         this.battle = battle;
+        this.party = GameState.getInstance().getParty();
+
+        uiOverlay = new BorderPane();
+
+        setPrefSize(800, 600);
+
+        canvas = new Canvas();
+        canvas.widthProperty().bind(widthProperty());
+        canvas.heightProperty().bind(heightProperty());
+        gc = canvas.getGraphicsContext2D();
+
+        initUI();
+        initGameLoop();
     }
 
-    private VBox createHud(CharacterPG character) {
-        ProgressBar hpBar = new ProgressBar(
-                (double) character.getCurrentStats().getHp() / character.getBaseStats().getHp());
-        ProgressBar expBar = new ProgressBar(character.getCurrentStats().getXpPerc());
-        Label nameLabel = new Label(character.getJob().name());
-        Label levelLabel = new Label("Level " + character.getBaseStats().getLevel());
+    // ---------------- UI ----------------
 
-        HBox hpBox = new HBox(5, new Label("HP"), hpBar);
+    private void initUI() {
+        backgroundImage = new Image("/battle/Battleground.png");
+        getChildren().add(canvas);
 
-        return new VBox(5, nameLabel, hpBox, levelLabel, expBar);
+        actionList.getItems().addAll("Move", "Item", "Flee");
+        actionList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
+        actionList.setPrefHeight(45);
+        actionList.setStyle("-fx-font-size: 14px;");
+        actionList.setOnMouseClicked(e -> handleAction());
+
+        HBox bottomBox = new HBox(actionList);
+        bottomBox.setAlignment(Pos.CENTER);
+        bottomBox.setPadding(new Insets(20));
+
+        HBox playersBox = new HBox(15);
+        playersBox.setPadding(new Insets(20));
+        playersBox.getChildren().addAll(
+                party.getMembers().stream().map(HUD::new).toList());
+
+        uiOverlay.setTop(playersBox);
+        uiOverlay.setBottom(bottomBox);
+        uiOverlay.prefWidthProperty().bind(widthProperty());
+        uiOverlay.prefHeightProperty().bind(heightProperty());
+        uiOverlay.setPickOnBounds(false);
+
+        getChildren().add(uiOverlay);
     }
+
+    // ---------------- GAME LOOP ----------------
+
+    private void initGameLoop() {
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+                render();
+            }
+        }.start();
+    }
+
+    private void update() {
+        // easing dell'animazione attacco
+        playerAttackOffset *= 0.85;
+        if (Math.abs(playerAttackOffset) < 0.5)
+            playerAttackOffset = 0;
+    }
+
+    // ---------------- RENDER ----------------
+
+    private void render() {
+        double w = getWidth();
+        double h = getHeight();
+        if (w <= 0 || h <= 0)
+            return;
+
+        gc.clearRect(0, 0, w, h);
+
+        // SFONDO
+        gc.drawImage(backgroundImage, 0, 0, w, h);
+        gc.setImageSmoothing(false);
+
+        double groundY = h * 0.8;
+
+        drawPlayers(w, groundY, h);
+        drawEnemy(w, groundY, h);
+    }
+
+    private void drawPlayers(double w, double groundY, double h) {
+        List<Player> members = party.getMembers();
+        double size = Math.floor(h * 0.3);
+
+        for (int i = 0; i < members.size(); i++) {
+            Player p = members.get(i);
+            Image sprite = p.getImg();
+            if (sprite == null)
+                continue;
+
+            double x = w * 0.10 + i * (size * 0.6) + playerAttackOffset;
+            double y = groundY - size;
+
+            int sx = p.getJob().getX();
+            int sy = p.getJob().getY();
+            int sw = Job.SIZE;
+            int sh = Job.SIZE;
+
+            gc.save();
+
+            // Flip orizzontale
+            gc.translate(x + size / 2, 0);
+            gc.scale(-1, 1);
+            gc.translate(-x - size / 2, 0);
+
+            // Disegno pixel-perfect
+            gc.drawImage(sprite,
+                    sx, sy, sw, sh,
+                    Math.floor(x), Math.floor(y),
+                    size, size);
+
+            gc.restore();
+        }
+    }
+
+    private void drawEnemy(double w, double groundY, double h) {
+        Enemy enemy = battle.getEnemy();
+        if (enemy == null || enemy.getImg() == null)
+            return;
+
+        double size = Math.floor(h * 0.4);
+        double x = Math.floor(w * 0.60);
+
+        // Compensa lo spazio vuoto nello sprite sheet
+        double enemyYOffset = size * 0.20;
+
+        double y = Math.floor(groundY - size + enemyYOffset);
+
+        int sx = enemy.getJob().getX();
+        int sy = enemy.getJob().getY();
+        int sw = Job.SIZE;
+        int sh = Job.SIZE;
+
+        gc.drawImage(enemy.getImg(),
+                sx, sy, sw, sh,
+                x, y, size, size);
+
+        drawEnemyHP(enemy, x, y, size);
+    }
+
+    private void drawEnemyHP(Enemy enemy, double x, double y, double size) {
+
+        double barWidth = 110;
+        double barHeight = 10;
+
+        double hpPerc = Math.max(0, Math.min(1, enemy.getCurrentStats().getHpPerc()));
+        double barX = x + (size - barWidth) / 2;
+        double barY = y - 22;
+
+        // Testo HP
+        String hpText = enemy.getCurrentStats().getHp() + "/" + enemy.getCurrentStats().getMaxHp();
+        gc.setFont(Font.font("Verdana", 11));
+
+        // Ombra
+        gc.setFill(Color.BLACK);
+        gc.fillText(hpText, barX + barWidth / 2 - 1, barY - 4);
+
+        // Testo bianco
+        gc.setFill(Color.WHITE);
+        gc.fillText(hpText, barX + barWidth / 2, barY - 5);
+
+        // Icona cuore (frame in base alla percentuale)
+        int frame = (int) Math.round((1 - hpPerc) * (heart_img.length - 1));
+        double iconSize = 20;
+        double iconX = barX - iconSize - 6;
+        double iconY = barY - (iconSize - barHeight) / 2;
+
+        gc.drawImage(heart_img[frame], iconX, iconY, iconSize, iconSize);
+
+        // Cornice esterna pixel-art
+        gc.setFill(Color.BLACK);
+        gc.fillRect(barX - 2, barY - 2, barWidth + 4, barHeight + 4);
+
+        // Sfondo barra
+        gc.setFill(Color.rgb(60, 0, 0));
+        gc.fillRect(barX, barY, barWidth, barHeight);
+
+        // Riempimento rosso
+        gc.setFill(new LinearGradient(
+                barX, barY, barX + barWidth, barY,
+                false, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.rgb(255, 80, 80)),
+                new Stop(1, Color.rgb(180, 0, 0))));
+        gc.fillRect(barX, barY, barWidth * hpPerc, barHeight);
+
+        // Bordo pixel-art
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        gc.strokeRect(barX, barY, barWidth, barHeight);
+    }
+    // ---------------- INPUT ----------------
+
+    private void handleAction() {
+        String selected = actionList.getSelectionModel().getSelectedItem();
+        if (selected == null)
+            return;
+
+        switch (selected) {
+            case "Flee" -> new ExplorationView(stage).showMap();
+            case "Move" -> playerAttackOffset = 80;
+        }
+    }
+
+    // ---------------- SCENE ----------------
 
     public void showBattle() {
-        root.getChildren().clear();
-
-        BorderPane bp = new BorderPane();
-        bp.prefWidthProperty().bind(scene.widthProperty());
-        bp.prefHeightProperty().bind(scene.heightProperty());
-
-        // Top: players' HUDs
-        HBox playersBox = new HBox(10);
-        playersBox.setPadding(new Insets(10));
-        playersBox.getChildren().addAll(party.getMembers().stream().map(this::createHud).toList());
-
-        // Center: filler area (battle arena)
-        // TODO: actually show battle
-
-        // Bottom: actions (Move, Item, Flee)
-        listView.getItems().clear();
-        listView.getItems().addAll("Move", "Item", "Flee");
-        listView.setOrientation(Orientation.HORIZONTAL);
-        listView.setPrefHeight(60);
-        listView.setMaxHeight(60);
-        listView.setOnMouseClicked(e -> {
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.equals("Flee")) {
-                new ExplorationView(stage).showMap();
-            }
-        });
-        HBox bottomBox = new HBox(listView);
-        bottomBox.setAlignment(Pos.CENTER);
-        bottomBox.setPadding(new Insets(10));
-
-        bp.setTop(playersBox);
-        bp.setBottom(bottomBox);
-
-        root.getChildren().add(bp);
-        this.stage.setScene(scene);
-        this.stage.show();
+        Scene scene = new Scene(this, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
     }
 }

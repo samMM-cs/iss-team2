@@ -9,6 +9,7 @@ public class Stats {
   int level;
   int maxXp;
   int hp;
+  int maxHp;
   int attack;
   int defense;
   int special;
@@ -18,6 +19,7 @@ public class Stats {
 
   public Stats(int hp, int attack, int defense, int special, int speed) {
     this.hp = hp;
+    this.maxHp = 100;
     this.attack = attack;
     this.defense = defense;
     this.special = special;
@@ -32,6 +34,7 @@ public class Stats {
 
   public Stats(Stats newStats) {
     this.hp = newStats.getHp();
+    this.maxHp = newStats.getMaxHp();
     this.attack = newStats.getAttack();
     this.defense = newStats.getDefense();
     this.special = newStats.getSpecial();
@@ -67,8 +70,16 @@ public class Stats {
     maxXp = (int) (maxXp * 1.5);
   }
 
+  public double getHpPerc() {
+    return getHp() / getMaxHp();
+  }
+
   public int getHp() {
     return this.hp;
+  }
+
+  public int getMaxHp() {
+    return maxHp;
   }
 
   public void setHp(int hp) {
@@ -140,8 +151,9 @@ public class Stats {
   }
 
   public int getMoney() {
-      return money;
+    return money;
   }
+
   public Stats copy() {
     return new Stats(this);
   }

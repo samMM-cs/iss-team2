@@ -17,22 +17,25 @@ public abstract class CharacterPG {
     private Stats currentStats;
     private Position pos;
 
+    private Image img;
     private ImageView sprite;
     private List<Ability> abilities = new ArrayList<>();
 
     private boolean inCombat; // Stato del combattimento
 
-
     public CharacterPG(Job job, Position pos, Image img) {
         this.job = job;
         this.pos = pos;
-        this.sprite = createCharacterSprite(img, job);
+        this.img = img;
+        this.sprite = createCharacterSprite(this.img, job);
         this.baseStats = job.getBaseStats().copy();
         this.currentStats = this.getBaseStats().copy();
     }
 
     public ImageView createCharacterSprite(Image img, Job job) {
         this.sprite = new ImageView(img);
+        this.sprite.setSmooth(false);
+        this.sprite.setPreserveRatio(false);
 
         Rectangle2D viewPort = new Rectangle2D(job.getX(), job.getY(), Job.SIZE, Job.SIZE);
 
@@ -65,6 +68,10 @@ public abstract class CharacterPG {
         return pos;
     }
 
+    public Image getImg() {
+        return img;
+    }
+
     public ImageView getSprite() {
         return sprite;
     }
@@ -88,10 +95,6 @@ public abstract class CharacterPG {
     public void setCurrentStats(Stats newStats) {
         currentStats = newStats;
     }
-
-    // public VBox getHud() {
-    // return hud;
-    // }
 
     public abstract void takeDamage(int value);
 

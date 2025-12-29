@@ -7,8 +7,8 @@ public enum Job {
     MAGE(1, 0, 60, 6, 3, 0, 4, true),
     ARCHER(2, 0, 40, 4, 3, 0, 4, true),
     // Enemy
-    GOBLIN(0, 0, 30, 3, 3, 0, 4, false),
-    GOBLIN2(0, 1, 20, 4, 3, 0, 2, false),
+    GOBLIN(0, 0, 100, 3, 3, 0, 4, false),
+    GOBLIN2(0, 1, 110, 4, 3, 0, 2, false),
     // NPC
     FARMER(0, 6, 0, 0, 0, 0, 0, false),
     TRAINER(3,4,0,0,0,0,0,false);
