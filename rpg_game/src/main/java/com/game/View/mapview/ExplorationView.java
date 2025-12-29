@@ -3,6 +3,7 @@ package com.game.view.mapview;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.game.controller.ViewManager;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Party;
@@ -18,14 +19,12 @@ import com.game.view.HUD;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.*;
 
 public class ExplorationView {
     private static final String MAP_FILE_PATH = "/maps/samplemap1.tmj";
     private static final String TILESET_IMAGE_PATH = "/images/punyworld-overworld-tileset.png";
     private static final String TILESET_DATA_PATH = "/maps/punyworld-overworld-tiles.tsx";
     private ExplorationController movementController;
-    private Stage stage;
     private Party party;
     private List<Enemy> enemies = new ArrayList<>();
     private List<NPC> npc = new ArrayList<>();
@@ -36,10 +35,7 @@ public class ExplorationView {
     private ShopView shopView;
     private HUD hud;
 
-    public ExplorationView(Stage stage) {
-        this.stage = stage;
-        if (stage == null)
-            return;
+    public ExplorationView() {
         TiledMapData mapData = MapBuilder.loadRawMapData(MAP_FILE_PATH);
         MapBuilder builder = new MapBuilder()
                 .addLayer(mapData.getLayers().get(0))
@@ -50,7 +46,8 @@ public class ExplorationView {
                 .setTileSetImageFromPath(TILESET_IMAGE_PATH);
 
         this.root = new Pane();
-        this.scene = new Scene(root, stage.getWidth(), stage.getHeight());
+        this.scene = new Scene(root, ViewManager.getInstance().getWidth(),
+                ViewManager.getInstance().getHeight());
         GameState gameState = GameState.getInstance();
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
@@ -74,7 +71,7 @@ public class ExplorationView {
                 .addLayer(mapData.getLayers().get(3))
                 .build();
         this.movementController = new ExplorationController(party, scene, mapView, enemies, npc, dialogueView,
-                shopView, this.stage);
+                shopView);
 
         this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
@@ -87,8 +84,7 @@ public class ExplorationView {
 
     public void showMap() {
 
-        stage.setScene(scene);
-        stage.show();
+        ViewManager.getInstance().setAndShowScene(scene);
 
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {

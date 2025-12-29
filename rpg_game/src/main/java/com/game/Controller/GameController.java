@@ -1,34 +1,22 @@
 package com.game.controller;
 
-import com.game.view.gameview.NewGameView;
 import com.game.model.GameState;
-import com.game.view.CharacterSelectionView;
-import com.game.view.mapview.ExplorationView;
 import com.game.model.character.Job;
 import com.game.model.creator.Game;
 import com.game.model.creator.NewGame;
 
-import javafx.stage.Stage;
-
 public class GameController {
     private GameState gameState;
     private Game game;
-    private Stage stage;
 
-    public GameController(Stage stage, Game game) {
-        this.stage = stage;
+    public GameController(Game game) {
         this.game = game;
     }
 
     public void start() {
-        if (stage == null) {
-            System.err.println("Stage nullo in GameController");
-            return;
-        }
-        if (game instanceof NewGame) {
-            NewGameView view = new NewGameView(stage, this);
-            view.show();
-        } else
+        if (game instanceof NewGame)
+            ViewManager.getInstance().showNewGameView(this);
+        else
             startExploration();
     }
 
@@ -39,15 +27,7 @@ public class GameController {
         }
 
         gameState = new GameState.GameStateBuilder().setNPlayers(players).enableAutoSave(autoSave).build();
-        goToCharacterSelection(); // Passa alla selezione dei personaggi
-    }
-
-    // Mostra la schermata per la selezione dei personaggi
-    public void goToCharacterSelection() {
-        if (stage == null)
-            return;
-        CharacterSelectionView charView = new CharacterSelectionView(stage, this);
-        charView.show();
+        ViewManager.getInstance().showCharacterSelectionView(this);
     }
 
     // Viene chiamato quando selezioniamo un personaggio
@@ -58,12 +38,11 @@ public class GameController {
 
     // Avvia l'esplorazione della mappa
     public void startExploration() {
-        if (gameState != null && stage != null) {
+        if (gameState != null) {
             gameState.createEnemy();
             gameState.createParty();
             gameState.createNpc();
-            ExplorationView explorationView = new ExplorationView(stage);
-            explorationView.showMap();
+            ViewManager.getInstance().showExplorationView();
         }
     }
 

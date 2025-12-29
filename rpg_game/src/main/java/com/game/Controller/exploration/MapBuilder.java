@@ -13,7 +13,6 @@ import com.game.model.Position;
 import com.game.model.map.LayerData;
 import com.game.model.map.SpritePosition;
 import com.game.model.map.TiledMapData;
-import com.game.view.mapview.MapView___UNUSED;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.image.Image;
@@ -59,7 +58,7 @@ public class MapBuilder {
 
     public MapBuilder setWalkableIds(String path) {
         try {
-            URL url = MapView___UNUSED.class.getResource(path);
+            URL url = MapBuilder.class.getResource(path);
             String regex = "<tile id=\"(\\d*)\">\\s*<properties>\\s*<property name=\"walkable\" type=\"bool\" value=\"true\"/>\\s*</properties>\\s*</tile>";
             String content = new String(((BufferedInputStream) url.getContent()).readAllBytes());
             walkableId = Pattern.compile(regex)

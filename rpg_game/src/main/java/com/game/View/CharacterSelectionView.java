@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import com.game.controller.GameController;
+import com.game.controller.ViewManager;
 import com.game.model.character.Job;
 import com.game.view.gameview.*;
 
@@ -27,7 +28,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.stage.*;
 
 public class CharacterSelectionView extends GameView {
     private GameController gameController;
@@ -35,18 +35,12 @@ public class CharacterSelectionView extends GameView {
     private VBox selectedCard = null;
     private Button startGameBtn;
 
-    public CharacterSelectionView(Stage stage, GameController gameController) {
-        super(stage);
+    public CharacterSelectionView(GameController gameController) {
         this.gameController = gameController;
     }
 
     @Override
     public void show() {
-        if (stage == null) {
-            System.err.println("Stage nullo in CharacterSelectionView");
-            return;
-        }
-
         Label title = new Label("Scegli il personaggio");
         title.setStyle("""
                 -fx-text-fill: white;
@@ -78,8 +72,7 @@ public class CharacterSelectionView extends GameView {
         background.fitHeightProperty().bind(scene.heightProperty());
         background.fitWidthProperty().bind(scene.widthProperty());
 
-        stage.setScene(scene);
-        stage.show();
+        ViewManager.getInstance().setAndShowScene(scene);
     }
 
     private VBox createCard(Job job) {

@@ -1,6 +1,7 @@
 package com.game.view;
 
 import com.game.controller.MainMenuController;
+import com.game.controller.ViewManager;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,16 +19,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 public class MainMenuView {
-    private Stage stage;
     private MainMenuController controller;
 
-    public MainMenuView(Stage stage) {
-        this.stage = stage;
-        this.controller = new MainMenuController(stage);
+    public MainMenuView() {
+        this.controller = new MainMenuController();
     }
 
     public void show() {
@@ -55,15 +52,8 @@ public class MainMenuView {
         newGameBtn.setOnAction(controller::onNewGame);
         exitBtn.setOnAction(controller::onExit);
 
-        stage.setTitle("RPG Game");
-        stage.setWidth(Screen.getPrimary().getBounds().getWidth());
-        stage.setHeight(Screen.getPrimary().getBounds().getHeight());
-        stage.centerOnScreen();
+        ViewManager.getInstance().setAndShowScene(scene);
 
-        stage.setResizable(true);
-        stage.setMaximized(true);
-        stage.setScene(scene);
-        stage.show();
     }
 
     private Button createButton(String txt, String path) {
