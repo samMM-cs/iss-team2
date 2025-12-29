@@ -34,6 +34,7 @@ public class ExplorationView {
     private DialogueView dialogueView;
     private ShopView shopView;
     private HUD hud;
+    private AnimationTimer timer;
 
     public ExplorationView() {
         TiledMapData mapData = MapBuilder.loadRawMapData(MAP_FILE_PATH);
@@ -86,11 +87,12 @@ public class ExplorationView {
 
         ViewManager.getInstance().setAndShowScene(scene);
 
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
+            @Override
             public void handle(long now) {
-                this.stop();
+                //this.stop();
                 movementController.update();
-                this.start();
+                //this.start();
                 mapView.requestLayout();
 
                 for (Player player : party.getMembers()) {
@@ -106,5 +108,10 @@ public class ExplorationView {
         };
 
         timer.start();
+    }
+    public void stop() {
+        if (this.timer != null) {
+            this.timer.stop();
+        }
     }
 }

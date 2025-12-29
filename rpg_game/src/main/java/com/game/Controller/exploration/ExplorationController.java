@@ -72,6 +72,7 @@ public class ExplorationController {
         if (!battleStarted && optEnemy.isPresent()) {
             battleStarted = true;
             optEnemy.ifPresent(this::handleBattle);
+            battleStarted = false;
         }
 
         KeyCode key = activeKeys.poll();
@@ -116,14 +117,14 @@ public class ExplorationController {
         // Versatile for multiple enemy
         List<Enemy> enemiesList = new ArrayList<>();
         enemiesList.add(e);
-<<<<<<< HEAD
         Battle battle = new Battle(e);
-        battleView = new BattleView(this.stage, battle);
-        battleView.showBattle();
-=======
-        Battle battle = new Battle(enemiesList);
+        
+        /*battleView = new BattleView(this.stage, battle);
+        battleView.showBattle();*/
+
+        //Battle battle = new Battle(enemiesList);
+        
         ViewManager.getInstance().showBattleView(battle);
->>>>>>> acb1b99a730cb37e4a809f0cbf9169caf4ee15b6
 
         party.updateFollowPosition(prevPosition);
         System.out.println("starting battle with: " + e.toString());

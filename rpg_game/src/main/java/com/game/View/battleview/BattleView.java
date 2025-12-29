@@ -1,8 +1,6 @@
 package com.game.view.battleview;
 
-<<<<<<< HEAD
 import javafx.animation.AnimationTimer;
-=======
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
@@ -14,7 +12,6 @@ import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 import com.game.model.character.Party;
 
->>>>>>> acb1b99a730cb37e4a809f0cbf9169caf4ee15b6
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,7 +32,6 @@ import com.game.model.character.Party;
 import com.game.view.HUD;
 import com.game.view.mapview.ExplorationView;
 
-<<<<<<< HEAD
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -47,9 +43,8 @@ import java.util.List;
 
 public class BattleView extends Pane {
 
-    private final Battle battle;
+    private Battle battle;
     private final Party party;
-    private final Stage stage;
 
     private final Canvas canvas;
     private final GraphicsContext gc;
@@ -66,20 +61,7 @@ public class BattleView extends Pane {
     // ---- Stato animazioni ----
     private double playerAttackOffset = 0;
 
-    public BattleView(Stage stage, Battle battle) {
-        this.stage = stage;
-=======
-    private Pane root;
-    private Scene scene;
-    ListView<String> listView = new ListView<>();
-    private Party party;
-
     public BattleView(Battle battle) {
-        this.root = new Pane();
-        this.scene = new Scene(root, ViewManager.getInstance().getWidth(),
-                ViewManager.getInstance().getHeight());
-        this.party = GameState.getInstance().getParty();
->>>>>>> acb1b99a730cb37e4a809f0cbf9169caf4ee15b6
         this.battle = battle;
         this.party = GameState.getInstance().getParty();
 
@@ -283,7 +265,7 @@ public class BattleView extends Pane {
             return;
 
         switch (selected) {
-            case "Flee" -> new ExplorationView(stage).showMap();
+            case "Flee" -> ViewManager.getInstance().showExplorationView();
             case "Move" -> playerAttackOffset = 80;
         }
     }
@@ -291,45 +273,8 @@ public class BattleView extends Pane {
     // ---------------- SCENE ----------------
 
     public void showBattle() {
-<<<<<<< HEAD
-        Scene scene = new Scene(this, stage.getWidth(), stage.getHeight());
-        stage.setScene(scene);
-=======
-        root.getChildren().clear();
-
-        BorderPane bp = new BorderPane();
-        bp.prefWidthProperty().bind(scene.widthProperty());
-        bp.prefHeightProperty().bind(scene.heightProperty());
-
-        // Top: players' HUDs
-        HBox playersBox = new HBox(10);
-        playersBox.setPadding(new Insets(10));
-        playersBox.getChildren().addAll(party.getMembers().stream().map(this::createHud).toList());
-
-        // Center: filler area (battle arena)
-        // TODO: actually show battle
-
-        // Bottom: actions (Move, Item, Flee)
-        listView.getItems().clear();
-        listView.getItems().addAll("Move", "Item", "Flee");
-        listView.setOrientation(Orientation.HORIZONTAL);
-        listView.setPrefHeight(60);
-        listView.setMaxHeight(60);
-        listView.setOnMouseClicked(e -> {
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null && selectedItem.equals("Flee")) {
-                ViewManager.getInstance().showExplorationView();
-            }
-        });
-        HBox bottomBox = new HBox(listView);
-        bottomBox.setAlignment(Pos.CENTER);
-        bottomBox.setPadding(new Insets(10));
-
-        bp.setTop(playersBox);
-        bp.setBottom(bottomBox);
-
-        root.getChildren().add(bp);
+        Scene scene = new Scene(this, ViewManager.getInstance().getWidth(),
+                ViewManager.getInstance().getHeight());
         ViewManager.getInstance().setAndShowScene(scene);
->>>>>>> acb1b99a730cb37e4a809f0cbf9169caf4ee15b6
     }
 }

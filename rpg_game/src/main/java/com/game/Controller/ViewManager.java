@@ -56,8 +56,9 @@ public class ViewManager {
   }
 
   public void showBattleView(Battle battle) {
-    if (battleView == null)
-      battleView = new BattleView(battle);
+    //if (battleView == null)
+    explorationView.stop();
+    battleView = new BattleView(battle);
     battleView.showBattle();
   }
 
