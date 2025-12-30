@@ -7,6 +7,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -20,6 +22,7 @@ public class HUD extends VBox {
     private Label xpLabel;
     private Label playerName;
     private Stats statsCharacter;
+    private ImageView heart_view;
 
     private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
             new Image("/battle/icons/heart/Sprite_heart_2.png"),
@@ -28,24 +31,25 @@ public class HUD extends VBox {
 
     public HUD(CharacterPG c) {
         this.statsCharacter = c.getCurrentStats();
-        setSpacing(8);
-        setPadding(new Insets(12));
+        setSpacing(10);
+        setPadding(new Insets(16));
         setAlignment(Pos.TOP_LEFT);
 
         setStyle("""
                     -fx-background-color: rgba(15, 15, 15, 0.8);
                     -fx-background-radius: 12;
                     -fx-border-radius: 12;
-                    -fx-border-color: #777;
+                    -fx-border-color: #888;
                     -fx-border-width: 2;
                 """);
 
         playerName = new Label(String.valueOf(c.getJob()));
-        playerName.setFont(Font.font(16));
+        playerName.setFont(Font.font(18));
         playerName.setStyle("""
                 -fx-text-fill: gold;
                 -fx-font-weight: bold;
                     """);
+        // HP
         hpBar = new ProgressBar();
         hpBar.setPrefWidth(180);
         hpBar.setStyle("""
@@ -53,7 +57,17 @@ public class HUD extends VBox {
                     -fx-control-inner-background: #400000;
                     -fx-background-radius: 8;
                 """);
+        hpLabel = new Label("HP");
+        hpLabel.setStyle("-fx-text-fill: #eeeeee; -fx-font-size: 11;");
+        heart_view = new ImageView(heart_img[0]);
+        heart_view.setFitHeight(20);
+        heart_view.setFitWidth(20);
+        HBox hpBox = new HBox(6);
+        hpBox.setAlignment(Pos.CENTER_LEFT);
+        hpBox.getChildren().addAll(heart_view, hpBar, hpLabel);
 
+        // XP
+        HBox xpBox = new HBox(6);
         xpBar = new ProgressBar();
         xpBar.setPrefWidth(180);
         xpBar.setStyle("""
@@ -61,17 +75,20 @@ public class HUD extends VBox {
                     -fx-control-inner-background: #001a40;
                     -fx-background-radius: 8;
                 """);
-
-        hpLabel = new Label("HP");
         xpLabel = new Label("XP");
-        hpLabel.setStyle("-fx-text-fill: #eeeeee; -fx-font-size: 11;");
         xpLabel.setStyle("-fx-text-fill: #eeeeee; -fx-font-size: 11;");
+        xpBox.getChildren().addAll(xpBar, xpLabel);
+        getChildren().addAll(playerName, hpBox, xpBox);
+    }
 
-        getChildren().addAll(playerName, hpBar, hpLabel, xpBar, xpLabel);
+    private int getHeartFrame(double hpPerc) {
+        int frame = (int) Math.floor((1 - hpPerc) * (heart_img.length - 1));
+        return Math.min(frame, heart_img.length - 1);
     }
 
     public void update() {
-        hpBar.setProgress(1);
+        heart_view.setImage(heart_img[getHeartFrame(statsCharacter.getHpPerc())]);
+        hpBar.setProgress(statsCharacter.getHpPerc());
         hpLabel.setText("HP: " + statsCharacter.getHp());
 
         xpBar.setProgress(statsCharacter.getXpPerc());

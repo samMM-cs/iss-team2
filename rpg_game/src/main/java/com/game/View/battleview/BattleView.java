@@ -1,37 +1,24 @@
 package com.game.view.battleview;
 
-import javafx.animation.AnimationTimer;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
-
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
-import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 import com.game.model.character.Party;
+import com.game.model.character.Player;
+import com.game.model.character.Job;
+import com.game.view.HUD;
 
+import javafx.animation.AnimationTimer;
+import javafx.scene.control.ListView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-
-import com.game.model.GameState;
-import com.game.model.battle.Battle;
-import com.game.model.character.Player;
-import com.game.model.character.Enemy;
-import com.game.model.character.Job;
-import com.game.model.character.Party;
-import com.game.view.HUD;
-import com.game.view.mapview.ExplorationView;
-
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -172,7 +159,6 @@ public class BattleView extends Pane {
             gc.scale(-1, 1);
             gc.translate(-x - size / 2, 0);
 
-            // Disegno pixel-perfect
             gc.drawImage(sprite,
                     sx, sy, sw, sh,
                     Math.floor(x), Math.floor(y),
@@ -229,7 +215,8 @@ public class BattleView extends Pane {
         gc.fillText(hpText, barX + barWidth / 2, barY - 5);
 
         // Icona cuore (frame in base alla percentuale)
-        int frame = (int) Math.round((1 - hpPerc) * (heart_img.length - 1));
+        int frame = (int) Math.floor((1 - hpPerc) * (heart_img.length - 1));
+        frame = Math.min(frame, heart_img.length - 1);
         double iconSize = 20;
         double iconX = barX - iconSize - 6;
         double iconY = barY - (iconSize - barHeight) / 2;
