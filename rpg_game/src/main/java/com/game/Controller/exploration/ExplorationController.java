@@ -34,7 +34,6 @@ public class ExplorationController {
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = Position.Origin;
     private DialogueView dialogueView;
-    private ShopView shopView;
     private boolean battleStarted = false;
 
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
@@ -45,7 +44,6 @@ public class ExplorationController {
         this.enemies = enemies;
         this.npcs = npc;
         this.dialogueView = dialogueView;
-        this.shopView = shopView;
         this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -79,12 +77,6 @@ public class ExplorationController {
         if (key != null) {
             if (movementKeys.contains(key))
                 movePlayer(key);
-
-            if (dialogueView.isVisible()) {
-                if (key == KeyCode.E)
-                    dialogueView.handleAdvance();
-                return;
-            }
             if (key == KeyCode.E)
                 handlePossibleInteractions();
         }
@@ -102,12 +94,9 @@ public class ExplorationController {
         }
 
         final NPC nearbyNPC = target;
+        System.out.println("Sono nella ExplorationController");
         if (target != null) {
-            dialogueView.showDialogue(target.getDialogue());
-            dialogueView.setOnCloseClick(() -> {
-                shopView.open(nearbyNPC);
-            });
-
+            ViewManager.getInstance().showDialogView(scene,mainPlayer,nearbyNPC);
             target.interact(mainPlayer);
 
         }
