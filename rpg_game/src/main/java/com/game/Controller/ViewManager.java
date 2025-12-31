@@ -2,12 +2,18 @@ package com.game.controller;
 
 import com.game.model.battle.Battle;
 import com.game.view.CharacterSelectionView;
-import com.game.view.MainMenuView;
 import com.game.view.battleview.BattleView;
+import com.game.view.gameview.MainMenuView;
 import com.game.view.gameview.NewGameView;
+import com.game.view.gameview.PauseMenu;
 import com.game.view.mapview.ExplorationView;
 
 import javafx.scene.Scene;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -17,9 +23,12 @@ public class ViewManager {
 
   private MainMenuView mainMenuView;
   private NewGameView newGameView;
+  private PauseMenu pauseMenu;
   private CharacterSelectionView characterSelectionView;
   private ExplorationView explorationView;
   private BattleView battleView;
+
+  private boolean paused = false;
 
   private ViewManager(Stage stage) {
     this.stage = stage;
@@ -29,6 +38,7 @@ public class ViewManager {
     this.stage.centerOnScreen();
     this.stage.setResizable(true);
     this.stage.setMaximized(true);
+    ;
   }
 
   public void showMainMenu() {
@@ -41,6 +51,50 @@ public class ViewManager {
     if (newGameView == null)
       newGameView = new NewGameView(gameController);
     newGameView.show();
+  }
+
+  // Menu pausa
+  public void initPauseMenu(Scene scene) {
+    if (pauseMenu == null) {
+      pauseMenu = new PauseMenu();
+      pauseMenu.setVisible(false);
+      pauseMenu.prefWidthProperty().bind(scene.widthProperty());
+      pauseMenu.prefHeightProperty().bind(scene.heightProperty());
+
+      ((Pane) scene.getRoot()).getChildren().add(pauseMenu);
+    }
+  }
+
+  public void enableGlobalPause(Scene scene) {
+    scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+      if (e.getCode() == KeyCode.ESCAPE) {
+        togglePause();
+        e.consume();
+      }
+    });
+  }
+
+  public void togglePause() {
+    if (pauseMenu == null)
+      return;
+    paused = !paused;
+    Pane root = (Pane) pauseMenu.getParent();
+    if (paused) {
+      pauseMenu.setVisible(paused);
+      pauseMenu.toFront();
+      explorationView.stop();
+      root.getChildren().forEach(node -> {
+        if (node != pauseMenu)
+          node.setEffect(new GaussianBlur(10));
+      });
+    } else {
+      root.getChildren().forEach(node -> {
+        if (node != pauseMenu)
+          node.setEffect(null);
+      });
+      explorationView.showMap();
+      pauseMenu.setVisible(paused);
+    }
   }
 
   public void showCharacterSelectionView(GameController gameController) {
@@ -56,7 +110,6 @@ public class ViewManager {
   }
 
   public void showBattleView(Battle battle) {
-    //if (battleView == null)
     explorationView.stop();
     battleView = new BattleView(battle);
     battleView.showBattle();
@@ -87,10 +140,15 @@ public class ViewManager {
     return stage.getHeight();
   }
 
+  public boolean isPaused() {
+    return this.paused;
+  }
+
   public class ViewManagerBuilder {
     public static ViewManager build(Stage stage) {
       instance = new ViewManager(stage);
       return instance;
     }
   }
+
 }

@@ -86,13 +86,15 @@ public class ExplorationView {
     public void showMap() {
 
         ViewManager.getInstance().setAndShowScene(scene);
+        ViewManager.getInstance().initPauseMenu(scene);
+        ViewManager.getInstance().enableGlobalPause(scene);
 
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                //this.stop();
+                if (ViewManager.getInstance().isPaused())
+                    return;
                 movementController.update();
-                //this.start();
                 mapView.requestLayout();
 
                 for (Player player : party.getMembers()) {
@@ -109,6 +111,7 @@ public class ExplorationView {
 
         timer.start();
     }
+
     public void stop() {
         if (this.timer != null) {
             this.timer.stop();

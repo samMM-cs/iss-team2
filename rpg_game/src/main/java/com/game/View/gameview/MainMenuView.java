@@ -1,4 +1,4 @@
-package com.game.view;
+package com.game.view.gameview;
 
 import com.game.controller.MainMenuController;
 import com.game.controller.ViewManager;
