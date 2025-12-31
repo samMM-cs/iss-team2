@@ -1,7 +1,11 @@
 package com.game.controller;
 
 import com.game.model.battle.Battle;
+import com.game.model.character.NPC;
+import com.game.model.character.Player;
 import com.game.view.CharacterSelectionView;
+import com.game.view.DialogueView;
+import com.game.view.ShopView;
 import com.game.view.battleview.BattleView;
 import com.game.view.gameview.MainMenuView;
 import com.game.view.gameview.NewGameView;
@@ -12,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -27,8 +30,12 @@ public class ViewManager {
   private CharacterSelectionView characterSelectionView;
   private ExplorationView explorationView;
   private BattleView battleView;
+  private DialogueView dialogView;
+  private ShopView shopView;
+  private Player player;
 
   private boolean paused = false;
+  private Pane root;
 
   private ViewManager(Stage stage) {
     this.stage = stage;
@@ -38,7 +45,6 @@ public class ViewManager {
     this.stage.centerOnScreen();
     this.stage.setResizable(true);
     this.stage.setMaximized(true);
-    ;
   }
 
   public void showMainMenu() {
@@ -78,7 +84,7 @@ public class ViewManager {
     if (pauseMenu == null)
       return;
     paused = !paused;
-    Pane root = (Pane) pauseMenu.getParent();
+    root = (Pane) pauseMenu.getParent();
     if (paused) {
       pauseMenu.setVisible(paused);
       pauseMenu.toFront();
@@ -113,6 +119,33 @@ public class ViewManager {
     explorationView.stop();
     battleView = new BattleView(battle);
     battleView.showBattle();
+  }
+
+  public void showDialogView(Scene scene, Player player, NPC target) {
+    System.out.println("Apro la DialogueView");
+    explorationView.stop();
+    root = (Pane) scene.getRoot();
+    if (dialogView == null) {
+      dialogView = new DialogueView();
+      if (dialogView.isVisible())
+        dialogView.handleAdvance();
+      dialogView.showDialogue(target.getDialogue());
+      dialogView.setOnCloseClick(() -> {
+        showShop(player, target);
+        root.getChildren().remove(dialogView);
+      });
+      root.getChildren().add(dialogView);
+    }
+  }
+
+  public void showShop(Player player, NPC npc) {
+    root = (Pane) ViewManager.getInstance().getStage().getScene().getRoot();
+    if (shopView == null) {
+      shopView = new ShopView(player);
+      root.getChildren().add(shopView);
+    }
+    shopView.open(npc);
+    shopView.toFront();
   }
 
   public void setAndShowScene(Scene scene) {
