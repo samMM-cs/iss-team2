@@ -1,5 +1,6 @@
 package com.game.view.battleview;
 
+import com.game.controller.BattleController;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
@@ -37,6 +38,8 @@ public class BattleView extends Pane {
     private Battle battle;
     private final Party party;
 
+    private BattleController controller;
+
     private final Canvas canvas;
     private final GraphicsContext gc;
 
@@ -56,6 +59,7 @@ public class BattleView extends Pane {
     public BattleView(Battle battle) {
         this.battle = battle;
         this.party = GameState.getInstance().getParty();
+        this.controller = new BattleController(battle, this);
 
         uiOverlay = new BorderPane();
 
@@ -80,7 +84,10 @@ public class BattleView extends Pane {
         actionList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
         actionList.setPrefHeight(45);
         actionList.setStyle("-fx-font-size: 14px;");
-        actionList.setOnMouseClicked(e -> handleAction());
+        actionList.setOnMouseClicked(e -> {
+            String selected = actionList.getSelectionModel().getSelectedItem();
+            controller.handleAction(selected);
+        });
 
         moveList.setOrientation(javafx.geometry.Orientation.VERTICAL);
         moveList.setStyle("-fx-font-size: 14px;");
@@ -88,7 +95,10 @@ public class BattleView extends Pane {
         moveList.setManaged(false); // IMPORTANTISSIMO per layout
         moveList.getItems().addAll("Basic Attack", "Basic Heal", "Basic Magic Attack", "Back");
         resizeListViewToFitItems(moveList);
-        moveList.setOnMouseClicked(e -> handleMoveSelection());
+        moveList.setOnMouseClicked(e -> {
+            String move = moveList.getSelectionModel().getSelectedItem();
+            controller.handleMoveSelection(move);
+        });
 
         HBox bottomBox = new HBox(10, actionList, moveList);
         bottomBox.setAlignment(Pos.CENTER);
@@ -115,7 +125,7 @@ public class BattleView extends Pane {
         list.setMaxHeight(height);
     }
 
-    private void showMoveList() {
+    public void showMoveList() {
         actionList.setVisible(false);
         actionList.setManaged(false);
 
@@ -123,7 +133,7 @@ public class BattleView extends Pane {
         moveList.setManaged(true);
     }
 
-    private void hideMoveList() {
+    public void hideMoveList() {
         moveList.setVisible(false);
         moveList.setManaged(false);
 
@@ -282,50 +292,23 @@ public class BattleView extends Pane {
         gc.setLineWidth(2);
         gc.strokeRect(barX, barY, barWidth, barHeight);
     }
+
+    public void setPlayerAttackOffset(double playerAttackOffset) {
+        this.playerAttackOffset= playerAttackOffset;
+    }
+
     // ---------------- INPUT ----------------
 
-    private void handleAction() {
-        String selected = actionList.getSelectionModel().getSelectedItem();
-        if (selected == null)
-            return;
-
-        switch (selected) {
-            case "Flee" -> {
-                ViewManager.getInstance().showExplorationView();
-                break;
-            }
-            case "Move" -> {
-                showMoveList();
-                break;
-            }
-        }
+    public void disableInput() {
+        actionList.setDisable(true);
+        moveList.setDisable(true);
     }
 
-private void handleMoveSelection() {
-    String move = moveList.getSelectionModel().getSelectedItem();
-    if (move == null)
-        return;
-
-    switch (move) {
-        case "Attack" -> {
-            playerAttackOffset = 80;
-            // qui poi: calcolo danno, animazione, turno nemico
-            break;
-        }
-
-        case "Back" -> {
-            hideMoveList();
-            break;
-        }
-
-        default -> {
-            ArrayList<CharacterPG> f= new ArrayList<CharacterPG>();
-            f.add(battle.getEnemy());
-            MoveRegistry.getMoveRegistry().getMoveActionStrategy(move).doAction(party.getMainPlayer(), f);
-            break;
-        }
+    public void enableInput() {
+        actionList.setDisable(false);
+        moveList.setDisable(false);
     }
-}
+
 
     // ---------------- SCENE ----------------
 

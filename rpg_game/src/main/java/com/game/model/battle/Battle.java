@@ -3,6 +3,8 @@ package com.game.model.battle;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 
+import java.util.List;
+
 import com.game.model.GameState;
 
 public class Battle {
@@ -11,6 +13,7 @@ public class Battle {
     private int turnIndex;
     private TurnStrategy turnStrategy;
     private RewardStrategy rewardStrategy;
+    private List<Action> plannedActionList;
 
     public Battle(Enemy enemy) {
         this.gameState = GameState.getInstance();
@@ -31,16 +34,24 @@ public class Battle {
         return this.turnIndex;
     }
 
-    public void nextTurn() {
+    public BattleResult nextTurn() {
         this.turnStrategy.sortAction();
         TurnIterator it = turnStrategy.getTurnIterator();
         while (it.hasCharacters()) {
             CharacterPG character = it.nextCharacter();
             if (character.getCurrentStats().getHp() > 0) {
-                // PerformAction
+                Action action = getCurrentAction(character);
+                if (action != null) {
+                    System.out.println("Azione di: " + character);
+                    action.execute();
+                    if (isBattleOver() != BattleResult.ONGOING) {
+                        return isBattleOver();
+                    }
+                }
             }
         }
         this.turnIndex++;
+        return BattleResult.ONGOING;
     }
 
     /**
@@ -72,29 +83,6 @@ public class Battle {
         return BattleResult.ONGOING;
     }
 
-    public void endBattle() {
-        BattleResult flag = this.isBattleOver();
-        switch (flag) {
-            case BattleResult.ONGOING:
-                break;
-            case BattleResult.PARTY_WON: {
-                System.out.println("ggwp");
-                // Notify controller
-                this.assignRewards();
-                break;
-            }
-            case BattleResult.PARTY_DEFEATED: {
-                System.out.println("Party got wiped out");
-                // Notify controller
-                break;
-            }
-            default: {
-                System.err.println("Error in logic: isBattleOver()");
-                break;
-            }
-        }
-    }
-
     public void assignRewards() {
         Reward reward = rewardStrategy.calculateRewards(enemy);
         reward.assignXP(this.gameState.getParty());
@@ -103,5 +91,18 @@ public class Battle {
 
     public Enemy getEnemy() {
         return enemy;
+    }
+
+    public void setPlannedActionList(List<Action> plannedActionList) {
+        this.plannedActionList = plannedActionList;
+    }
+
+    private Action getCurrentAction(CharacterPG character) {
+        for (Action action : plannedActionList) {
+            if (action.getUser().equals(character)) {
+                return action;
+            }
+        }
+        return null;
     }
 }
