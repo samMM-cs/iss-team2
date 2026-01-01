@@ -3,6 +3,9 @@ package com.game.view.battleview;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
+import com.game.model.battle.MoveReader;
+import com.game.model.battle.MoveRegistry;
+import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
@@ -26,6 +29,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BattleView extends Pane {
@@ -38,6 +42,7 @@ public class BattleView extends Pane {
 
     private final BorderPane uiOverlay;
     private final ListView<String> actionList = new ListView<>();
+    private final ListView<String> moveList = new ListView<>();
 
     private Image backgroundImage;
     private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
@@ -77,7 +82,15 @@ public class BattleView extends Pane {
         actionList.setStyle("-fx-font-size: 14px;");
         actionList.setOnMouseClicked(e -> handleAction());
 
-        HBox bottomBox = new HBox(actionList);
+        moveList.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        moveList.setStyle("-fx-font-size: 14px;");
+        moveList.setVisible(false); // nascosta di default
+        moveList.setManaged(false); // IMPORTANTISSIMO per layout
+        moveList.getItems().addAll("Basic Attack", "Basic Heal", "Basic Magic Attack", "Back");
+        resizeListViewToFitItems(moveList);
+        moveList.setOnMouseClicked(e -> handleMoveSelection());
+
+        HBox bottomBox = new HBox(10, actionList, moveList);
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setPadding(new Insets(20));
 
@@ -93,6 +106,31 @@ public class BattleView extends Pane {
         uiOverlay.setPickOnBounds(false);
 
         getChildren().add(uiOverlay);
+    }
+
+    private void resizeListViewToFitItems(ListView<?> list) {
+        list.setFixedCellSize(36);
+        double height = list.getItems().size() * list.getFixedCellSize() + 2;
+        list.setPrefHeight(height);
+        list.setMaxHeight(height);
+    }
+
+    private void showMoveList() {
+        actionList.setVisible(false);
+        actionList.setManaged(false);
+
+        moveList.setVisible(true);
+        moveList.setManaged(true);
+    }
+
+    private void hideMoveList() {
+        moveList.setVisible(false);
+        moveList.setManaged(false);
+
+        actionList.setVisible(true);
+        actionList.setManaged(true);
+
+        moveList.getSelectionModel().clearSelection();
     }
 
     // ---------------- GAME LOOP ----------------
@@ -252,10 +290,42 @@ public class BattleView extends Pane {
             return;
 
         switch (selected) {
-            case "Flee" -> ViewManager.getInstance().showExplorationView();
-            case "Move" -> playerAttackOffset = 80;
+            case "Flee" -> {
+                ViewManager.getInstance().showExplorationView();
+                break;
+            }
+            case "Move" -> {
+                showMoveList();
+                break;
+            }
         }
     }
+
+private void handleMoveSelection() {
+    String move = moveList.getSelectionModel().getSelectedItem();
+    if (move == null)
+        return;
+
+    switch (move) {
+        case "Attack" -> {
+            playerAttackOffset = 80;
+            // qui poi: calcolo danno, animazione, turno nemico
+            break;
+        }
+
+        case "Back" -> {
+            hideMoveList();
+            break;
+        }
+
+        default -> {
+            ArrayList<CharacterPG> f= new ArrayList<CharacterPG>();
+            f.add(battle.getEnemy());
+            MoveRegistry.getMoveRegistry().getMoveActionStrategy(move).doAction(party.getMainPlayer(), f);
+            break;
+        }
+    }
+}
 
     // ---------------- SCENE ----------------
 
