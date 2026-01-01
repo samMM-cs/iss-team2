@@ -4,9 +4,6 @@ import com.game.controller.BattleController;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
-import com.game.model.battle.MoveReader;
-import com.game.model.battle.MoveRegistry;
-import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
@@ -30,7 +27,6 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BattleView extends Pane {
