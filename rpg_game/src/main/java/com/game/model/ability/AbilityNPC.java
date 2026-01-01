@@ -1,25 +1,25 @@
-package com.game.model.character;
+package com.game.model.ability;
 
 import javafx.scene.image.Image;
 
 import java.util.List;
 
 import com.game.model.Position;
-import com.game.model.ability.FireballAbility;
-import com.game.model.ability.HealAbility;
-import com.game.model.ability.Ability;
+import com.game.model.character.Job;
+import com.game.model.character.NPC;
+import com.game.model.character.Player;
 import com.game.model.character.dialogue.Dialogue;
 import com.game.view.ShopView;
 
 public class AbilityNPC extends NPC {
     private static final Image img = new Image(AbilityNPC.class.getResourceAsStream("/characters/rogues.png"));
-    List<Ability> abilities = List.of(new FireballAbility(), new HealAbility());
+    List<AbilityType> abilities = List.of(AbilityType.FIREBALL,AbilityType.HEAL);
 
     public AbilityNPC(Job job, Position pos) {
         super(job, pos, img, new Dialogue(List.of(
                 "Welcome to my shop! I'm " + job,
                 "Take a look at my goods.")));
-        for (Ability ability : abilities) {
+        for (AbilityType ability : abilities) {
             this.addShopAbility(ability);
         }
     }

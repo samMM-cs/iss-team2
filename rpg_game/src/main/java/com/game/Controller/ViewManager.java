@@ -32,7 +32,6 @@ public class ViewManager {
   private BattleView battleView;
   private DialogueView dialogView;
   private ShopView shopView;
-  private Player player;
 
   private boolean paused = false;
   private Pane root;
@@ -127,12 +126,16 @@ public class ViewManager {
     root = (Pane) scene.getRoot();
     if (dialogView == null) {
       dialogView = new DialogueView();
-      if (dialogView.isVisible())
+      if (dialogView.isVisible()) {
         dialogView.handleAdvance();
+        explorationView.stop();
+      } else
+        explorationView.showMap();
       dialogView.showDialogue(target.getDialogue());
       dialogView.setOnCloseClick(() -> {
         showShop(player, target);
-        root.getChildren().remove(dialogView);
+        dialogView.setVisible(false);
+        dialogView = null;
       });
       root.getChildren().add(dialogView);
     }

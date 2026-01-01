@@ -1,6 +1,6 @@
 package com.game.view;
 
-import com.game.model.ability.Ability;
+import com.game.model.ability.AbilityType;
 import com.game.model.character.NPC;
 import com.game.model.character.Player;
 
@@ -37,21 +37,61 @@ public class ShopView extends VBox {
         abilityBox = new VBox(10); // Spazio tra le abilità
         abilityBox.setAlignment(Pos.CENTER);
 
-        Button closeBtn = new Button("ESCI");
+        Button closeBtn = new Button("Exit");
         closeBtn.setStyle("-fx-background-color: #ff4444; -fx-text-fill: white; -fx-font-weight: bold;");
         closeBtn.setOnAction(e -> closed());
 
-        this.getChildren().addAll(title, goldLabel, abilityBox, closeBtn,buyAbility);
+        this.getChildren().addAll(title, goldLabel, abilityBox, closeBtn, buyAbility);
     }
 
-    private void addShopItem(Ability ability) {
-        HBox itemBox = new HBox(15); // Aumentato spazio
-        itemBox.setAlignment(Pos.CENTER);
+    private void addShopItem(AbilityType ability) {
+        HBox itemBox = new HBox(20); // Aumentato spazio
+        itemBox.setAlignment(Pos.CENTER_LEFT);
+
+        itemBox.setStyle(
+                "-fx-background-color: rgba(50,50,50,0.8);" +
+                        "-fx-padding: 12;" +
+                        "-fx-border-color: #d4af37;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;");
+
+        // Effetto hover
+        itemBox.setOnMouseEntered(e -> itemBox.setStyle(
+                "-fx-background-color: rgba(70,70,70,0.9);" +
+                        "-fx-padding: 12;" +
+                        "-fx-border-color: #ffd700;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;"));
+        itemBox.setOnMouseExited(e -> itemBox.setStyle(
+                "-fx-background-color: rgba(50,50,50,0.8);" +
+                        "-fx-padding: 12;" +
+                        "-fx-border-color: #d4af37;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;"));
 
         Label nameLabel = new Label(ability.getName() + " - " + ability.getCost() + " €");
-        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
+        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18;-fx-font-wight: bold");
 
-        Button buyButton = new Button("Compra");
+        Button buyButton = new Button("Buy");
+        buyButton.setStyle(
+                "-fx-background-color: #228B22;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 8;");
+        buyButton.setOnMouseEntered(e -> buyButton.setStyle(
+                "-fx-background-color: #2ecc71;" +
+                        "-fx-text-fill: black;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 8;"));
+        buyButton.setOnMouseExited(e -> buyButton.setStyle(
+                "-fx-background-color: #228B22;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 8;"));
+
         buyButton.setCursor(Cursor.HAND);
         buyButton.setOnAction(e -> {
             if (player.getCurrentStats().getMoney() >= ability.getCost()) {
@@ -59,8 +99,10 @@ public class ShopView extends VBox {
                 player.addAbility(ability); // Assicurati che Player abbia questo metodo
                 updateUI();
                 showFeedback(ability.getName());
-            } else
-                buyButton.setText("No Money!"); // Feedback visivo immediato
+            } else {
+                buyButton.setDisable(true);
+                itemBox.setOpacity(1);
+            }
         });
         itemBox.getChildren().addAll(nameLabel, buyButton);
         abilityBox.getChildren().add(itemBox);
@@ -84,7 +126,7 @@ public class ShopView extends VBox {
     public void open(NPC npc) {
         this.title.setText(String.valueOf(npc.getJob()));
         abilityBox.getChildren().clear();
-        for (Ability ability : npc.getShopAbilities()) {
+        for (AbilityType ability : npc.getShopAbilities()) {
             addShopItem(ability);
         }
         this.setVisible(true);

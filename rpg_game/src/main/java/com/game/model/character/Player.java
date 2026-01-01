@@ -6,30 +6,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.game.model.Position;
-import com.game.model.ability.Ability;
 
 public class Player extends CharacterPG {
     private int xp;
     private Inventory inventory;
     private Player follower;
     private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
-    private Set<Integer> learnedAbilities = new HashSet<>();
 
     public Player(Job job, Position position) {
         super(job, position, img);
     }
 
     public void equipItem(Item item) {
-    }
-
-    public void learnAbility(Ability ability) {
-        if (ability == null)
-            return;
-
-        if (hasAbility(ability))
-            return;
-        learnedAbilities.add(ability.getId());
-        ability.apply(this);
     }
 
     public void notifyFollower() {
@@ -73,10 +61,6 @@ public class Player extends CharacterPG {
 
     public void setPosition(Position pos) {
         this.setPos(pos);
-    }
-
-    public boolean hasAbility(Ability ability) {
-        return learnedAbilities.contains(ability.getId());
     }
 
     @Override

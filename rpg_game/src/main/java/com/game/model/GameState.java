@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-import com.game.model.character.AbilityNPC;
+import com.game.model.ability.AbilityNPC;
 import com.game.model.character.Enemy;
 import com.game.model.character.Player;
 import com.game.model.character.Party;

@@ -92,11 +92,8 @@ public class ExplorationController {
                 break;
             }
         }
-
-        final NPC nearbyNPC = target;
-        System.out.println("Sono nella ExplorationController");
         if (target != null) {
-            ViewManager.getInstance().showDialogView(scene,mainPlayer,nearbyNPC);
+            ViewManager.getInstance().showDialogView(scene,mainPlayer,target);
             target.interact(mainPlayer);
 
         }

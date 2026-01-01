@@ -20,7 +20,7 @@ public abstract class NPC implements Interactable {
 
     private final Dialogue dialogue;
 
-    private final List<Ability> shopAbilities;
+    private final List<AbilityType> shopAbilities;
 
     public NPC(Job job, Position pos, Image img, Dialogue dialogue) {
         this.job = job;
@@ -54,11 +54,11 @@ public abstract class NPC implements Interactable {
         return dialogue;
     }
 
-    public void addShopAbility(Ability ability) {
+    public void addShopAbility(AbilityType ability) {
         this.shopAbilities.add(ability);
     }
 
-    public List<Ability> getShopAbilities() {
+    public List<AbilityType> getShopAbilities() {
         return shopAbilities;
     }
 

@@ -2,49 +2,54 @@
 
 title GameLauncher
 
-class App{
+' ===========================
+' Launcher & Menu
+' ===========================
+
+class App {
     + main(): void
 }
-App-->GameLauncher: calls getIstance()
+App --> GameLauncher : calls getInstance()
 
-class GameLauncher{
+class GameLauncher {
     - static instance : GameLauncher
     - GameLauncher()
-    +static getIstance(): GameLauncher
-    + launch() : void
+    + static getInstance(): GameLauncher
+    + launch(): void
 }
 
-class MainMenu{
-    +show() : void
+class MainMenu {
+    + show(): void
 }
 
-GameLauncher-->MainMenu: launch
+GameLauncher --> MainMenu : launch()
 
-abstract class GameCreator{
+' ===========================
+' Game Creation (Factory Method)
+' ===========================
+
+abstract class GameCreator {
     + createGame(): Game
 }
 
-class NewGameCreator{
+class NewGameCreator {
     + createGame(): Game
 }
 
-class ContinueGameCreator{
+class ContinueGameCreator {
     + createGame(): Game
 }
 
-GameCreator -down-> NewGameCreator
-GameCreator -down-> ContinueGameCreator
-GameCreator --> Game : create
+GameCreator <|-- NewGameCreator
+GameCreator <|-- ContinueGameCreator
+GameCreator --> Game : create()
 
-abstract class Game{
-    - GameState: gameState
+abstract class Game {
+    - gameState: GameState
 }
 
-class NewGame{}
-class ContinueGame{}
-
-class NewGame {}
-class ContinueGame {}
+class NewGame
+class ContinueGame
 
 Game <|-- NewGame
 Game <|-- ContinueGame
@@ -52,6 +57,7 @@ Game <|-- ContinueGame
 class NewGameView {
     + render(): void
 }
+
 class SaveMenuView {
     + render(): void
 }
@@ -59,7 +65,10 @@ class SaveMenuView {
 NewGame --> NewGameView
 ContinueGameCreator --> SaveMenuView
 
-' ===== Singleton GameInstance =====
+' ===========================
+' Singleton GameInstance
+' ===========================
+
 class GameInstance {
     - static instance: GameInstance
     - gameCreator: GameCreator
@@ -67,9 +76,8 @@ class GameInstance {
 }
 
 GameInstance --> GameCreator
-GameInstance --> GameInstance
 
-class MainMenuController{
+class MainMenuController {
     + handleSelection(option: String): void
 }
 
@@ -77,113 +85,143 @@ MainMenu --> MainMenuController : user input
 MainMenuController --> GameCreator : createGame()
 MainMenuController --> GameView : render()
 
-'Choose character job, uso Abstract Factory'
-abstract class Character{
-    -abilities: List<Ability>
+' ===========================
+' Character Creation (Abstract Factory)
+' ===========================
+
+abstract class Character {
+    - abilities: List<AbilityType>
     - job: Job
-    -baseStats: Stats
-    -currentStats: Stats
-    -position: Position
-    -inCombat: boolean
-    +refreshCurrentStats(): void
-    +enterCombat(): void
-    +exitCombat(): void
-    +isInCombat(): boolean
-    +createCharacterSprite(): ImageView
-    +useAbilities(): void
-    +addAbility(a: Ability): void
-    +getAbilities(): List<Ability>
-    +takeDamage(int value): void
-    +heal(int value): void
+    - baseStats: Stats
+    - currentStats: Stats
+    - position: Position
+    - inCombat: boolean
+
+    + refreshCurrentStats(): void
+    + enterCombat(): void
+    + exitCombat(): void
+    + isInCombat(): boolean
+    + createCharacterSprite(): ImageView
+    + addAbility(a: AbilityType): void
+    + getAbilities(): List<AbilityType>
+    + takeDamage(int value): void
+    + heal(int value): void
 }
 
-class Player extends Character{
+class Player extends Character {
     - xp: int
     - follower: Player
     - imgSprite: Image
-    - abilities: List<Ability>
-    +notifyFollower(): void
-    +subscribeToFollowed(): void
-    +unsubscribeFromFollowed(): void
-    +addXp(): void
-    +takeDamage(int value): void
-    +heal(int value): void
-    +addAbility(a: Ability): void
-    +getAbilities(): List<Ability>
-    +useAbilities(): void
-    +hasAbility(): boolean
+
+    + notifyFollower(): void
+    + subscribeToFollowed(): void
+    + unsubscribeFromFollowed(): void
+    + addXp(): void
+    + takeDamage(int value): void
+    + heal(int value): void
+    + hasAbility(): boolean
 }
-class Enemy extends Character{
+
+class Enemy extends Character {
     - imgSprite: Image
-    +takeDamage(int value): void
-    +heal(int value): void
+    + takeDamage(int value): void
+    + heal(int value): void
 }
 
-class CharacterSelectionView{
-    +show(): void
-    +createCard(Job job): void
-    +selectCharacter(Job job,VBox card): void
-}
-class GameController{
-    +onNewGameConfirmed(int players,boolean autoSave): void
-    +goToCharacterSelection(): void
-    +onCharacterSelected(Job job): void
-    +createParty(): void
-    +createEnemy():  void
-    +createNPC(): void
-
-}
-enum Job{}
-CharacterSelectionView-->GameController: user selects job
-NewGameView-->CharacterSelectionView: selectJobs()
-GameController-->Player:createParty()
-GameController-->Enemy:createEnemy()
-Player-->Job
-Enemy-->Job
-
-'Character Evolution, Strategy'
-interface Ability{
-    +getName(): String
-    +getDescription(): String
-    +getCost(): int
-    +apply(player: Player): void
+interface Interactable {
+    + interact(player: Player): void
 }
 
-class FireballAbility implements Ability{
-    +getName(): String
-    +getDescription(): String
-    +getCost(): int
-    +apply(player: Player): void
+abstract class NPC implements Interactable {
+    - sprite: ImageView
+    - job: Job
+    - pos: Position
+    - dialogue: Dialogue
+    - shopAbilities: List<AbilityType>
+
+    + getJob(): Job
+    + addShopAbilities(ability: AbilityType): void
+    + interact(player: Player): void
 }
 
-class HealAbility implements Ability{
-    +getName(): String
-    +getDescription(): String
-    +getCost(): int
-    +apply(player: Player): void
+class AbilityNPC extends NPC {
+    - abilities: List<AbilityType>
+    + interact(player: Player): void
 }
 
-Player->Ability: apply()
+enum Job
 
-'Builder'
+CharacterSelectionView --> GameController : user selects job
+NewGameView --> CharacterSelectionView : selectJobs()
+GameController --> Player : createParty()
+GameController --> Enemy : createEnemy()
+Player --> Job
+Enemy --> Job
 
-class MapBuilder{
-    - MapView map
+' ===========================
+' Strategy Pattern (Abilities)
+' ===========================
+
+interface Ability {
+    + apply(player: Player, enemy: Enemy): void
+}
+
+enum AbilityType {
+    + getIcon(): ImageView
+    + getCost(): int
+    + getName(): String
+    + getDescription(): String
+    + getRarity(): int
+    + getDamage(): int
+    + getHeal(): int
+}
+
+class FireballAbility implements Ability {
+    + apply(player: Player, enemy: Enemy): void
+}
+
+class HealAbility implements Ability {
+    + apply(player: Player, enemy: Enemy): void
+}
+
+Player --> AbilityType : owns >
+AbilityType --> Ability : used to instantiate >
+
+' ===========================
+' Shop
+' ===========================
+
+class ShopView {
+    - player: Player
+    - addShopItem(ability: AbilityType): void
+    + open(npc: NPC): void
+}
+
+ShopView --> Player
+ShopView --> NPC
+ShopView --> AbilityType : add()
+
+' ===========================
+' Builder Pattern (Map)
+' ===========================
+
+class MapBuilder {
+    - map: MapView
     + addLayer(layer)
     + build()
 }
 
-  class ExplorationView {
+class ExplorationView {
     + renderMap()
-  }
+}
 
-  class ExplorationController {
+class ExplorationController {
     + movePlayer(direction)
     + updatePartyFollow()
-  }
+}
 
-  ExplorationView --> ExplorationController
-  ExplorationView --> MapBuilder
+ExplorationView --> ExplorationController
+ExplorationView --> MapBuilder
+CharacterSelectionView --> ExplorationView : startExploration()
 
-  CharacterSelectionView-->ExplorationView: startExploration()
 @enduml
