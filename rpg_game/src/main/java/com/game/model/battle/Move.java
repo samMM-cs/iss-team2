@@ -5,17 +5,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Move {
+
+    public Move() {
+    }
+
     @JsonProperty("id")
-    public String id;
+    private String id;
 
     @JsonProperty("name")
-    public String name;
+    private String name;
 
     @JsonProperty("type")
-    public String type;
+    private MoveType type;
 
     @JsonProperty("value")
-    public int value;
+    private int value;
+
+    @JsonProperty("cost")
+    private int cost;
+
+    @JsonProperty("description")
+    private String description;
 
     public String getId() {
         return this.id;
@@ -25,11 +35,43 @@ public class Move {
         return this.name;
     }
 
-    public String getType() {
+    public MoveType getType() {
         return this.type;
     }
 
     public int getValue() {
         return this.value;
+    }
+
+    public int getCost() {
+        return this.cost;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(MoveType type) {
+        this.type = type;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -9,6 +9,7 @@ import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.Job;
 import com.game.view.HUD;
+import com.game.model.battle.*;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.ListView;
@@ -51,6 +52,7 @@ public class BattleView extends Pane {
 
     // ---- Stato animazioni ----
     private double playerAttackOffset = 0;
+    private int activePlayerIndex = 0;
 
     public BattleView(Battle battle) {
         this.battle = battle;
@@ -82,23 +84,24 @@ public class BattleView extends Pane {
         actionList.setStyle("-fx-font-size: 14px;");
         actionList.setOnMouseClicked(e -> {
             String selected = actionList.getSelectionModel().getSelectedItem();
-            controller.handleAction(selected);
+            if (selected != null)
+                controller.handleAction(selected);
         });
 
         moveList.setOrientation(javafx.geometry.Orientation.VERTICAL);
         moveList.setStyle("-fx-font-size: 14px;");
         moveList.setVisible(false); // nascosta di default
         moveList.setManaged(false); // IMPORTANTISSIMO per layout
-        moveList.getItems().addAll("Basic Attack", "Basic Heal", "Basic Magic Attack", "Back");
-        resizeListViewToFitItems(moveList);
         moveList.setOnMouseClicked(e -> {
             String move = moveList.getSelectionModel().getSelectedItem();
-            controller.handleMoveSelection(move);
+            if (move != null)
+                controller.handleMoveSelection(move);
         });
 
         HBox bottomBox = new HBox(10, actionList, moveList);
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setPadding(new Insets(20));
+        bottomBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 10;");
 
         HBox playersBox = new HBox(15);
         playersBox.setPadding(new Insets(20));
@@ -116,9 +119,16 @@ public class BattleView extends Pane {
 
     private void resizeListViewToFitItems(ListView<?> list) {
         list.setFixedCellSize(36);
-        double height = list.getItems().size() * list.getFixedCellSize() + 2;
+        double height = list.getItems().size() * list.getFixedCellSize() + 4;
         list.setPrefHeight(height);
         list.setMaxHeight(height);
+    }
+
+    public void updateMoveList(List<String> moves) {
+        moveList.getItems().clear();
+        moveList.getItems().addAll(moves);
+        moveList.getItems().add("Back");// Per dare sempre la possibilità di tornare indietro
+        resizeListViewToFitItems(moveList);
     }
 
     public void showMoveList() {
@@ -139,6 +149,10 @@ public class BattleView extends Pane {
         moveList.getSelectionModel().clearSelection();
     }
 
+    public void setActivePlayer(int index) {
+        this.activePlayerIndex = index;
+    }
+
     // ---------------- GAME LOOP ----------------
 
     private void initGameLoop() {
@@ -152,9 +166,9 @@ public class BattleView extends Pane {
     }
 
     private void update() {
-        // easing dell'animazione attacco
+        // easing dell'animazione di scatto in avanti
         playerAttackOffset *= 0.85;
-        if (Math.abs(playerAttackOffset) < 0.5)
+        if (Math.abs(playerAttackOffset) < 0.1)
             playerAttackOffset = 0;
     }
 
@@ -184,32 +198,38 @@ public class BattleView extends Pane {
 
         for (int i = 0; i < members.size(); i++) {
             Player p = members.get(i);
-            Image sprite = p.getImg();
-            if (sprite == null)
-                continue;
+            if (p.getCurrentStats().getHp() <= 0)
+                continue; // Non disegnare i morti o falli vedere diversamente
 
-            double x = w * 0.10 + i * (size * 0.6) + playerAttackOffset;
+            double x = w * 0.10 + i * (size * 0.6);
+            // Applichiamo l'offset solo se è il turno di questo giocatore
+            double currentX = (i == activePlayerIndex) ? x + playerAttackOffset : x;
             double y = groundY - size;
 
-            int sx = p.getJob().getX();
-            int sy = p.getJob().getY();
-            int sw = Job.SIZE;
-            int sh = Job.SIZE;
+            // --- INDICATORE TURNO ---
+            if (i == activePlayerIndex && actionList.isDisabled() == false) {
+                drawTurnIndicator(currentX, groundY, size);
+            }
 
             gc.save();
-
-            // Flip orizzontale
-            gc.translate(x + size / 2, 0);
+            // Flip per guardare verso destra (il nemico)
+            gc.translate(currentX + size / 2, 0);
             gc.scale(-1, 1);
-            gc.translate(-x - size / 2, 0);
+            gc.translate(-currentX - size / 2, 0);
 
-            gc.drawImage(sprite,
-                    sx, sy, sw, sh,
-                    Math.floor(x), Math.floor(y),
-                    size, size);
-
+            gc.drawImage(p.getImg(), p.getJob().getX(), p.getJob().getY(), Job.SIZE, Job.SIZE,
+                    Math.floor(currentX), Math.floor(y), size, size);
             gc.restore();
         }
+    }
+
+    // --- NUOVO: Disegna un cerchio luminoso sotto il giocatore attivo ---
+    private void drawTurnIndicator(double x, double y, double size) {
+        gc.setFill(Color.rgb(255, 255, 255, 0.4));
+        gc.fillOval(x + size * 0.1, y - 10, size * 0.8, 15);
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(2);
+        gc.strokeOval(x + size * 0.1, y - 10, size * 0.8, 15);
     }
 
     private void drawEnemy(double w, double groundY, double h) {
@@ -290,7 +310,7 @@ public class BattleView extends Pane {
     }
 
     public void setPlayerAttackOffset(double playerAttackOffset) {
-        this.playerAttackOffset= playerAttackOffset;
+        this.playerAttackOffset = playerAttackOffset;
     }
 
     // ---------------- INPUT ----------------
@@ -304,7 +324,6 @@ public class BattleView extends Pane {
         actionList.setDisable(false);
         moveList.setDisable(false);
     }
-
 
     // ---------------- SCENE ----------------
 

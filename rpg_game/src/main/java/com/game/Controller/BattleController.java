@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.game.model.GameState;
 import com.game.model.battle.Action;
+import com.game.model.battle.ActionStrategy;
+import com.game.model.battle.Move;
+import com.game.model.battle.MoveReader;
 import com.game.model.battle.Battle;
 import com.game.model.battle.BattleResult;
 import com.game.model.character.CharacterPG;
@@ -13,15 +16,25 @@ import com.game.view.battleview.BattleView;
 
 public class BattleController {
     private Battle battle;
+    private BattleResult result;
     private BattleView view;
     private Party party;
-    private int currentPlayerActingIndex= 0;
-    private List<Action> plannedActionList= new ArrayList<>();
+    private int currentPlayerActingIndex = 0;
+    private List<Action> plannedActionList = new ArrayList<>();
+    private List<Move> availableMove;
+    private List<Move> loadMove;
 
     public BattleController(Battle battle, BattleView view) {
         this.battle = battle;
         this.view = view;
+        this.availableMove = new ArrayList<>();
+        this.loadMove = MoveReader.readMove("/battle/moves.json");// Carico le mosse dal file JSON
+        if (loadMove != null)
+            this.availableMove.addAll(loadMove);
+        else
+            System.out.println("Impossibile caricare il file");
         this.party = GameState.getInstance().getParty();
+        this.currentPlayerActingIndex = getNextPlayerIndex();
     }
 
     public void handleAction(String selected) {
@@ -29,66 +42,85 @@ public class BattleController {
             return;
 
         switch (selected) {
-            case "Flee" -> {
+            case "Flee" ->
                 backToMap();
-                break;
-            }
             case "Move" -> {
+                view.updateMoveList(availableMove.stream().map(Move::getName).toList());
                 view.showMoveList();
-                break;
             }
         }
     }
 
-    public void handleMoveSelection(String move) {
-        if (move == null)
+    public void handleMoveSelection(String moveName) {
+        if (moveName == null || moveName.equals("Back")) {
+            view.hideMoveList();
             return;
-
-        CharacterPG currentPlayerActing= party.getMembers().get(currentPlayerActingIndex);
-
-        switch (move) {
-            case "Attack" -> {
-                view.setPlayerAttackOffset(80);
-                // qui poi: calcolo danno, animazione, turno nemico
-                break;
-            }
-
-            case "Back" -> {
-                view.hideMoveList();
-                break;
-            }
-
-            default -> {
-                plannedActionList.add(new Action(move, currentPlayerActing, List.of(battle.getEnemy())));
-                nextPlayerAction();
-                break;
-            }
         }
+        Move moveData = availableMove.stream().filter(m -> m.getName().equalsIgnoreCase(moveName)).findFirst()
+                .orElse(null);
+        if (moveData != null) {
+            CharacterPG currentPlayerActing = party.getMembers().get(currentPlayerActingIndex);
+
+            ActionStrategy actionStrategy = moveData.getType().createMove(moveData);
+            plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(battle.getEnemy())));
+            nextPlayerAction();
+        }
+    }
+
+    private void updatePlayerUI() {
+        // 1. Diciamo alla View chi evidenziare graficamente
+        view.setActivePlayer(currentPlayerActingIndex);
+
+        // 2. Estraiamo i nomi delle mosse dal JSON (availableMoves)
+        // Se ogni personaggio ha mosse diverse, qui puoi filtrare per Job o Id.
+        // Per ora prendiamo tutti i nomi delle mosse caricate:
+        if (availableMove == null)
+            availableMove = new ArrayList<>();
+        List<String> moveNames = availableMove.stream()
+                .map(Move::getName)
+                .toList();
+
+        // 3. Inviamo i nomi alla View
+        view.updateMoveList(moveNames);
     }
 
     private void nextPlayerAction() {
         if (allPlayerActed()) {
-            //TODO define enemy AI
-            battle.setPlannedActionList(plannedActionList);
+            // Esecuzione logica del turno
+            battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
-            handleBattleResult(battle.nextTurn());
-            view.enableInput();
-            plannedActionList.clear();
+
+            this.result = battle.nextTurn();
+            // Esegue i calcoli e restituisce il risultato
+            handleBattleResult(this.result);
+
+            // Se la battglia non è finita
+            if (result == BattleResult.ONGOING) {
+                // Reset per il prossimo round
+                plannedActionList.clear();
+                view.hideMoveList(); // Menu principale per il nuovo round
+                currentPlayerActingIndex = party.getMembers().size() - 1;
+                currentPlayerActingIndex = getNextPlayerIndex();
+
+                updatePlayerUI();
+                view.enableInput();
+            }
+        } else {
+            currentPlayerActingIndex = getNextPlayerIndex();
+            updatePlayerUI();
+            view.hideMoveList();
         }
-        else {
-            //TODO notifyView to highlight nextPlayer
-        }
-        currentPlayerActingIndex = getNextPlayerIndex();
     }
 
-    private void handleBattleResult (BattleResult br) {
+    private void handleBattleResult(BattleResult br) {
         switch (br) {
-            case BattleResult.ONGOING : break;
-            case BattleResult.PARTY_DEFEATED : {
+            case BattleResult.ONGOING:
+                break;
+            case BattleResult.PARTY_DEFEATED: {
                 backToMap();
                 break;
             }
-            case BattleResult.PARTY_WON : {
+            case BattleResult.PARTY_WON: {
                 battle.assignRewards();
                 backToMap();
                 break;
@@ -97,8 +129,16 @@ public class BattleController {
 
     }
 
+    // Calcolo l'indice del prossimo player vivo. Salta chi ha getHp()<=0
     private int getNextPlayerIndex() {
-        return (currentPlayerActingIndex + 1) % party.getMembers().size();
+        int size = party.getMembers().size();
+        for (int i = 0; i < size; i++) {
+            int next = (currentPlayerActingIndex + i) % party.getMembers().size();
+            if (party.getMembers().get(next).getCurrentStats().getHp() > 0)
+                return next;
+        }
+        return currentPlayerActingIndex;
+
     }
 
     private boolean allPlayerActed() {
@@ -107,5 +147,13 @@ public class BattleController {
 
     private void backToMap() {
         ViewManager.getInstance().showExplorationView();
+    }
+
+    public int getCurrentPlayerActionIndex() {
+        return this.currentPlayerActingIndex;
+    }
+
+    public List<Move> getAvailableMove() {
+        return availableMove;
     }
 }

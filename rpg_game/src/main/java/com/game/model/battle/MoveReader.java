@@ -7,21 +7,19 @@ import java.util.List;
 
 public class MoveReader {
     public static List<Move> readMove(String path) {
-        try {
-            ObjectMapper mapper= new ObjectMapper();
-            InputStream input= MoveReader.class
-                .getClassLoader()
-                .getResourceAsStream(path);
-            if (input== null) {
-                System.err.println("Stai ucciso");
-                return null;
+        try (InputStream input = MoveReader.class.getResourceAsStream(path)) {
+            ObjectMapper mapper = new ObjectMapper();
+
+            if (input == null) {
+                System.err.println("File non trovato");
+                return List.of();// Resituisce una lista vuota immutabile
             }
-            return mapper.readValue(input, new TypeReference<>() {});
-        }
-        catch (Exception e) {
+            return mapper.readValue(input, new TypeReference<List<Move>>() {
+            });
+        } catch (Exception e) {
             System.err.println("Impossibile leggere JSON delle mosse");
             e.printStackTrace();
-            return null;
+            return List.of();
         }
     }
 }

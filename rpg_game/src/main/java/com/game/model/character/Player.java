@@ -2,9 +2,6 @@ package com.game.model.character;
 
 import javafx.scene.image.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.game.model.Position;
 
 public class Player extends CharacterPG {

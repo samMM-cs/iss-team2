@@ -3,20 +3,40 @@
         "id": "A01",
         "name": "Basic Attack",
         "type": "ATTACK",
-        "value": 10
+        "value": 10,
+        "cost": 0,
+        "description": "Attacco fisico base"
     },
-
     {
         "id": "H01",
         "name": "Basic Heal",
         "type": "HEAL",
-        "value": 5
+        "value": 5,
+        "cost": 0,
+        "description": "Cura base"
     },
-
     {
         "id": "M01",
-        "name": "Basic Magic Attack",
+        "name": "Magic Bolt",
         "type": "MAGIC_ATTACK",
-        "value": 20
+        "value": 20,
+        "cost": 50,
+        "description": "Attacco magico base"
+    },
+    {
+        "id": "M02",
+        "name": "Fireball",
+        "type": "MAGIC_ATTACK",
+        "value": 30,
+        "cost": 100,
+        "description": "Danni da fuoco"
+    },
+    {
+        "id": "M03",
+        "name": "Magic Heal",
+        "type": "MAGIC_HEAL",
+        "value": 20,
+        "cost": 150,
+        "description": "Cura magica il player"
     }
 ]

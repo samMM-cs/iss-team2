@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import com.game.model.Position;
-import com.game.model.ability.Ability;
 import com.game.model.ability.AbilityType;
 
 public abstract class CharacterPG {
