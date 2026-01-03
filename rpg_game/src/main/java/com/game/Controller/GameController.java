@@ -4,6 +4,7 @@ import com.game.model.GameState;
 import com.game.model.character.Job;
 import com.game.model.creator.Game;
 import com.game.model.creator.NewGame;
+import com.game.model.map.Map1;
 
 public class GameController {
     private GameState gameState;
@@ -26,7 +27,8 @@ public class GameController {
             return;
         }
 
-        gameState = new GameState.GameStateBuilder().setNPlayers(players).enableAutoSave(autoSave).build();
+        gameState = new GameState.GameStateBuilder().setNPlayers(players).enableAutoSave(autoSave).setMap(new Map1())
+                .build();
         ViewManager.getInstance().showCharacterSelectionView(this);
     }
 
@@ -42,7 +44,7 @@ public class GameController {
             gameState.createEnemy();
             gameState.createParty();
             gameState.createNpc();
-            ViewManager.getInstance().showExplorationView();
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
         }
     }
 

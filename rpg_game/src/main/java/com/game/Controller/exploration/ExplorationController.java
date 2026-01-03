@@ -54,7 +54,7 @@ public class ExplorationController {
     }
 
     public void update() {
-        // System.out.println();
+        // System.out.println(GameState.getInstance().getParty().getMainPlayer().getPosition());
         Optional<Enemy> optEnemy = GameState.getInstance().getEnemies().stream()
                 .filter(enemy -> enemy.getPosition().equals(
                         GameState.getInstance().getParty().getMainPlayer().getPosition()))

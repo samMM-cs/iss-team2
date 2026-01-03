@@ -4,7 +4,7 @@ import com.game.controller.ViewManager;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Player;
-
+import com.game.model.map.Map;
 import com.game.model.map.TiledMapData;
 import com.game.model.GameState;
 import com.game.view.HUD;
@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 public class ExplorationView {
-    private static final String MAP_FILE_PATH = "/maps/samplemap1.tmj";
     private static final String TILESET_IMAGE_PATH = "/images/punyworld-overworld-tileset.png";
     private static final String TILESET_DATA_PATH = "/maps/punyworld-overworld-tiles.tsx";
     private ExplorationController movementController;
@@ -24,24 +23,23 @@ public class ExplorationView {
     private HUD hud;
     private AnimationTimer timer;
 
-    public ExplorationView() {
-        TiledMapData mapData = MapBuilder.loadRawMapData(MAP_FILE_PATH);
-        MapBuilder builder = new MapBuilder()
-                .addLayer(mapData.getLayers().get(0))
-                .addLayer(mapData.getLayers().get(1))
-                .addLayer(mapData.getLayers().get(2))
+    public ExplorationView(Map map) {
+        TiledMapData mapData = MapBuilder.loadRawMapData(map.getFilePath());
+
+        this.mapView = new MapBuilder()
                 .setDimensions(mapData.getTileheight(), mapData.getWidth(), mapData.getHeight())
                 .setWalkableIds(TILESET_DATA_PATH)
-                .setTileSetImageFromPath(TILESET_IMAGE_PATH);
+                .setTileSetImageFromPath(TILESET_IMAGE_PATH)
+                .addLayers(mapData.getLayers())
+                .showSprites(map.getSpriteindex())
+                .build();
 
         this.root = new Pane();
         this.scene = new Scene(root, ViewManager.getInstance().getWidth(),
                 ViewManager.getInstance().getHeight());
         this.hud = new HUD(GameState.getInstance().getParty().getMainPlayer());
         hud.setVisible(false);
-        this.mapView = builder.showSprites()
-                .addLayer(mapData.getLayers().get(3))
-                .build();
+
         this.movementController = new ExplorationController(scene, mapView);
 
         this.mapView.updatePlayerPosition(

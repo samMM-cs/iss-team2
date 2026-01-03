@@ -10,8 +10,6 @@ import com.game.model.character.HasSpriteAndPosition;
 import com.game.model.character.Player;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
-import com.game.model.character.MerchantNPC;
-import com.game.model.character.MovesNPC;
 import com.game.model.character.NPC;
 import com.game.model.character.Inventory;
 
@@ -27,6 +25,7 @@ public class GameState {
     private final WorldPosition worldPosition;
     private static GameState instance;
     private final List<HasSpriteAndPosition> sprites = new ArrayList<>();
+    private com.game.model.map.Map map;
 
     // Costruttore privato, il Builder lo costruisce
     private GameState(GameStateBuilder builder) {
@@ -38,6 +37,7 @@ public class GameState {
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
         this.npc = new ArrayList<>();
+        this.map = builder.map;
     }
 
     public static GameState getInstance() {
@@ -69,9 +69,8 @@ public class GameState {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < selectedCharacters.size(); i++) {
             Job selectedJob = selectedCharacters.get(i);
-            Position pos = new Position(selectedCharacters.size() - i - 1, 7);
 
-            Player p = new Player(selectedJob, pos);
+            Player p = new Player(selectedJob, map.getPlayerPosition(selectedCharacters.size(), i));
             if (i > 0)
                 p.subscribeToFollowed(players.get(i - 1));
             players.add(p);
@@ -82,20 +81,14 @@ public class GameState {
     public void createEnemy() {
         enemies.clear();
         Job.initAllMoves();
-        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN2);
-        List<Position> pos = List.of(new Position(5, 5), new Position(6, 8));
-        for (int i = 0; i < enemiesJob.size(); i++) {
-            Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
-            enemies.add(new Enemy(enemiesJob.get(i), newPos));
-        }
+        enemies.addAll(map.getEnemies());
     }
 
     public void createNpc() {
         this.npc.clear();
 
         Job.initAllMoves();
-        this.npc.add(new MerchantNPC(Job.FARMER, new Position(4, 7)));
-        this.npc.add(new MovesNPC(Job.TRAINER, new Position(16, 18)));
+        this.npc.addAll(map.getNpcs());
     }
 
     public List<HasSpriteAndPosition> getSpritesAndPositions() {
@@ -110,6 +103,10 @@ public class GameState {
 
     public void applyChoices(String choice) {
 
+    }
+
+    public com.game.model.map.Map getMap() {
+        return map;
     }
 
     public Inventory getInventory() {
@@ -155,6 +152,8 @@ public class GameState {
     // ----------------------------------------------------------------------------------------
 
     public static class GameStateBuilder {
+        public com.game.model.map.Map map;
+
         public int nPlayers = 2;
         public boolean autoSaveEnabled = false;
         public List<Job> selectedCharacters = new ArrayList<>();
@@ -163,6 +162,11 @@ public class GameState {
         public Inventory inventory;
         public Map<Event, Boolean> storyFlags = new HashMap<>();
         public WorldPosition worldPosition = new WorldPosition();
+
+        public GameStateBuilder setMap(com.game.model.map.Map map) {
+            this.map = map;
+            return this;
+        }
 
         public GameStateBuilder setNPlayers(int nPlayers) {
             this.nPlayers = nPlayers;

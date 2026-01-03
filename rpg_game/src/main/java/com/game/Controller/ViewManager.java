@@ -3,6 +3,7 @@ package com.game.controller;
 import com.game.model.battle.Battle;
 import com.game.model.character.NPC;
 import com.game.model.character.Player;
+import com.game.model.map.Map;
 import com.game.view.CharacterSelectionView;
 import com.game.view.DialogueView;
 import com.game.view.ShopView;
@@ -107,9 +108,21 @@ public class ViewManager {
     characterSelectionView.show();
   }
 
-  public void showExplorationView() {
+  public void showExplorationView(Map map) {
     if (explorationView == null)
-      explorationView = new ExplorationView();
+      explorationView = new ExplorationView(map);
+    if (isUIVisible()) {
+      if (battleView != null)
+        battleView.setVisible(false);
+      if (dialogView != null)
+        dialogView.setVisible(false);
+      if (shopView != null)
+        shopView.setVisible(false);
+    }
+    explorationView.showMap();
+  }
+
+  public void showExplorationView() {
     if (isUIVisible()) {
       if (battleView != null)
         battleView.setVisible(false);

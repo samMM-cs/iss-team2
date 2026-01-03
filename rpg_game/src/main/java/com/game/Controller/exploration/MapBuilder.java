@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -86,8 +87,18 @@ public class MapBuilder {
         return this;
     }
 
+    public MapBuilder addLayers(Collection<LayerData> layers) {
+        this.layers.addAll(layers);
+        return this;
+    }
+
     public MapBuilder showSprites() {
         spriteLayerIndex = layers.size();
+        return this;
+    }
+
+    public MapBuilder showSprites(int i) {
+        spriteLayerIndex = i;
         return this;
     }
 

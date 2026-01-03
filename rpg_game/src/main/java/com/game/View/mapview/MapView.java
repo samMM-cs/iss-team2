@@ -87,11 +87,13 @@ public class MapView extends Pane {
 
     private void drawMap(Position offset) {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int i = 0; i < layers.size(); i++) {
+        for (int i = 0; i <= Math.max(layers.size(), spriteLayerIndex); i++) {
             if (i == spriteLayerIndex) {
                 renderSprites(offset);
             }
-            renderLayer(layers.get(i), offset);
+            if (i < layers.size()) {
+                renderLayer(layers.get(i), offset);
+            }
         }
     }
 
