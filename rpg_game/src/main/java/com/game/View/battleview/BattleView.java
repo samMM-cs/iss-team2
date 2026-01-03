@@ -1,6 +1,8 @@
 package com.game.view.battleview;
 
 import com.game.controller.BattleController;
+import javafx.animation.AnimationTimer;
+import javafx.scene.control.ListView;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
@@ -10,8 +12,6 @@ import com.game.model.character.Player;
 import com.game.model.character.Job;
 import com.game.view.HUD;
 
-import javafx.animation.AnimationTimer;
-import javafx.scene.control.ListView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
