@@ -89,9 +89,8 @@ public class PartyTest {
         Party party = setUpEmptyParty();
 
         assertThrows(
-            IndexOutOfBoundsException.class,
-            () -> party.getMainPlayer()
-        );
+                IndexOutOfBoundsException.class,
+                () -> party.getMainPlayer());
     }
 
     @Test
@@ -114,8 +113,8 @@ public class PartyTest {
 
         party.updateFollowPosition(p);
 
-        assertEquals(200, (int) party.getMainPlayer().getPos().x());
-        assertEquals(50, (int) party.getMainPlayer().getPos().y());
+        assertEquals(200, (int) party.getMainPlayer().getPosition().x());
+        assertEquals(50, (int) party.getMainPlayer().getPosition().y());
     }
 
     @Test
@@ -126,8 +125,8 @@ public class PartyTest {
         party.updateFollowPosition(pos);
 
         for (Player p : party.getMembers()) {
-            assertEquals(200, (int) p.getPos().x());
-            assertEquals(50, (int) p.getPos().y());
+            assertEquals(200, (int) p.getPosition().x());
+            assertEquals(50, (int) p.getPosition().y());
         }
     }
 }

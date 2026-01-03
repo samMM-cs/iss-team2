@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 import com.game.model.Position;
 import com.game.model.battle.*;
 
-public abstract class CharacterPG {
+public abstract class CharacterPG implements HasSpriteAndPosition {
     private Job job;
     private Stats baseStats;
 
@@ -56,7 +56,8 @@ public abstract class CharacterPG {
         return job;
     }
 
-    public Position getPos() {
+    @Override
+    public Position getPosition() {
         return pos;
     }
 
@@ -64,6 +65,7 @@ public abstract class CharacterPG {
         return img;
     }
 
+    @Override
     public ImageView getSprite() {
         return sprite;
     }

@@ -8,9 +8,9 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.game.controller.ViewManager;
+import com.game.model.GameState;
 import com.game.model.Position;
 import com.game.model.battle.Battle;
-import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
@@ -20,10 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
 public class ExplorationController {
-    private Party party;
     private Scene scene;
-    private List<Enemy> enemies = new ArrayList<>();
-    private List<NPC> npcs = new ArrayList<>();
 
     private Queue<KeyCode> activeKeys = new LinkedList<>();
     private Position posLimit;
@@ -33,12 +30,9 @@ public class ExplorationController {
     private Position prevPosition = Position.Origin;
     private boolean battleStarted = false;
 
-    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc) {
+    public ExplorationController(Scene scene, MapView mapView) {
         this.scene = scene;
-        this.party = party;
         this.mapView = mapView;
-        this.enemies = enemies;
-        this.npcs = npc;
         this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -60,9 +54,11 @@ public class ExplorationController {
     }
 
     public void update() {
-        System.out.println("updating");
-        Optional<Enemy> optEnemy = this.enemies.stream()
-                .filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).findFirst();
+        // System.out.println();
+        Optional<Enemy> optEnemy = GameState.getInstance().getEnemies().stream()
+                .filter(enemy -> enemy.getPosition().equals(
+                        GameState.getInstance().getParty().getMainPlayer().getPosition()))
+                .findFirst();
         if (!battleStarted && optEnemy.isPresent()) {
             battleStarted = true;
             optEnemy.ifPresent(this::handleBattle);
@@ -70,32 +66,28 @@ public class ExplorationController {
         }
 
         KeyCode key = activeKeys.poll();
-        if (!ViewManager.getInstance().isVisible() && key != null) {
+        if (!ViewManager.getInstance().isUIVisible() && key != null) {
             if (movementKeys.contains(key))
                 movePlayer(key);
 
             if (key == KeyCode.E)
                 handlePossibleInteractions();
         }
-        updateSpritePositions();
     }
 
     private void handlePossibleInteractions() {
         NPC target = null;
-        Player mainPlayer = party.getMainPlayer();
-        for (NPC npc : npcs) {
-            if (Math.abs(npc.getPos().sub(mainPlayer.getPos()).max()) <= 1) {
+        Player mainPlayer = GameState.getInstance().getParty().getMainPlayer();
+        for (NPC npc : GameState.getInstance().getNpc()) {
+            if (Math.abs(npc.getPosition().sub(mainPlayer.getPosition()).max()) <= 1) {
                 target = npc;
                 break;
             }
         }
 
         if (target != null) {
-            activeKeys.clear();
-            // canMove = false;
             ViewManager.getInstance().showDialogView(scene, mainPlayer, target);
             target.interact(mainPlayer);
-            // canMove = true;
         }
     }
 
@@ -114,42 +106,12 @@ public class ExplorationController {
 
         ViewManager.getInstance().showBattleView(battle);
 
-        party.updateFollowPosition(prevPosition);
+        GameState.getInstance().getParty().updateFollowPosition(prevPosition);
         System.out.println("starting battle with: " + e.toString());
     }
 
-    private void updateSpritePositions() {
-        int tileSize = mapView.getTileSize();
-
-        for (Player player : party.getMembers()) {
-            if (player.getSprite() != null) {
-                player.getSprite().setFitWidth(tileSize);
-                player.getSprite().setFitHeight(tileSize);
-                player.getSprite().setX(mapView.getOffset().x() + player.getPos().x() * tileSize);
-                player.getSprite().setY(mapView.getOffset().y() + player.getPos().y() * tileSize);
-            }
-        }
-
-        for (Enemy enemy : enemies) {
-            if (enemy.getSprite() != null) {
-                enemy.getSprite().setFitWidth(tileSize);
-                enemy.getSprite().setFitHeight(tileSize);
-                enemy.getSprite().setX(mapView.getOffset().x() + enemy.getPos().x() * tileSize);
-                enemy.getSprite().setY(mapView.getOffset().y() + enemy.getPos().y() * tileSize);
-            }
-        }
-        for (NPC n : npcs) {
-            if (n.getSprite() != null) {
-                n.getSprite().setFitWidth(tileSize);
-                n.getSprite().setFitHeight(tileSize);
-                n.getSprite().setX(mapView.getOffset().x() + n.getPos().x() * tileSize);
-                n.getSprite().setY(mapView.getOffset().y() + n.getPos().y() * tileSize);
-            }
-        }
-    }
-
     void movePlayer(KeyCode key) {
-        Player mainPlayer = party.getMainPlayer();
+        Player mainPlayer = GameState.getInstance().getParty().getMainPlayer();
         int dx = 0;
         int dy = 0;
 
@@ -163,10 +125,10 @@ public class ExplorationController {
             dx += 1;
 
         if (dx != 0 || dy != 0) {
-            Position nextPosition = mainPlayer.getPos().add(dx, dy);
+            Position nextPosition = mainPlayer.getPosition().add(dx, dy);
             if (canGoThere(nextPosition)) {
-                prevPosition = mainPlayer.getPos();
-                party.updateFollowPosition(nextPosition);
+                prevPosition = mainPlayer.getPosition();
+                GameState.getInstance().getParty().updateFollowPosition(nextPosition);
                 mapView.updatePlayerPosition(nextPosition.scale(mapView.getTileSize()));
             }
         }
@@ -177,6 +139,6 @@ public class ExplorationController {
                 // player isn't walking on some obstacle
                 && this.mapView.getWalkableTiles()[(int) nextPosition.x()][(int) nextPosition.y()]
                 // prevent player from trampling npcs
-                && !this.npcs.stream().anyMatch(npc -> npc.getPos().equals(nextPosition));
+                && !GameState.getInstance().getNpc().stream().anyMatch(npc -> npc.getPosition().equals(nextPosition));
     }
 }

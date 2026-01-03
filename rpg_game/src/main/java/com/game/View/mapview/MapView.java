@@ -2,9 +2,10 @@ package com.game.view.mapview;
 
 import java.util.List;
 
+import com.game.model.GameState;
 import com.game.model.Position;
+import com.game.model.character.HasSpriteAndPosition;
 import com.game.model.map.LayerData;
-import com.game.model.map.SpritePosition;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,7 +17,6 @@ import javafx.scene.layout.Pane;
 public class MapView extends Pane {
     private static final double SMOOTHING = .18;
     private List<LayerData> layers;
-    private List<SpritePosition> sprites;
     private int spriteLayerIndex;
     private int tileSize;
     private int renderedTileSize;
@@ -30,11 +30,9 @@ public class MapView extends Pane {
     private Position playerPosition = Position.Origin;
     private Position lastOffset = Position.Origin;
 
-    public MapView(List<LayerData> layers, List<SpritePosition> sprites,
-            int spriteLayerIndex, int tileSize, int width, int height, boolean[][] walkableTiles, int renderedTileSize,
-            Image tileSet) {
+    public MapView(List<LayerData> layers, int spriteLayerIndex, int tileSize, int width, int height,
+            boolean[][] walkableTiles, int renderedTileSize, Image tileSet) {
         this.layers = layers;
-        this.sprites = sprites;
         this.spriteLayerIndex = spriteLayerIndex;
         this.tileSize = tileSize;
         this.renderedTileSize = renderedTileSize;
@@ -50,6 +48,7 @@ public class MapView extends Pane {
 
     @Override
     protected void layoutChildren() {
+        updateSpritePositions();
         super.layoutChildren();
         canvas.setWidth(getWidth());
         canvas.setHeight(getHeight());
@@ -62,6 +61,17 @@ public class MapView extends Pane {
         drawMap(offset);
         this.lastOffset = offset;
 
+    }
+
+    public void updateSpritePositions() {
+        for (HasSpriteAndPosition spritePosition : GameState.getInstance().getSpritesAndPositions()) {
+            if (spritePosition.getSprite() != null) {
+                spritePosition.getSprite().setFitWidth(renderedTileSize);
+                spritePosition.getSprite().setFitHeight(renderedTileSize);
+                spritePosition.getSprite().setX(lastOffset.x() + spritePosition.getPosition().x() * renderedTileSize);
+                spritePosition.getSprite().setY(lastOffset.y() + spritePosition.getPosition().y() * renderedTileSize);
+            }
+        }
     }
 
     private Position calculateCameraOffset(double viewWidth, double viewHeight) {
@@ -86,9 +96,9 @@ public class MapView extends Pane {
     }
 
     private void renderSprites(Position offset) {
-        for (SpritePosition spritePosition : sprites) {
-            ImageView sprite = spritePosition.sprite();
-            Position position = spritePosition.position();
+        for (HasSpriteAndPosition spritePosition : GameState.getInstance().getSpritesAndPositions()) {
+            ImageView sprite = spritePosition.getSprite();
+            Position position = spritePosition.getPosition();
             Image img = sprite.getImage();
             Rectangle2D vp = sprite.getViewport();
             Position dest = new Position(sprite.getX(), sprite.getY());

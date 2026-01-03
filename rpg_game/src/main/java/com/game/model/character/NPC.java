@@ -14,7 +14,7 @@ import com.game.view.DialogueView;
 import com.game.model.character.dialogue.Dialogue;
 import com.game.model.battle.*;
 
-public abstract class NPC implements Interactable {
+public abstract class NPC implements Interactable, HasSpriteAndPosition {
     private ImageView sprite;
     private final Job job;
     private final Position pos;
@@ -43,10 +43,12 @@ public abstract class NPC implements Interactable {
         return this.job;
     }
 
-    public final Position getPos() {
+    @Override
+    public final Position getPosition() {
         return this.pos;
     }
 
+    @Override
     public final ImageView getSprite() {
         return this.sprite;
     }

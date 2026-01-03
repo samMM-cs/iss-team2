@@ -9,18 +9,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.game.model.Position;
 import com.game.model.map.LayerData;
-import com.game.model.map.SpritePosition;
 import com.game.model.map.TiledMapData;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class MapBuilder {
     private List<LayerData> layers = new ArrayList<>();
-    private List<SpritePosition> sprites = new ArrayList<>();
     private List<Integer> walkableId;
     private int spriteLayerIndex;
     private int tileSize, width, height;
@@ -90,11 +86,6 @@ public class MapBuilder {
         return this;
     }
 
-    public MapBuilder addSprite(ImageView sprite, Position position) {
-        this.sprites.add(new SpritePosition(sprite, position));
-        return this;
-    }
-
     public MapBuilder showSprites() {
         spriteLayerIndex = layers.size();
         return this;
@@ -115,7 +106,7 @@ public class MapBuilder {
                 }
             }
         }
-        return new MapView(layers, sprites, spriteLayerIndex, tileSize, width, height, walkableTiles,
+        return new MapView(layers, spriteLayerIndex, tileSize, width, height, walkableTiles,
                 renderedTileSize, tileSet);
     }
 }

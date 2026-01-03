@@ -49,7 +49,8 @@ public class BattleController {
             return;
         }
         CharacterPG character = party.getMembers().get(currentPlayerActingIndex);
-        Move moveData = character.getCurrentMove().stream().filter(m -> m.getName().equalsIgnoreCase(moveName)).findFirst()
+        Move moveData = character.getCurrentMove().stream().filter(m -> m.getName().equalsIgnoreCase(moveName))
+                .findFirst()
                 .orElse(null);
         if (moveData != null) {
             CharacterPG currentPlayerActing = party.getMembers().get(currentPlayerActingIndex);
@@ -59,7 +60,7 @@ public class BattleController {
             nextPlayerAction();
             view.hideMoveList();
         }
-        
+
     }
 
     private void updatePlayerUI() {
@@ -115,6 +116,8 @@ public class BattleController {
             }
             case BattleResult.PARTY_WON: {
                 battle.assignRewards();
+                // battle.getEnemy().hide();
+                GameState.getInstance().getEnemies().remove(battle.getEnemy());
                 backToMap();
                 break;
             }

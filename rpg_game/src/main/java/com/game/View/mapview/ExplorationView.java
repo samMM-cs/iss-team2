@@ -1,16 +1,11 @@
 package com.game.view.mapview;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.game.controller.ViewManager;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
-import com.game.model.character.Party;
 import com.game.model.character.Player;
-import com.game.model.character.NPC;
+
 import com.game.model.map.TiledMapData;
-import com.game.model.character.Enemy;
 import com.game.model.GameState;
 import com.game.view.HUD;
 
@@ -23,14 +18,9 @@ public class ExplorationView {
     private static final String TILESET_IMAGE_PATH = "/images/punyworld-overworld-tileset.png";
     private static final String TILESET_DATA_PATH = "/maps/punyworld-overworld-tiles.tsx";
     private ExplorationController movementController;
-    private Party party;
-    private List<Enemy> enemies = new ArrayList<>();
-    private List<NPC> npc = new ArrayList<>();
     private Pane root;
     private Scene scene;
     private MapView mapView;
-    // private DialogueView dialogueView;
-    // private ShopView shopView;
     private HUD hud;
     private AnimationTimer timer;
 
@@ -47,37 +37,20 @@ public class ExplorationView {
         this.root = new Pane();
         this.scene = new Scene(root, ViewManager.getInstance().getWidth(),
                 ViewManager.getInstance().getHeight());
-        GameState gameState = GameState.getInstance();
-        this.party = gameState.getParty();
-        this.enemies = gameState.getEnemies();
-        this.npc = gameState.getNpc();
-        this.hud = new HUD(party.getMainPlayer());
+        this.hud = new HUD(GameState.getInstance().getParty().getMainPlayer());
         hud.setVisible(false);
-        // this.dialogueView = new DialogueView();
-        // dialogueView.setVisible(false);
-        // this.shopView = new ShopView(party.getMainPlayer());
-        // shopView.setVisible(false);
-        for (Player player : this.party.getMembers()) {
-            builder = builder.addSprite(player.getSprite(), player.getPos());
-        }
-        for (Enemy enemy : this.enemies) {
-            builder = builder.addSprite(enemy.getSprite(), enemy.getPos());
-        }
-        for (NPC n : npc) {
-            builder = builder.addSprite(n.getSprite(), n.getPos());
-        }
         this.mapView = builder.showSprites()
                 .addLayer(mapData.getLayers().get(3))
                 .build();
-        this.movementController = new ExplorationController(party, scene, mapView, enemies, npc);
+        this.movementController = new ExplorationController(scene, mapView);
 
-        this.mapView.updatePlayerPosition(this.party.getMainPlayer().getPos().scale(mapView.getTileSize()));
+        this.mapView.updatePlayerPosition(
+                GameState.getInstance().getParty().getMainPlayer()
+                        .getPosition().scale(mapView.getTileSize()));
         mapView.prefHeightProperty().bind(root.heightProperty());
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
         root.getChildren().add(hud);
-        // root.getChildren().add(dialogueView);
-        // root.getChildren().add(shopView);
     }
 
     public void showMap() {
@@ -94,7 +67,7 @@ public class ExplorationView {
                 movementController.update();
                 mapView.requestLayout();
 
-                for (Player player : party.getMembers()) {
+                for (Player player : GameState.getInstance().getParty().getMembers()) {
                     if (player.isInCombat()) {
                         hud.setVisible(true);
                         hud.update();

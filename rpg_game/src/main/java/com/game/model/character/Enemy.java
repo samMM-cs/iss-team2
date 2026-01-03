@@ -20,4 +20,8 @@ public class Enemy extends CharacterPG {
     public void heal(int value) {
     }
 
+    public void hide() {
+        this.getSprite().setVisible(false);
+    }
+
 }

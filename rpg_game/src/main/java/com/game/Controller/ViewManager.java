@@ -110,6 +110,14 @@ public class ViewManager {
   public void showExplorationView() {
     if (explorationView == null)
       explorationView = new ExplorationView();
+    if (isUIVisible()) {
+      if (battleView != null)
+        battleView.setVisible(false);
+      if (dialogView != null)
+        dialogView.setVisible(false);
+      if (shopView != null)
+        shopView.setVisible(false);
+    }
     explorationView.showMap();
   }
 
@@ -156,7 +164,7 @@ public class ViewManager {
     stage.show();
   }
 
-  public boolean isVisible() {
+  public boolean isUIVisible() {
     return (this.battleView != null && this.battleView.isVisible())
         || (this.dialogView != null && this.dialogView.isVisible())
         || (this.shopView != null && this.shopView.isVisible());

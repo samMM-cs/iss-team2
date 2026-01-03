@@ -27,7 +27,7 @@ public class Player extends CharacterPG {
     public void notifyFollower() {
         if (this.follower != null) {
             this.follower.notifyFollower();
-            this.follower.setPosition(getPos());
+            this.follower.setPosition(getPosition());
         }
     }
 

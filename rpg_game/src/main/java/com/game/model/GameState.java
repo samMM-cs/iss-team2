@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import com.game.model.character.Enemy;
+import com.game.model.character.HasSpriteAndPosition;
 import com.game.model.character.Player;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
@@ -25,6 +26,7 @@ public class GameState {
     private final Map<Event, Boolean> storyFlags;
     private final WorldPosition worldPosition;
     private static GameState instance;
+    private final List<HasSpriteAndPosition> sprites = new ArrayList<>();
 
     // Costruttore privato, il Builder lo costruisce
     private GameState(GameStateBuilder builder) {
@@ -94,6 +96,16 @@ public class GameState {
         Job.initAllMoves();
         this.npc.add(new MerchantNPC(Job.FARMER, new Position(4, 7)));
         this.npc.add(new MovesNPC(Job.TRAINER, new Position(16, 18)));
+    }
+
+    public List<HasSpriteAndPosition> getSpritesAndPositions() {
+        if (sprites.size() != party.getMembers().size() + enemies.size() + npc.size()) {
+            sprites.clear();
+            sprites.addAll(this.party.getMembers());
+            sprites.addAll(this.enemies);
+            sprites.addAll(this.npc);
+        }
+        return sprites;
     }
 
     public void applyChoices(String choice) {
