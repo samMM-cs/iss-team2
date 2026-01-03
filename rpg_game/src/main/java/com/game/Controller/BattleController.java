@@ -26,12 +26,9 @@ public class BattleController {
         this.battle = battle;
         this.view = view;
         this.party = GameState.getInstance().getParty();
-<<<<<<< HEAD
         this.currentPlayerActingIndex = getNextPlayerIndex();
 
         updatePlayerUI();
-=======
->>>>>>> 17ba2d2bd9a88ff52efd4d0b9733effcd88d3c46
     }
 
     public void handleAction(String selected) {
@@ -88,7 +85,6 @@ public class BattleController {
             this.result = battle.nextTurn();
             // Esegue i calcoli e restituisce il risultato
             handleBattleResult(this.result);
-<<<<<<< HEAD
 
             // Se la battglia non è finita
             if (result == BattleResult.ONGOING) {
@@ -105,12 +101,6 @@ public class BattleController {
             updatePlayerUI();
             view.hideMoveList();
         }
-=======
-        } 
-        currentPlayerActingIndex = getNextPlayerIndex();
-        updatePlayerUI();
-        view.enableInput();
->>>>>>> 17ba2d2bd9a88ff52efd4d0b9733effcd88d3c46
     }
 
     private void handleBattleResult(BattleResult br) {
