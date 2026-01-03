@@ -8,22 +8,25 @@ import com.game.model.character.Player;
 import com.game.model.character.Job;
 import com.game.model.Position;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class StaticSpeedTurnTest {
     StaticSpeedTurn sst;
     Position pos;
     List<CharacterPG> list;
 
-    @Before
-    public void setUp() {
-        Position pos= mock(Position.class);
-        List<CharacterPG> list= new ArrayList<>();
+    @BeforeEach
+    void setUp() {
+        pos= mock(Position.class);
+        list= new ArrayList<>();
         CharacterPG p1= new Player (Job.ARCHER, pos);
         CharacterPG p2= new Player(Job.MAGE, pos);
         CharacterPG e1= new Enemy(Job.GOBLIN, pos);
@@ -36,7 +39,7 @@ public class StaticSpeedTurnTest {
     }
 
     @Test
-    public void testGetTurnIterator() {
+    void testGetTurnIterator() {
         sst.sortAction();
 
         List<CharacterPG> res= sst.getCharacters();
@@ -47,7 +50,7 @@ public class StaticSpeedTurnTest {
     }
 
     @Test
-    public void testSortAction() {
+    void testSortAction() {
 
     }
 }

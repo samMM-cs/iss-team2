@@ -34,7 +34,6 @@ public class BattleController {
         else
             System.out.println("Impossibile caricare il file");
         this.party = GameState.getInstance().getParty();
-        this.currentPlayerActingIndex = getNextPlayerIndex();
     }
 
     public void handleAction(String selected) {
@@ -64,7 +63,9 @@ public class BattleController {
             ActionStrategy actionStrategy = moveData.getType().createMove(moveData);
             plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(battle.getEnemy())));
             nextPlayerAction();
+            view.hideMoveList();
         }
+        
     }
 
     private void updatePlayerUI() {
@@ -93,28 +94,17 @@ public class BattleController {
             this.result = battle.nextTurn();
             // Esegue i calcoli e restituisce il risultato
             handleBattleResult(this.result);
-
-            // Se la battglia non è finita
-            if (result == BattleResult.ONGOING) {
-                // Reset per il prossimo round
-                plannedActionList.clear();
-                view.hideMoveList(); // Menu principale per il nuovo round
-                currentPlayerActingIndex = party.getMembers().size() - 1;
-                currentPlayerActingIndex = getNextPlayerIndex();
-
-                updatePlayerUI();
-                view.enableInput();
-            }
-        } else {
-            currentPlayerActingIndex = getNextPlayerIndex();
-            updatePlayerUI();
-            view.hideMoveList();
-        }
+        } 
+        currentPlayerActingIndex = getNextPlayerIndex();
+        updatePlayerUI();
+        view.enableInput();
     }
 
     private void handleBattleResult(BattleResult br) {
         switch (br) {
             case BattleResult.ONGOING:
+                // Reset per il prossimo round
+                plannedActionList.clear();
                 break;
             case BattleResult.PARTY_DEFEATED: {
                 backToMap();
@@ -132,8 +122,8 @@ public class BattleController {
     // Calcolo l'indice del prossimo player vivo. Salta chi ha getHp()<=0
     private int getNextPlayerIndex() {
         int size = party.getMembers().size();
-        for (int i = 0; i < size; i++) {
-            int next = (currentPlayerActingIndex + i) % party.getMembers().size();
+        for (int i = 1; i <= size; i++) {
+            int next = (currentPlayerActingIndex + i) % size;
             if (party.getMembers().get(next).getCurrentStats().getHp() > 0)
                 return next;
         }

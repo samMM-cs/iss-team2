@@ -5,7 +5,6 @@ import javafx.scene.image.*;
 import com.game.model.Position;
 
 public class Player extends CharacterPG {
-    private int xp;
     private Inventory inventory;
     private Player follower;
     private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
@@ -32,16 +31,8 @@ public class Player extends CharacterPG {
         player.setFollower(null);
     }
 
-    public final int getXp() {
-        return this.xp;
-    }
-
     public final void addXp(int xp) {
-        this.xp += xp;
-    }
-
-    public final void setXp(int xp) {
-        this.xp = xp;
+        this.getCurrentStats().addExp(xp);
     }
 
     public final Inventory getInventory() {

@@ -1,5 +1,5 @@
 package com.game.model.story;
 
-public class Choice {
-
+public enum Choice {
+    EXAMPLE_CHOICE
 }

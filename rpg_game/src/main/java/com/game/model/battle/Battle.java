@@ -44,8 +44,9 @@ public class Battle {
                 if (action != null) {
                     System.out.println("Azione di: " + character);
                     action.execute();
-                    if (isBattleOver() != BattleResult.ONGOING) {
-                        return isBattleOver();
+                    BattleResult flag= isBattleOver();
+                    if (flag != BattleResult.ONGOING) {
+                        return flag;
                     }
                 }
             }

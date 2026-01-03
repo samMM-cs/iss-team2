@@ -1,24 +1,24 @@
 package com.game.model.battle;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
 public class MoveReaderTest {
     @Test
-    public void testReadMove() {
+    void testReadMove() {
         String jsonpath = "/battle/moves.json";
         List<Move> moveList = MoveReader.readMove(jsonpath);
 
         MoveTest moveTest1 = new MoveTest("A01", "Basic Attack", MoveType.ATTACK, "Attacco fisico base", 10, 0);
         MoveTest moveTest2 = new MoveTest("H01", "Basic Heal", MoveType.HEAL, "Cura base", 5, 0);
 
-        assertNotNull("La lista è vuota", moveList);
+        assertNotNull(moveList);
         if (!moveList.isEmpty()) {
-            System.out.println("Mossa caricata");
-            assertNotNull("La lista non è vuota", moveList);
+            assertNotNull(moveList);
         }
         // assertEquals(2, moveList.size());
         assertEquals(moveTest1.getType(), MoveType.ATTACK);

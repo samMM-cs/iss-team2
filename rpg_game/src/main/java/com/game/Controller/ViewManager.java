@@ -136,6 +136,7 @@ public class ViewManager {
         showShop(player, target);
         dialogView.setVisible(false);
         dialogView = null;
+        explorationView.start();
       });
       root.getChildren().add(dialogView);
     }
