@@ -14,8 +14,6 @@ import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
-import com.game.view.DialogueView;
-import com.game.view.ShopView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -33,18 +31,14 @@ public class ExplorationController {
     private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = Position.Origin;
-    private DialogueView dialogueView;
     private boolean battleStarted = false;
-    private boolean canMove = true;
 
-    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
-            DialogueView dialogueView, ShopView shopView) {
+    public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc) {
         this.scene = scene;
         this.party = party;
         this.mapView = mapView;
         this.enemies = enemies;
         this.npcs = npc;
-        this.dialogueView = dialogueView;
         this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
@@ -66,6 +60,7 @@ public class ExplorationController {
     }
 
     public void update() {
+        System.out.println("updating");
         Optional<Enemy> optEnemy = this.enemies.stream()
                 .filter(enemy -> enemy.getPos().equals(party.getMainPlayer().getPos())).findFirst();
         if (!battleStarted && optEnemy.isPresent()) {
@@ -75,16 +70,10 @@ public class ExplorationController {
         }
 
         KeyCode key = activeKeys.poll();
-        if (key != null) {
-            if (canMove && movementKeys.contains(key))
+        if (!ViewManager.getInstance().isVisible() && key != null) {
+            if (movementKeys.contains(key))
                 movePlayer(key);
 
-            if (dialogueView.isVisible()) {
-                if (key == KeyCode.E)
-                    dialogueView.handleAdvance();
-                return;
-            } else
-                canMove = true;
             if (key == KeyCode.E)
                 handlePossibleInteractions();
         }
@@ -100,9 +89,13 @@ public class ExplorationController {
                 break;
             }
         }
+
         if (target != null) {
+            activeKeys.clear();
+            // canMove = false;
             ViewManager.getInstance().showDialogView(scene, mainPlayer, target);
             target.interact(mainPlayer);
+            // canMove = true;
         }
     }
 

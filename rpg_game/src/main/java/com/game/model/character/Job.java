@@ -2,7 +2,6 @@ package com.game.model.character;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.game.model.battle.Move;
@@ -63,6 +62,7 @@ public enum Job {
     public List<Move> getShopMoves() {
         return this.effectiveMoves.stream().filter(m -> m.getCost() > 0).collect(Collectors.toList());
     }
+
     public List<Move> getEffectiveMoves() {
         return this.effectiveMoves;
     }

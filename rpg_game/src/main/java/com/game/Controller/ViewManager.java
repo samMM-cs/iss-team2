@@ -32,7 +32,6 @@ public class ViewManager {
   private BattleView battleView;
   private DialogueView dialogView;
   private ShopView shopView;
-
   private boolean paused = false;
   private Pane root;
 
@@ -155,6 +154,12 @@ public class ViewManager {
   public void setAndShowScene(Scene scene) {
     stage.setScene(scene);
     stage.show();
+  }
+
+  public boolean isVisible() {
+    return (this.battleView != null && this.battleView.isVisible())
+        || (this.dialogView != null && this.dialogView.isVisible())
+        || (this.shopView != null && this.shopView.isVisible());
   }
 
   public void exit() {
