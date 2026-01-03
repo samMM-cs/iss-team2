@@ -35,6 +35,7 @@ public class ExplorationController {
     private Position prevPosition = Position.Origin;
     private DialogueView dialogueView;
     private boolean battleStarted = false;
+    private boolean canMove = true;
 
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
             DialogueView dialogueView, ShopView shopView) {
@@ -75,8 +76,15 @@ public class ExplorationController {
 
         KeyCode key = activeKeys.poll();
         if (key != null) {
-            if (movementKeys.contains(key))
+            if (canMove && movementKeys.contains(key))
                 movePlayer(key);
+
+            if (dialogueView.isVisible()) {
+                if (key == KeyCode.E)
+                    dialogueView.handleAdvance();
+                return;
+            } else
+                canMove = true;
             if (key == KeyCode.E)
                 handlePossibleInteractions();
         }
@@ -93,9 +101,8 @@ public class ExplorationController {
             }
         }
         if (target != null) {
-            ViewManager.getInstance().showDialogView(scene,mainPlayer,target);
+            ViewManager.getInstance().showDialogView(scene, mainPlayer, target);
             target.interact(mainPlayer);
-
         }
     }
 
