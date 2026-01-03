@@ -33,7 +33,6 @@ public class ExplorationController {
     private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = Position.Origin;
-    private DialogueView dialogueView;
     private boolean battleStarted = false;
 
     public ExplorationController(Party party, Scene scene, MapView mapView, List<Enemy> enemies, List<NPC> npc,
@@ -43,7 +42,6 @@ public class ExplorationController {
         this.mapView = mapView;
         this.enemies = enemies;
         this.npcs = npc;
-        this.dialogueView = dialogueView;
         this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });

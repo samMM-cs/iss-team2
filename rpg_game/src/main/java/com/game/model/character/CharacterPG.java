@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import com.game.model.Position;
-import com.game.model.ability.AbilityType;
 import com.game.model.battle.*;
 
 public abstract class CharacterPG {
@@ -21,7 +20,6 @@ public abstract class CharacterPG {
     private Image img;
     private ImageView sprite;
     private List<Move> currentMove;
-    private List<AbilityType> abilities = new ArrayList<>();
 
     private boolean inCombat; // Stato del combattimento
 
@@ -46,10 +44,6 @@ public abstract class CharacterPG {
         return this.sprite;
     }
 
-    public void addAbility(AbilityType ability) {
-        this.abilities.add(ability);
-    }
-
     protected void refreshCurrentStats() {
         this.currentStats = this.baseStats.copy();
     }
@@ -72,10 +66,6 @@ public abstract class CharacterPG {
 
     public ImageView getSprite() {
         return sprite;
-    }
-
-    public final List<AbilityType> getAbilities() {
-        return this.abilities;
     }
 
     protected void setPos(Position pos) {

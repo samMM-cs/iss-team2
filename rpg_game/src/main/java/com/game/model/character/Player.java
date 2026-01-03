@@ -2,6 +2,10 @@ package com.game.model.character;
 
 import javafx.scene.image.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.game.model.Position;
 import com.game.model.battle.*;
 
@@ -9,9 +13,12 @@ public class Player extends CharacterPG {
     private Inventory inventory;
     private Player follower;
     private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
+    private List<Move> learnedMoves = new ArrayList<>();
 
     public Player(Job job, Position position) {
         super(job, position, img);
+        learnedMoves
+                .addAll(job.getEffectiveMoves().stream().filter(m -> m.getCost() == 0).collect(Collectors.toList()));
     }
 
     public void equipItem(Item item) {
@@ -25,9 +32,10 @@ public class Player extends CharacterPG {
     }
 
     public void learnMove(Move move) {
-        if (!this.getCurrentMove().contains(move))
-            this.getCurrentMove().add(move);
+        if (!learnedMoves.contains(move))
+            learnedMoves.add(move);
     }
+
     public void subscribeToFollowed(Player player) {
         player.setFollower(this);
     }

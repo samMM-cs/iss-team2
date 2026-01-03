@@ -1,8 +1,8 @@
 package com.game.view;
 
-import com.game.model.ability.AbilityType;
 import com.game.model.character.NPC;
 import com.game.model.character.Player;
+import com.game.model.battle.Move;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.Cursor;
@@ -10,42 +10,45 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 public class ShopView extends VBox {
-    private Player player;
+    private final Player player;
     private Label goldLabel;
-    private VBox abilityBox;
-    private Label title;
-    private Label buyAbility;
+    private VBox movesBox;
+    private Label titleLabel;
+    private Label feedbackLabel;
 
     public ShopView(Player player) {
         this.player = player;
         this.setAlignment(Pos.CENTER);
         this.setSpacing(20);
-        this.setMaxWidth(500); // Evita che lo shop si allarghi troppo
+        this.setMaxWidth(500);
         this.setStyle(
                 "-fx-background-color: rgba(30, 30, 30, 0.9); -fx-border-color: #d4af37; -fx-border-width: 4; -fx-padding: 20; -fx-background-radius: 20; -fx-border-radius: 20;");
 
-        this.title = new Label("");
-        title.setStyle("-fx-text-fill: #d4af37; -fx-font-size: 28; -fx-font-weight: bold;");
-        this.buyAbility = new Label("");
-        buyAbility.setStyle("-fx-text-fill: #00ff00; -fx-font-size: 14; -fx-font-weight: bold;");
+        titleLabel = new Label("");
+        titleLabel.setStyle("-fx-text-fill: #d4af37; -fx-font-size: 28; -fx-font-weight: bold;");
 
-        goldLabel = new Label("DISPONIBILITÀ: " + player.getCurrentStats().getMoney() + " €");
+        feedbackLabel = new Label("");
+        feedbackLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-size: 14; -fx-font-weight: bold;");
+
+        goldLabel = new Label("Money: " + player.getCurrentStats().getMoney());
         goldLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 18;");
 
-        abilityBox = new VBox(10); // Spazio tra le abilità
-        abilityBox.setAlignment(Pos.CENTER);
+        movesBox = new VBox(10);
+        movesBox.setAlignment(Pos.CENTER);
 
         Button closeBtn = new Button("Exit");
         closeBtn.setStyle("-fx-background-color: #ff4444; -fx-text-fill: white; -fx-font-weight: bold;");
         closeBtn.setOnAction(e -> closed());
 
-        this.getChildren().addAll(title, goldLabel, abilityBox, closeBtn, buyAbility);
+        this.getChildren().addAll(titleLabel, goldLabel, movesBox, closeBtn, feedbackLabel);
     }
 
-    private void addShopItem(AbilityType ability) {
-        HBox itemBox = new HBox(20); // Aumentato spazio
+    private void addShopItem(Move move) {
+        HBox itemBox = new HBox(20);
         itemBox.setAlignment(Pos.CENTER_LEFT);
 
         itemBox.setStyle(
@@ -56,7 +59,6 @@ public class ShopView extends VBox {
                         "-fx-background-radius: 10;" +
                         "-fx-border-radius: 10;");
 
-        // Effetto hover
         itemBox.setOnMouseEntered(e -> itemBox.setStyle(
                 "-fx-background-color: rgba(70,70,70,0.9);" +
                         "-fx-padding: 12;" +
@@ -72,8 +74,8 @@ public class ShopView extends VBox {
                         "-fx-background-radius: 10;" +
                         "-fx-border-radius: 10;"));
 
-        Label nameLabel = new Label(ability.getName() + " - " + ability.getCost() + " €");
-        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18;-fx-font-wight: bold");
+        Label nameLabel = new Label(move.getName() + " - " + move.getCost() + " €");
+        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;");
 
         Button buyButton = new Button("Buy");
         buyButton.setStyle(
@@ -94,28 +96,24 @@ public class ShopView extends VBox {
 
         buyButton.setCursor(Cursor.HAND);
         buyButton.setOnAction(e -> {
-            if (player.getCurrentStats().getMoney() >= ability.getCost()) {
-                player.getCurrentStats().removeMoney(ability.getCost());
-                player.addAbility(ability); // Assicurati che Player abbia questo metodo
+            if (player.getCurrentStats().getMoney() >= move.getCost()) {
+                player.getCurrentStats().removeMoney(move.getCost());
+                player.learnMove(move);
                 updateUI();
-                showFeedback(ability.getName());
-            } else {
-                buyButton.setDisable(true);
-                itemBox.setOpacity(1);
+                showFeedback(move.getName());
+                buyButton.setDisable(true); // disabilita il pulsante dopo l'acquisto
             }
         });
+
         itemBox.getChildren().addAll(nameLabel, buyButton);
-        abilityBox.getChildren().add(itemBox);
+        movesBox.getChildren().add(itemBox);
     }
 
-    private void showFeedback(String nameAbility) {
-        buyAbility.setText("Hai acquistato " + nameAbility);
+    private void showFeedback(String moveName) {
+        feedbackLabel.setText("Hai acquistato " + moveName);
 
-        buyAbility.setStyle("-fx-text-fill: " + "\"#00ff00\"" + "; -fx-font-size: 14;");
-
-        // Timer per cancellare il testo dopo 2 secondi
-        javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
-        delay.setOnFinished(e -> buyAbility.setText(""));
+        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        delay.setOnFinished(e -> feedbackLabel.setText(""));
         delay.play();
     }
 
@@ -124,10 +122,10 @@ public class ShopView extends VBox {
     }
 
     public void open(NPC npc) {
-        this.title.setText(String.valueOf(npc.getJob()));
-        abilityBox.getChildren().clear();
-        for (AbilityType ability : npc.getShopAbilities()) {
-            addShopItem(ability);
+        titleLabel.setText(npc.getJob().name());
+        movesBox.getChildren().clear();
+        for (Move move : npc.getShopMoves()) {
+            addShopItem(move);
         }
         this.setVisible(true);
     }

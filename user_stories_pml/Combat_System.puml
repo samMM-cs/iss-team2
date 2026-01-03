@@ -1,9 +1,11 @@
-@startuml Combat_System Strategy + Observer
+@startuml Combat_System e Character_Evolution Strategy + Observer
 
+'Il Pattern Strategy è utilizzato per modellare le mosse come comportamenti intercambiabili, permettendo al Player di variare dinamicamente il proprio comportamento senza modificare la sua struttura.'
 class Player{
     - name: String
     - HP: int
     - inventory: List<Item>
+    +learnMove(move: Move): void
 }
 
 class Enemy{
@@ -13,6 +15,10 @@ class Enemy{
 
 interface ActionStrategy{
     + execute(user: Character, target: Character)
+}
+
+enum MoveType{
+    +createMove(move: Move): ActionStrategy
 }
 
 abstract class MoveAction implements ActionStrategy{
@@ -49,6 +55,7 @@ class ItemAction implements ActionStrategy{
     + execute(user, target)
 }
 
-Player --> ActionStrategy : user
-Enemy-->ActionStrategy : target
+Player ..> ActionStrategy : uses
+Enemy..>ActionStrategy : uses
+MoveType..>MoveAction: creates
 @enduml

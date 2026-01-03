@@ -1,51 +1,22 @@
 @startuml US18
 title Character Evolution
-'Il Strategy Pattern è utilizzato per modellare le abilità come comportamenti intercambiabili, permettendo al Player di variare dinamicamente il proprio comportamento senza modificare la sua struttura.'
+
 
 'Interfaccia Strategy'
-interface Ability{
-    +getName(): String
-    +getDescription(): String
-    +getCost(): int
-    +apply(player: Player): void
+interface ActionStrategy{
+    + execute(user: Character, target: Character)
 }
-enum AbilityType{
-    +getIcon(): ImageView
-    +getCost(): int
-    +getName(): String
-    +getDescription(): String
-    +getRarity(): int
-    +getDamage(): int
-    +getHeal(): int
+enum MoveType{
+    +createMove(move:Move): ActionStrategy
 }
 class Player{
-    - abilities: List<Ability>
-    +addAbility(a: Ability): void
-    +getAbilities(): List<Ability>
-    +useAbilities(): void
+    - currentMoves: List<Move>
+    +learnMove(m: Move)
 }
-class AbilityNPC extends NPC{
-    -List<AbilityType> abilities
+class MovesNPC extends NPC{
     +interact(player: Player): void
 }
-'Concrete Strategy'
-class FireballAbility implements Ability{
-    +apply(player: Player,enemy: Enemy): void
-}
 
-class HealAbility implements Ability{
-    +apply(player: Player,enemy: Enemy): void
-}
-
-class ShopView{
-    - Player  player
-    - addShopItem(ability: AbilityType): void
-    + open(npc: NPC): void
-}
-Player->Ability: apply()
-AbilityType->Ability: creates
-
-ShopView->Player
-ShopView->NPC
-ShopView->AbilityType: add()
+Playero--Ability: apply()
+MoveType..>Ability: creates
 @enduml

@@ -2,7 +2,6 @@ package com.game.model.character;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.game.model.battle.Move;
@@ -53,9 +52,10 @@ public enum Job {
     }
 
     public static void initAllMoves() {
-        List<Move> allMove = MoveReader.readMove("/battle/moves.json");
+        List<Move> allMoves = MoveReader.readMove("/battle/moves.json");
         for (Job job : Job.values()) {
-            job.effectiveMoves = allMove.stream().filter(move -> move.getReq().contains(job.name()))
+            job.effectiveMoves = allMoves.stream()
+                    .filter(move -> move.getReq().contains(job.name()))
                     .collect(Collectors.toList());
         }
     }
@@ -63,6 +63,7 @@ public enum Job {
     public List<Move> getShopMoves() {
         return this.effectiveMoves.stream().filter(m -> m.getCost() > 0).collect(Collectors.toList());
     }
+
     public List<Move> getEffectiveMoves() {
         return this.effectiveMoves;
     }

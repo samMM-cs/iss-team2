@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 public class MoveRegistry {
     private static MoveRegistry moveRegistry;
-    private final Map<String, ActionStrategy> moves;
+    private final Map<String, Move> moves; //Registra le mosse disponibili
 
     private MoveRegistry() {
         this.moves= MoveReader.readMove("battle/moves.json")
             .stream()
-            .collect(Collectors.toMap(Move::getName, MoveFactory::createMove));
+            .collect(Collectors.toMap(Move::getName, m->m));
     }
 
     public static MoveRegistry getMoveRegistry() {
@@ -20,7 +20,10 @@ public class MoveRegistry {
         return moveRegistry;
     }
 
-    public ActionStrategy getMoveActionStrategy(String id) {
-        return moves.get(id);
+    public ActionStrategy getMoveActionStrategy(String moveName) {
+        Move move = moves.get(moveName);
+        if (move == null)
+            return null;
+        return move.getType().createMove(move); //Crea la ConcreteStrategy
     }
 }

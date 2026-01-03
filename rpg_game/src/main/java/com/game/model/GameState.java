@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-import com.game.model.ability.AbilityNPC;
 import com.game.model.character.Enemy;
 import com.game.model.character.Player;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
 import com.game.model.character.MerchantNPC;
+import com.game.model.character.MovesNPC;
 import com.game.model.character.NPC;
 import com.game.model.character.Inventory;
 
@@ -93,7 +93,7 @@ public class GameState {
 
         Job.initAllMoves();
         this.npc.add(new MerchantNPC(Job.FARMER, new Position(4, 7)));
-        this.npc.add(new AbilityNPC(Job.TRAINER, new Position(16, 18)));
+        this.npc.add(new MovesNPC(Job.TRAINER, new Position(16, 18)));
     }
 
     public void applyChoices(String choice) {

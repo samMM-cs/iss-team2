@@ -10,17 +10,17 @@ public enum MoveType {
     },
     HEAL {
         public ActionStrategy createMove(Move move) {
-            return new AttackMove(move);
+            return new HealMove(move);
         }
     },
     MAGIC_ATTACK {
         public ActionStrategy createMove(Move move) {
-            return new AttackMove(move);
+            return new MagicAttackMove(move);
         }
     },
     MAGIC_HEAL {
         public ActionStrategy createMove(Move move) {
-            return new AttackMove(move);
+            return new HealMove(move);
         }
     };
 

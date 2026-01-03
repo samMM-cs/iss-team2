@@ -1,8 +1,9 @@
 package com.game.model.character;
 
-import com.game.model.ability.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.game.model.battle.Move;
 
 public class Stats {
   int xp;
@@ -14,7 +15,7 @@ public class Stats {
   int defense;
   int special;
   int speed;
-  List<Ability> abilities;
+  List<Move> moves;
   int money;
 
   public Stats(int hp, int attack, int defense, int special, int speed) {
@@ -28,7 +29,7 @@ public class Stats {
     this.level = 1;
     this.xp = 0;
     this.maxXp = 100;
-    this.abilities = new ArrayList<>();
+    this.moves = new ArrayList<>();
     this.money = 1;
   }
 
@@ -44,17 +45,17 @@ public class Stats {
     this.level = newStats.level;
     this.maxXp = newStats.maxXp;
 
-    this.abilities = new ArrayList<>(newStats.abilities);
+    this.moves = new ArrayList<>(newStats.moves);
     this.money = newStats.money;
   }
 
-  public void addAbility(Ability ability) {
-    if (!abilities.contains(ability))
-      abilities.add(ability);
+  public void addMove(Move move) {
+    if (!moves.contains(move))
+      moves.add(move);
   }
 
-  public List<Ability> getAbilities() {
-    return abilities;
+  public List<Move> getMoves() {
+    return moves;
   }
 
   public void addExp(int amount) {
@@ -71,7 +72,7 @@ public class Stats {
   }
 
   public double getHpPerc() {
-    return (double) this.hp / (double)this.maxHp;
+    return (double) this.hp / (double) this.maxHp;
   }
 
   public int getHp() {

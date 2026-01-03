@@ -89,8 +89,8 @@ MainMenuController --> GameView : render()
 ' Character Creation (Abstract Factory)
 ' ===========================
 
-abstract class Character {
-    - abilities: List<AbilityType>
+abstract class CharacterPG {
+    - currentMove: List<Move>
     - job: Job
     - baseStats: Stats
     - currentStats: Stats
@@ -102,18 +102,18 @@ abstract class Character {
     + exitCombat(): void
     + isInCombat(): boolean
     + createCharacterSprite(): ImageView
-    + addAbility(a: AbilityType): void
-    + getAbilities(): List<AbilityType>
+    + getCurrentMove(): List<Move>
     + takeDamage(int value): void
     + heal(int value): void
 }
 
-class Player extends Character {
+class Player extends CharacterPG {
     - xp: int
     - follower: Player
     - imgSprite: Image
 
     + notifyFollower(): void
+    + learnMove(move: Move): void
     + subscribeToFollowed(): void
     + unsubscribeFromFollowed(): void
     + addXp(): void
@@ -122,7 +122,7 @@ class Player extends Character {
     + hasAbility(): boolean
 }
 
-class Enemy extends Character {
+class Enemy extends CharacterPG {
     - imgSprite: Image
     + takeDamage(int value): void
     + heal(int value): void
@@ -137,19 +137,32 @@ abstract class NPC implements Interactable {
     - job: Job
     - pos: Position
     - dialogue: Dialogue
-    - shopAbilities: List<AbilityType>
+    - shopMoves: List<Move>
 
     + getJob(): Job
-    + addShopAbilities(ability: AbilityType): void
+    + addShopMove(move: Move): void
     + interact(player: Player): void
 }
 
-class AbilityNPC extends NPC {
-    - abilities: List<AbilityType>
+class MovesNPC extends NPC {
     + interact(player: Player): void
 }
 
-enum Job
+enum Job{
+    - col: int
+    - row: int
+    - baseStats: Stats
+    - isPlayable: boolean
+    - effectiveMoves: List<Move>
+
+    +getX(): int
+    +getY(): int
+    +getIsPlayable: boolean
+    +getBaseStats(): Stats
+    + initAllMoves(): void
+    + getShopMoves(): List<Move>
+    + getEffectiveMoves(): List<Move>
+}
 
 CharacterSelectionView --> GameController : user selects job
 NewGameView --> CharacterSelectionView : selectJobs()
@@ -159,33 +172,72 @@ Player --> Job
 Enemy --> Job
 
 ' ===========================
-' Strategy Pattern (Abilities)
+' Strategy Pattern (Move)
 ' ===========================
 
-interface Ability {
-    + apply(player: Player, enemy: Enemy): void
-}
-
-enum AbilityType {
-    + getIcon(): ImageView
-    + getCost(): int
+class Move {
+    - id: String
+    - name: String
+    - type: MoveType
+    - value: int
+    - cost: int
+    - req: List<String>
+    - description: String
+    + getId(): String
     + getName(): String
+    + getType(): MoveType
+    + getValue(): int
+    + getCost(): int
+    + getReq(): List<String>
     + getDescription(): String
-    + getRarity(): int
-    + getDamage(): int
-    + getHeal(): int
 }
 
-class FireballAbility implements Ability {
-    + apply(player: Player, enemy: Enemy): void
+interface ActionStrategy {
+    + execute(user: Character, target: Character)
 }
 
-class HealAbility implements Ability {
-    + apply(player: Player, enemy: Enemy): void
+enum MoveType {
+    +createMove(move: Move): ActionStrategy
 }
 
-Player --> AbilityType : owns >
-AbilityType --> Ability : used to instantiate >
+abstract class MoveAction implements ActionStrategy{
+    - move: Move
+    - combatStrategy: CombatCalculationStrategy
+    + execute(user,target)
+}
+
+abstract class OffensiveMove extends MoveAction {
+    - move: Move
+    + execute(user,target)
+    + calculateDamage(user,target)
+}
+
+class AttackMove extends OffensiveMove {
+    - move: Move
+    + execute(user,target)
+    + calculateDamage(user,target)
+}
+
+class HealMove extends MoveAction {
+    - move: Move
+    + execute(user,target)
+}
+
+class MagicAttackMove extends OffensiveMove {
+    - move: Move
+    + execute(user,target)
+    + calculateDamage(user,target)
+}
+
+class ItemAction implements ActionStrategy{
+    - item: Item
+    + execute(user, target)
+}
+
+Player ..> ActionStrategy : uses
+Player..>Move: stores
+Enemy..>ActionStrategy : uses
+MoveType..>MoveAction: creates
 
 ' ===========================
 ' Shop
@@ -193,13 +245,18 @@ AbilityType --> Ability : used to instantiate >
 
 class ShopView {
     - player: Player
-    - addShopItem(ability: AbilityType): void
+    + addShopItem(move: Move): void
+    + showFeedback(moveName: String): void
+    + updateUI(): void
     + open(npc: NPC): void
+    + closed(): void
+
 }
 
-ShopView --> Player
-ShopView --> NPC
-ShopView --> AbilityType : add()
+ShopView --> Player: interacts
+ShopView --> NPC: showShop
+'Indica dipendenza perchè shopview ha bisogno di Move per creare UI'
+ShopView ..> Move : add()
 
 ' ===========================
 ' Builder Pattern (Map)

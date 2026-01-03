@@ -5,13 +5,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.game.model.Position;
 import com.game.model.character.dialogue.Interactable;
 import com.game.view.DialogueView;
 import com.game.model.character.dialogue.Dialogue;
-import com.game.model.ability.*;
+import com.game.model.battle.*;
 
 public abstract class NPC implements Interactable {
     private ImageView sprite;
@@ -20,14 +21,14 @@ public abstract class NPC implements Interactable {
 
     private final Dialogue dialogue;
 
-    private final List<AbilityType> shopAbilities;
+    private final List<Move> shopMoves;
 
     public NPC(Job job, Position pos, Image img, Dialogue dialogue) {
         this.job = job;
         this.pos = pos;
         this.sprite = createCharacterSprite(img, job);
         this.dialogue = dialogue;
-        this.shopAbilities = new ArrayList<>();
+        this.shopMoves = new ArrayList<>();
     }
 
     private ImageView createCharacterSprite(Image img, Job job) {
@@ -54,12 +55,12 @@ public abstract class NPC implements Interactable {
         return dialogue;
     }
 
-    public void addShopAbility(AbilityType ability) {
-        this.shopAbilities.add(ability);
+    public void addShopMove(Move move) {
+        this.shopMoves.add(move);
     }
 
-    public List<AbilityType> getShopAbilities() {
-        return shopAbilities;
+    public List<Move> getShopMoves() {
+        return Collections.unmodifiableList(this.shopMoves);
     }
 
     @Override

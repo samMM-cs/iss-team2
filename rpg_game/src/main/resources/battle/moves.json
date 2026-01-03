@@ -14,7 +14,7 @@
         "type": "ATTACK",
         "value": 15,
         "cost": 20,
-        "requirements": ["WARRIOR"],
+        "requirements": ["WARRIOR","TRAINER"],
         "description": "Colpisce con lo scudo"
     },
     {
@@ -23,7 +23,7 @@
         "type": "ATTACK",
         "value": 25,
         "cost": 30,
-        "requirements": ["ROGUE"],
+        "requirements": ["ROGUE","TRAINER"],
         "description": "Colpisce alle spalle"
     },
     {
@@ -32,7 +32,7 @@
         "type": "ATTACK",
         "value": 20,
         "cost": 25,
-        "requirements": ["ARCHER"],
+        "requirements": ["ARCHER","TRAINER"],
         "description": "CScaglia due frecce contemporaneamente"
     },
     
@@ -51,7 +51,7 @@
         "type": "MAGIC_ATTACK",
         "value": 20,
         "cost": 50,
-        "requirements":["MAGE"],
+        "requirements":["MAGE","TRAINER"],
         "description": "Attacco magico base"
     },
     {
@@ -60,7 +60,7 @@
         "type": "MAGIC_ATTACK",
         "value": 30,
         "cost": 100,
-        "requirements":["MAGE"],
+        "requirements":["MAGE","TRAINER"],
         "description": "Danni da fuoco"
     },
     {
@@ -69,7 +69,7 @@
         "type": "MAGIC_HEAL",
         "value": 20,
         "cost": 150,
-        "requirements":["MAGE"],
+        "requirements":["MAGE","TRAINER"],
         "description": "Cura il player"
     },
     {
