@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.game.model.Position;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class PartyTest {
@@ -23,12 +22,12 @@ public class PartyTest {
      * private Player mainPlayer;
      */
 
-    public Party setUpEmptyParty() {
+    Party setUpEmptyParty() {
         Party party = new Party(new ArrayList<Player>());
         return party;
     }
 
-    public Party setUpNPlayersParty(int n) {
+    Party setUpNPlayersParty(int n) {
         List<Player> members = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             Player p = mock(Player.class);
@@ -45,10 +44,10 @@ public class PartyTest {
         return party;
     }
 
-    public Party setUpNPlayersParty_Positions(int n, Position pos) {
+    Party setUpNPlayersParty_Positions(int n, Position pos) {
         List<Player> members = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            Player p = new Player(mock(Job.class), pos);
+            Player p = new Player(Job.ARCHER, pos);
             members.add(p);
         }
         Party party = new Party(members);
@@ -56,7 +55,7 @@ public class PartyTest {
     }
 
     @Test
-    public void testNewParty_EmptyParty() {
+    void testNewParty_EmptyParty() {
         Party party = setUpEmptyParty();
 
         assertNotNull(party);
@@ -64,14 +63,14 @@ public class PartyTest {
     }
 
     @Test
-    public void testNewParty_4PlayersParty() {
+    void testNewParty_4PlayersParty() {
         Party party = setUpNPlayersParty(4);
 
         assertEquals(4, party.getMembers().size());
     }
 
     @Test
-    public void testGetMainPlayer_4PlayersParty() {
+    void testGetMainPlayer_4PlayersParty() {
         Player p1 = mock(Player.class);
         Player p2 = mock(Player.class);
         Player p3 = mock(Player.class);
@@ -85,16 +84,18 @@ public class PartyTest {
         assertSame(mainPlayer, result);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetMainPlayer_EmptyParty() {
+    @Test
+    void testGetMainPlayer_EmptyParty() {
         Party party = setUpEmptyParty();
 
-        @SuppressWarnings("unused")
-        Player result = party.getMainPlayer();
+        assertThrows(
+            IndexOutOfBoundsException.class,
+            () -> party.getMainPlayer()
+        );
     }
 
     @Test
-    public void testGetMembers() {
+    void testGetMembers() {
         Player p1 = mock(Player.class);
         Player p2 = mock(Player.class);
         List<Player> members = Arrays.asList(p1, p2);
@@ -107,7 +108,7 @@ public class PartyTest {
     }
 
     @Test
-    public void testUpdateFollowPosition_1PlayerParty() {
+    void testUpdateFollowPosition_1PlayerParty() {
         Position p = new Position(200, 50);
         Party party = setUpNPlayersParty_Positions(1, p);
 
@@ -118,7 +119,7 @@ public class PartyTest {
     }
 
     @Test
-    public void testUpdateFollowPosition_4PlayerParty() {
+    void testUpdateFollowPosition_4PlayerParty() {
         Position pos = new Position(200, 50);
         Party party = setUpNPlayersParty_Positions(4, pos);
 

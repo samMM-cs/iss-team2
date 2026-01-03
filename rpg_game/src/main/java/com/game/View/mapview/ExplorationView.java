@@ -117,4 +117,10 @@ public class ExplorationView {
             this.timer.stop();
         }
     }
+
+    public void start() {
+        if (this.timer != null) {
+            this.timer.start();
+        }
+    }
 }

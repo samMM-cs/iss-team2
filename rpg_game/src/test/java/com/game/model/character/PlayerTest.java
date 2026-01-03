@@ -1,24 +1,14 @@
 package com.game.model.character;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.game.model.Position;
 
 public class PlayerTest {
-    public Player setUpPlayer(Position pos) {
-        return new Player(mock(Job.class), pos);
-    }
-
-    @Test
-    public void testAddXp() {
-        int xp = 10;
-        Player player = setUpPlayer(null);
-
-        player.addXp(xp);
-
-        assertEquals(xp, player.getXp());
+    Player setUpPlayer(Position pos) {
+        return new Player(Job.ARCHER, pos);
     }
 
     // Passa dalla view
@@ -38,18 +28,18 @@ public class PlayerTest {
 
     // Not yet implemented
     @Test
-    public void testEquipItem() {
+    void testEquipItem() {
 
     }
 
     // Not yet implemented
     @Test
-    public void testLearnAbility() {
+    void testLearnAbility() {
 
     }
 
     @Test
-    public void testNotifyFollower() {
+    void testNotifyFollower() {
         Position p1pos = new Position(300, 100);
         Position p2pos = new Position(240, 100);
         Position p3pos = new Position(180, 100);

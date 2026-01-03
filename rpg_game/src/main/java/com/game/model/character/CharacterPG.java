@@ -50,11 +50,6 @@ public abstract class CharacterPG {
         this.abilities.add(ability);
     }
 
-    public void gainExp(int amount) {
-        baseStats.addExp(amount);
-        refreshCurrentStats();
-    }
-
     protected void refreshCurrentStats() {
         this.currentStats = this.baseStats.copy();
     }

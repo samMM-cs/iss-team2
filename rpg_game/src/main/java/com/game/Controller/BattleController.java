@@ -26,9 +26,12 @@ public class BattleController {
         this.battle = battle;
         this.view = view;
         this.party = GameState.getInstance().getParty();
+<<<<<<< HEAD
         this.currentPlayerActingIndex = getNextPlayerIndex();
 
         updatePlayerUI();
+=======
+>>>>>>> 17ba2d2bd9a88ff52efd4d0b9733effcd88d3c46
     }
 
     public void handleAction(String selected) {
@@ -57,7 +60,9 @@ public class BattleController {
             ActionStrategy actionStrategy = moveData.getType().createMove(moveData);
             plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(battle.getEnemy())));
             nextPlayerAction();
+            view.hideMoveList();
         }
+        
     }
 
     private void updatePlayerUI() {
@@ -83,6 +88,7 @@ public class BattleController {
             this.result = battle.nextTurn();
             // Esegue i calcoli e restituisce il risultato
             handleBattleResult(this.result);
+<<<<<<< HEAD
 
             // Se la battglia non è finita
             if (result == BattleResult.ONGOING) {
@@ -99,11 +105,19 @@ public class BattleController {
             updatePlayerUI();
             view.hideMoveList();
         }
+=======
+        } 
+        currentPlayerActingIndex = getNextPlayerIndex();
+        updatePlayerUI();
+        view.enableInput();
+>>>>>>> 17ba2d2bd9a88ff52efd4d0b9733effcd88d3c46
     }
 
     private void handleBattleResult(BattleResult br) {
         switch (br) {
             case BattleResult.ONGOING:
+                // Reset per il prossimo round
+                plannedActionList.clear();
                 break;
             case BattleResult.PARTY_DEFEATED: {
                 backToMap();
@@ -121,8 +135,8 @@ public class BattleController {
     // Calcolo l'indice del prossimo player vivo. Salta chi ha getHp()<=0
     private int getNextPlayerIndex() {
         int size = party.getMembers().size();
-        for (int i = 0; i < size; i++) {
-            int next = (currentPlayerActingIndex + i) % party.getMembers().size();
+        for (int i = 1; i <= size; i++) {
+            int next = (currentPlayerActingIndex + i) % size;
             if (party.getMembers().get(next).getCurrentStats().getHp() > 0)
                 return next;
         }
