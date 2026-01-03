@@ -63,6 +63,7 @@ public class GameState {
     public void createParty() {
         if (!allCharactersSelected())
             return;
+        Job.initAllMoves();
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < selectedCharacters.size(); i++) {
             Job selectedJob = selectedCharacters.get(i);
@@ -78,7 +79,7 @@ public class GameState {
 
     public void createEnemy() {
         enemies.clear();
-
+        Job.initAllMoves();
         List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN2);
         List<Position> pos = List.of(new Position(5, 5), new Position(6, 8));
         for (int i = 0; i < enemiesJob.size(); i++) {
@@ -90,6 +91,7 @@ public class GameState {
     public void createNpc() {
         this.npc.clear();
 
+        Job.initAllMoves();
         this.npc.add(new MerchantNPC(Job.FARMER, new Position(4, 7)));
         this.npc.add(new AbilityNPC(Job.TRAINER, new Position(16, 18)));
     }

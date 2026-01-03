@@ -2,12 +2,12 @@ package com.game.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.game.model.GameState;
 import com.game.model.battle.Action;
 import com.game.model.battle.ActionStrategy;
 import com.game.model.battle.Move;
-import com.game.model.battle.MoveReader;
 import com.game.model.battle.Battle;
 import com.game.model.battle.BattleResult;
 import com.game.model.character.CharacterPG;
@@ -21,20 +21,14 @@ public class BattleController {
     private Party party;
     private int currentPlayerActingIndex = 0;
     private List<Action> plannedActionList = new ArrayList<>();
-    private List<Move> availableMove;
-    private List<Move> loadMove;
 
     public BattleController(Battle battle, BattleView view) {
         this.battle = battle;
         this.view = view;
-        this.availableMove = new ArrayList<>();
-        this.loadMove = MoveReader.readMove("/battle/moves.json");// Carico le mosse dal file JSON
-        if (loadMove != null)
-            this.availableMove.addAll(loadMove);
-        else
-            System.out.println("Impossibile caricare il file");
         this.party = GameState.getInstance().getParty();
         this.currentPlayerActingIndex = getNextPlayerIndex();
+
+        updatePlayerUI();
     }
 
     public void handleAction(String selected) {
@@ -44,10 +38,8 @@ public class BattleController {
         switch (selected) {
             case "Flee" ->
                 backToMap();
-            case "Move" -> {
-                view.updateMoveList(availableMove.stream().map(Move::getName).toList());
+            case "Move" ->
                 view.showMoveList();
-            }
         }
     }
 
@@ -56,7 +48,8 @@ public class BattleController {
             view.hideMoveList();
             return;
         }
-        Move moveData = availableMove.stream().filter(m -> m.getName().equalsIgnoreCase(moveName)).findFirst()
+        CharacterPG character = party.getMembers().get(currentPlayerActingIndex);
+        Move moveData = character.getCurrentMove().stream().filter(m -> m.getName().equalsIgnoreCase(moveName)).findFirst()
                 .orElse(null);
         if (moveData != null) {
             CharacterPG currentPlayerActing = party.getMembers().get(currentPlayerActingIndex);
@@ -71,14 +64,11 @@ public class BattleController {
         // 1. Diciamo alla View chi evidenziare graficamente
         view.setActivePlayer(currentPlayerActingIndex);
 
+        CharacterPG character = party.getMembers().get(currentPlayerActingIndex);
         // 2. Estraiamo i nomi delle mosse dal JSON (availableMoves)
         // Se ogni personaggio ha mosse diverse, qui puoi filtrare per Job o Id.
         // Per ora prendiamo tutti i nomi delle mosse caricate:
-        if (availableMove == null)
-            availableMove = new ArrayList<>();
-        List<String> moveNames = availableMove.stream()
-                .map(Move::getName)
-                .toList();
+        List<String> moveNames = character.getCurrentMove().stream().map(Move::getName).collect(Collectors.toList());
 
         // 3. Inviamo i nomi alla View
         view.updateMoveList(moveNames);
@@ -99,7 +89,6 @@ public class BattleController {
                 // Reset per il prossimo round
                 plannedActionList.clear();
                 view.hideMoveList(); // Menu principale per il nuovo round
-                currentPlayerActingIndex = party.getMembers().size() - 1;
                 currentPlayerActingIndex = getNextPlayerIndex();
 
                 updatePlayerUI();
@@ -142,7 +131,8 @@ public class BattleController {
     }
 
     private boolean allPlayerActed() {
-        return getNextPlayerIndex() <= currentPlayerActingIndex;
+        return plannedActionList.size() >= party.getMembers().stream().filter(p -> p.getCurrentStats().getHp() > 0)
+                .count();
     }
 
     private void backToMap() {
@@ -151,9 +141,5 @@ public class BattleController {
 
     public int getCurrentPlayerActionIndex() {
         return this.currentPlayerActingIndex;
-    }
-
-    public List<Move> getAvailableMove() {
-        return availableMove;
     }
 }

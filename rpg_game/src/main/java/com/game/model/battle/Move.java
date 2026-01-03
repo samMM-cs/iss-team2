@@ -3,6 +3,8 @@ package com.game.model.battle;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Move {
 
@@ -23,6 +25,9 @@ public class Move {
 
     @JsonProperty("cost")
     private int cost;
+
+    @JsonProperty("requirements")
+    private List<String> req;
 
     @JsonProperty("description")
     private String description;
@@ -47,6 +52,9 @@ public class Move {
         return this.cost;
     }
 
+    public List<String> getReq() {
+        return req;
+    }
     public String getDescription() {
         return this.description;
     }

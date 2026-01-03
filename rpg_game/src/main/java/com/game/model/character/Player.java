@@ -3,6 +3,7 @@ package com.game.model.character;
 import javafx.scene.image.*;
 
 import com.game.model.Position;
+import com.game.model.battle.*;
 
 public class Player extends CharacterPG {
     private int xp;
@@ -24,6 +25,10 @@ public class Player extends CharacterPG {
         }
     }
 
+    public void learnMove(Move move) {
+        if (!this.getCurrentMove().contains(move))
+            this.getCurrentMove().add(move);
+    }
     public void subscribeToFollowed(Player player) {
         player.setFollower(this);
     }

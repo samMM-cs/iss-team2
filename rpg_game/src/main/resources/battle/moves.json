@@ -5,15 +5,45 @@
         "type": "ATTACK",
         "value": 10,
         "cost": 0,
+        "requirements": ["WARRIOR", "ROGUE", "ARCHER", "GOBLIN", "GOBLIN2"],
         "description": "Attacco fisico base"
     },
     {
+        "id": "W01",
+        "name": "Shield Bash",
+        "type": "ATTACK",
+        "value": 15,
+        "cost": 20,
+        "requirements": ["WARRIOR"],
+        "description": "Colpisce con lo scudo"
+    },
+    {
+        "id": "R01",
+        "name": "Backstab",
+        "type": "ATTACK",
+        "value": 25,
+        "cost": 30,
+        "requirements": ["ROGUE"],
+        "description": "Colpisce alle spalle"
+    },
+    {
+        "id": "ARC01",
+        "name": "Double Shot",
+        "type": "ATTACK",
+        "value": 20,
+        "cost": 25,
+        "requirements": ["ARCHER"],
+        "description": "CScaglia due frecce contemporaneamente"
+    },
+    
+    {
         "id": "H01",
-        "name": "Basic Heal",
+        "name": "First Aid",
         "type": "HEAL",
-        "value": 5,
+        "value": 15,
         "cost": 0,
-        "description": "Cura base"
+        "requirements": ["WARRIOR", "ARCHER", "ROGUE"],
+        "description": "Piccola cura rapida non magica"
     },
     {
         "id": "M01",
@@ -21,22 +51,35 @@
         "type": "MAGIC_ATTACK",
         "value": 20,
         "cost": 50,
+        "requirements":["MAGE"],
         "description": "Attacco magico base"
     },
     {
-        "id": "M02",
+        "id": "B01",
         "name": "Fireball",
         "type": "MAGIC_ATTACK",
         "value": 30,
         "cost": 100,
+        "requirements":["MAGE"],
         "description": "Danni da fuoco"
     },
     {
-        "id": "M03",
+        "id": "B02",
         "name": "Magic Heal",
         "type": "MAGIC_HEAL",
         "value": 20,
         "cost": 150,
-        "description": "Cura magica il player"
+        "requirements":["MAGE"],
+        "description": "Cura il player"
+    },
+    {
+        "id": "G01",
+        "name": "Goblin Bite",
+        "type": "ATTACK",
+        "value": 12,
+        "cost": 0,
+        "price": 0,
+        "requirements": ["GOBLIN", "GOBLIN2"],
+        "description": "Morso ferocissimo dei Goblin."
     }
 ]

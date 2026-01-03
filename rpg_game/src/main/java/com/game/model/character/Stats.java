@@ -71,7 +71,7 @@ public class Stats {
   }
 
   public double getHpPerc() {
-    return getHp() / getMaxHp();
+    return (double) this.hp / (double)this.maxHp;
   }
 
   public int getHp() {

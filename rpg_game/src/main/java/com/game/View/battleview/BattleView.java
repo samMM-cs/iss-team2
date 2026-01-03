@@ -9,7 +9,6 @@ import com.game.model.character.Party;
 import com.game.model.character.Player;
 import com.game.model.character.Job;
 import com.game.view.HUD;
-import com.game.model.battle.*;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.ListView;
@@ -82,21 +81,13 @@ public class BattleView extends Pane {
         actionList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
         actionList.setPrefHeight(45);
         actionList.setStyle("-fx-font-size: 14px;");
-        actionList.setOnMouseClicked(e -> {
-            String selected = actionList.getSelectionModel().getSelectedItem();
-            if (selected != null)
-                controller.handleAction(selected);
-        });
+        actionList.setOnMouseClicked(e -> controller.handleAction(actionList.getSelectionModel().getSelectedItem()));
 
         moveList.setOrientation(javafx.geometry.Orientation.VERTICAL);
         moveList.setStyle("-fx-font-size: 14px;");
         moveList.setVisible(false); // nascosta di default
         moveList.setManaged(false); // IMPORTANTISSIMO per layout
-        moveList.setOnMouseClicked(e -> {
-            String move = moveList.getSelectionModel().getSelectedItem();
-            if (move != null)
-                controller.handleMoveSelection(move);
-        });
+        moveList.setOnMouseClicked(e -> controller.handleMoveSelection(moveList.getSelectionModel().getSelectedItem()));
 
         HBox bottomBox = new HBox(10, actionList, moveList);
         bottomBox.setAlignment(Pos.CENTER);
@@ -262,7 +253,7 @@ public class BattleView extends Pane {
         double barWidth = 110;
         double barHeight = 10;
 
-        double hpPerc = Math.max(0, Math.min(1, enemy.getCurrentStats().getHpPerc()));
+        double hpPerc = enemy.getCurrentStats().getHpPerc();
         double barX = x + (size - barWidth) / 2;
         double barY = y - 22;
 
@@ -280,7 +271,7 @@ public class BattleView extends Pane {
 
         // Icona cuore (frame in base alla percentuale)
         int frame = (int) Math.floor((1 - hpPerc) * (heart_img.length - 1));
-        frame = Math.min(frame, heart_img.length - 1);
+        frame = Math.max(0, Math.min(frame, heart_img.length - 1));
         double iconSize = 20;
         double iconX = barX - iconSize - 6;
         double iconY = barY - (iconSize - barHeight) / 2;
