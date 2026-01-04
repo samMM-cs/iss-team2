@@ -281,4 +281,87 @@ ExplorationView --> ExplorationController
 ExplorationView --> MapBuilder
 CharacterSelectionView --> ExplorationView : startExploration()
 
+class Battle {
+    - List<Enemy> enemies
+    - List<Player> party
+    - int turnIndex
+    - RewardStrategy rewardStrategy
+    - observer : BattleView
+    + calculateDamage(attacker, defender)
+    + nextTurn()
+    + isBattleOver() : bool
+    + endBattle()
+    + assignRewards()
+    + notifyObservers()
+}
+
+class BattleView {
+    + showBattleState()
+    + showTurn()
+    + subscribe(battleController : BattleController)
+    + unsubscribe(battleController : BattleController)
+}
+
+class BattleController {
+    - TurnIterator turnIterator
+    + startBattle(enemies)
+    + playerTurn(action)
+    + enemyTurn()
+}
+
+enum BattleResult{
+    + ONGOING
+    + PARTY_WON
+    + PARTY_DEFEATED
+}
+
+interface TurnStrategy {
+    + sortAction() : void
+    + getTurnIterator() : TurnIterator
+}
+class StaticSpeedTurn implements TurnStrategy {
+    - List<Character> characterList
+    + sortAction() : void
+    + getTurnIterator() : TurnIterator
+}
+
+interface TurnIterator {
+    + hasCharacters()
+    + nextCharacter()
+}
+
+class ConcreteTurnIterator implements TurnIterator {
+    + hasCharacters()
+    + nextCharacter()
+}
+
+interface RewardStrategy {
+    ' Reward class will get a List<Item> from db through calculateRewards method '
+    + calculateRewards(List<Enemy>): Reward 
+}
+
+class StandardRewardStrategy implements RewardStrategy{
+    + calculateRewards(List<Enemy>): Reward 
+}
+
+class NoRewardStrategy implements RewardStrategy {
+    + calculateRewards(List<Enemy>): Reward 
+}
+
+class Reward {
+    - int xp
+    - List<Item> : drop
+    + assignXP(int: xp)
+    + assignItem(Item : item)
+}
+ExplorationView-->BattleView: startBattle()
+BattleController-->BattleView:updateUI()
+BattleController-->Battle
+
+Battle-left->BattleResult
+Battle-down->RewardStrategy
+Battle->TurnStrategy
+
+TurnStrategy..>TurnIterator: creates
+RewardStrategy..>Reward: creates
 @enduml
