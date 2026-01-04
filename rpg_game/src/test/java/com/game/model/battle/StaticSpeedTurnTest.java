@@ -39,7 +39,7 @@ public class StaticSpeedTurnTest {
     }
 
     @Test
-    void testGetTurnIterator() {
+    void testSortAction() {
         sst.sortAction();
 
         List<CharacterPG> res= sst.getCharacters();
@@ -50,7 +50,17 @@ public class StaticSpeedTurnTest {
     }
 
     @Test
-    void testSortAction() {
+    void testGetTurnIterator() {
+        sst.sortAction();
 
+        List<CharacterPG> res= sst.getCharacters();
+        assertNotNull(res);
+
+        ConcreteTurnIterator it = new ConcreteTurnIterator(res);
+        assertNotNull(it);
+        
+        while (it.hasCharacters()) {
+            assertTrue(it.nextCharacter().getCurrentStats().getSpeed() >= it.nextCharacter().getCurrentStats().getSpeed());
+        }
     }
 }

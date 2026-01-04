@@ -10,16 +10,6 @@ public class Enemy extends CharacterPG {
         super(job, pos, enemy_img);
     }
 
-    @Override
-    public void takeDamage(int value) {
-        this.getCurrentStats().setHp(
-                Math.max(0, this.getCurrentStats().getHp() - value));
-    }
-
-    @Override
-    public void heal(int value) {
-    }
-
     public void hide() {
         this.getSprite().setVisible(false);
     }

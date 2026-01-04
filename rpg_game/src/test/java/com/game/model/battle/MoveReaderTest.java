@@ -10,7 +10,7 @@ import java.util.List;
 public class MoveReaderTest {
     @Test
     void testReadMove() {
-        String jsonpath = "/battle/moves.json";
+        String jsonpath = "/battle/movestest.json";
         List<Move> moveList = MoveReader.readMove(jsonpath);
 
         MoveTest moveTest1 = new MoveTest("A01", "Basic Attack", MoveType.ATTACK, "Attacco fisico base", 10, 0);
@@ -20,9 +20,9 @@ public class MoveReaderTest {
         if (!moveList.isEmpty()) {
             assertNotNull(moveList);
         }
-        // assertEquals(2, moveList.size());
-        assertEquals(moveTest1.getType(), MoveType.ATTACK);
-        assertEquals(moveTest2.getType(), MoveType.HEAL);
+        assertEquals(2, moveList.size());
+        assertEquals(moveTest1.getId(), moveList.get(0).getId());
+        assertEquals(moveTest2.getId(), moveList.get(1).getId());
     }
 
     // Subclass to have method equals and constructor without changing Move class
@@ -37,6 +37,15 @@ public class MoveReaderTest {
             setDescription(description);
             setValue(value);
             setCost(cost);
+        }
+
+        public MoveTest(Move move) {
+            setId(move.getId());
+            setName(move.getName());
+            setType(move.getType());
+            setDescription(move.getDescription());
+            setValue(move.getValue());
+            setCost(move.getCost());
         }
 
         // Not symmetric, but still ok for this test

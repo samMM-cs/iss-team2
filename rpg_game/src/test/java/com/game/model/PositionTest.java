@@ -56,7 +56,7 @@ public class PositionTest {
     }
 
     @Test
-    public void isInside_retunrsFalse() {
+    public void isInside_returnsFalse() {
         Position p = new Position(20, 20);
         assertFalse(p.isInside(new Position(10, 10)));
     }

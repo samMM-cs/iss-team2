@@ -4,6 +4,7 @@ import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 
 import java.util.List;
+import java.util.Random;
 
 import com.game.model.GameState;
 
@@ -32,6 +33,17 @@ public class Battle {
 
     public final int getTurnIndex() {
         return this.turnIndex;
+    }
+
+    // Minimal enemyAI
+    public String enemyAIString() {
+        return enemy.getCurrentMove().get(new Random().nextInt(enemy.getCurrentMove().size())).getName();
+    }
+
+    public ActionStrategy enemyAIActionStrategy() {
+        Move enemyMove = enemy.getCurrentMove().get(new Random().nextInt(enemy.getCurrentMove().size()));
+        return enemyMove.getType().createMove(enemyMove);
+
     }
 
     public BattleResult nextTurn() {

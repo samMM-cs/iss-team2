@@ -9,9 +9,9 @@ public class Action {
     private String action;
     private ActionStrategy action2;
     private CharacterPG user;
-    private List<CharacterPG> targets;
+    private List<? extends CharacterPG> targets;
     
-    public Action(ActionStrategy action, CharacterPG user, List<CharacterPG> targets) {
+    public Action(ActionStrategy action, CharacterPG user, List<? extends CharacterPG> targets) {
         this.action2 = action;
         this.user = user;
         this.targets = targets;
@@ -20,10 +20,7 @@ public class Action {
     public Action(String action, CharacterPG user, CharacterPG... targets) {
         this.action = action;
         this.user = user;
-        this.targets = new ArrayList<>();
-        for (CharacterPG target : targets) {
-            this.targets.add(target);
-        }
+        this.targets = new ArrayList<CharacterPG>(List.of(targets));
     }
 
     public void execute() {
