@@ -7,7 +7,6 @@ import com.game.model.creator.NewGame;
 import com.game.model.map.Map1;
 
 public class GameController {
-    private GameState gameState;
     private Game game;
 
     public GameController(Game game) {
@@ -15,9 +14,11 @@ public class GameController {
     }
 
     public void start() {
-        if (game instanceof NewGame)
+        if (game instanceof NewGame) {
+            GameState.destroy();
+            ViewManager.getInstance().destroyViews();
             ViewManager.getInstance().showNewGameView(this);
-        else
+        } else
             startExploration();
     }
 
@@ -27,29 +28,30 @@ public class GameController {
             return;
         }
 
-        gameState = new GameState.GameStateBuilder().setNPlayers(players).enableAutoSave(autoSave).setMap(new Map1())
+        new GameState.GameStateBuilder().setNPlayers(players)
+                .enableAutoSave(autoSave).setMap(new Map1())
                 .build();
         ViewManager.getInstance().showCharacterSelectionView(this);
     }
 
     // Viene chiamato quando selezioniamo un personaggio
     public void onCharacterSelected(Job job) {
-        if (gameState != null)
-            gameState.selectCharacter(job);
+        if (GameState.getInstance() != null)
+            GameState.getInstance().selectCharacter(job);
     }
 
     // Avvia l'esplorazione della mappa
     public void startExploration() {
-        if (gameState != null) {
-            gameState.createEnemy();
-            gameState.createParty();
-            gameState.createNpc();
+        if (GameState.getInstance() != null) {
+            GameState.getInstance().createEnemy();
+            GameState.getInstance().createParty();
+            GameState.getInstance().createNpc();
             ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
         }
     }
 
     public void handleStoryChoice(String choice) {
-        if (gameState != null)
-            gameState.applyChoices(choice);
+        if (GameState.getInstance() != null)
+            GameState.getInstance().applyChoices(choice);
     }
 }

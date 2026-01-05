@@ -48,7 +48,7 @@ public class PauseMenu extends StackPane {
         Button resume = createMenuButton("Resume");
         resume.setOnAction(e -> ViewManager.getInstance().togglePause());
         Button quit = createMenuButton("Quit to Title");
-        quit.setOnAction(e->ViewManager.getInstance().exit());
+        quit.setOnAction(e -> ViewManager.getInstance().showMainMenu());
         box.getChildren().addAll(title, resume, quit);
 
         getChildren().addAll(overlay, box);

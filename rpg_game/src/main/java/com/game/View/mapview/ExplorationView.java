@@ -91,4 +91,8 @@ public class ExplorationView {
             this.timer.start();
         }
     }
+
+    public void destroyMap() {
+        mapView = null;
+    }
 }

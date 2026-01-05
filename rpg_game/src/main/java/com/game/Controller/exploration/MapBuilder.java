@@ -66,7 +66,6 @@ public class MapBuilder {
             System.err.println("Error while loading walkable ids");
             e.printStackTrace();
         }
-        System.out.println(walkableId);
         return this;
     }
 
