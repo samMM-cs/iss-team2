@@ -40,7 +40,6 @@ public class MapBuilder {
     }
 
     public MapBuilder() {
-
     }
 
     public MapBuilder setTileSetImageFromPath(String imagePath) {
@@ -67,6 +66,7 @@ public class MapBuilder {
             System.err.println("Error while loading walkable ids");
             e.printStackTrace();
         }
+        System.out.println(walkableId);
         return this;
     }
 
@@ -104,7 +104,7 @@ public class MapBuilder {
 
     public MapView build() {
         walkableTiles = new boolean[this.width][this.height];
-        for (int i = 0; i < this.spriteLayerIndex; i++) {
+        for (int i = 0; i <= Math.min(layers.size(), this.spriteLayerIndex); i++) {
             int[] tiles = layers.get(i).getData();
             for (int y = 0; y < this.height; y++) {
                 for (int x = 0; x < this.width; x++) {
