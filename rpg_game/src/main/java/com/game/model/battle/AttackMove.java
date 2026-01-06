@@ -12,7 +12,7 @@ public class AttackMove extends OffensiveMove {
     }
 
     @Override
-    public List<Integer> calculateDamage(CharacterPG user, List<CharacterPG> target) {
+    public List<Integer> calculateDamage(CharacterPG user, List<? extends CharacterPG> target) {
         List<Integer> res= new ArrayList<>(target.size());
         for (int i=0; i<target.size(); i++) {
             //This implementation doesn't use characters stats yet

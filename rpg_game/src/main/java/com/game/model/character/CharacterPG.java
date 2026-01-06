@@ -90,9 +90,16 @@ public abstract class CharacterPG implements HasSpriteAndPosition {
         currentStats = newStats;
     }
 
-    public abstract void takeDamage(int value);
+    public void takeDamage(int value) {
+        this.getCurrentStats().setHp(
+                Math.max(0, this.getCurrentStats().getHp() - value));
+    }
 
-    public abstract void heal(int value);
+    public void heal(int value) {
+        int maxHp = getBaseStats().getHp();
+        int hp = getCurrentStats().getHp();
+        getCurrentStats().setHp(Math.min(maxHp, hp + value));
+    }
 
     @Override
     public String toString() {

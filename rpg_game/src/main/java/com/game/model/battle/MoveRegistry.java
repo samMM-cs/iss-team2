@@ -8,7 +8,7 @@ public class MoveRegistry {
     private final Map<String, Move> moves; //Registra le mosse disponibili
 
     private MoveRegistry() {
-        this.moves= MoveReader.readMove("battle/moves.json")
+        this.moves= MoveReader.readMove("/battle/moves.json")
             .stream()
             .collect(Collectors.toMap(Move::getName, m->m));
     }

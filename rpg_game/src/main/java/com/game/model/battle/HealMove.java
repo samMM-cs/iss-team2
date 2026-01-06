@@ -11,14 +11,14 @@ public class HealMove extends MoveAction {
     }
 
     @Override
-    public void doAction (CharacterPG user, List<CharacterPG> target) {
+    public void doAction (CharacterPG user, List<? extends CharacterPG> target) {
         List<Integer> values= calculateHeal(user, target);
         for (int i=0; i<target.size(); i++) {
             target.get(i).heal(values.get(i));
         }
     }
 
-    public List<Integer> calculateHeal(CharacterPG user, List<CharacterPG> target) {
+    public List<Integer> calculateHeal(CharacterPG user, List<? extends CharacterPG> target) {
         List<Integer> res= new ArrayList<>(target.size());
         for (int i=0; i<target.size(); i++) {
             res.add(move.getValue());

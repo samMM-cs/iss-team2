@@ -50,6 +50,13 @@ public class ViewManager {
     this.stage.setMaximized(true);
   }
 
+  public void destroyViews() {
+    if (explorationView != null) {
+      explorationView.destroyMap();
+    }
+    explorationView = null;
+  }
+
   public void showMainMenu() {
     if (mainMenuView == null)
       mainMenuView = new MainMenuView();

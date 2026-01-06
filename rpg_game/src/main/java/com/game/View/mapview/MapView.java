@@ -15,7 +15,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
 
 public class MapView extends Pane {
-    private static final double SMOOTHING = .18;
+    private static final double SMOOTHING = .05;
     private List<LayerData> layers;
     private int spriteLayerIndex;
     private int tileSize;
@@ -63,7 +63,7 @@ public class MapView extends Pane {
 
     }
 
-    public void updateSpritePositions() {
+    private void updateSpritePositions() {
         for (HasSpriteAndPosition spritePosition : GameState.getInstance().getSpritesAndPositions()) {
             if (spritePosition.getSprite() != null) {
                 spritePosition.getSprite().setFitWidth(renderedTileSize);
@@ -88,11 +88,11 @@ public class MapView extends Pane {
     private void drawMap(Position offset) {
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int i = 0; i <= Math.max(layers.size(), spriteLayerIndex); i++) {
-            if (i == spriteLayerIndex) {
-                renderSprites(offset);
-            }
             if (i < layers.size()) {
                 renderLayer(layers.get(i), offset);
+            }
+            if (i == spriteLayerIndex) {
+                renderSprites(offset);
             }
         }
     }

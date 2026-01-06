@@ -63,17 +63,4 @@ public class Player extends CharacterPG {
     public void setPosition(Position pos) {
         this.setPos(pos);
     }
-
-    @Override
-    public void takeDamage(int value) {
-        int hp = getCurrentStats().getHp();
-        getCurrentStats().setHp(Math.max(0, hp - value));
-    }
-
-    @Override
-    public void heal(int value) {
-        int maxHp = getBaseStats().getHp();
-        int hp = getCurrentStats().getHp();
-        getCurrentStats().setHp(Math.min(maxHp, hp + value));
-    }
 }

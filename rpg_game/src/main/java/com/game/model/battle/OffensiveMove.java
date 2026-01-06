@@ -6,7 +6,7 @@ import com.game.model.character.CharacterPG;
 
 public abstract class OffensiveMove extends MoveAction {
     @Override
-    public void doAction (CharacterPG user, List<CharacterPG> target) {
+    public void doAction (CharacterPG user, List<? extends CharacterPG> target) {
         List<Integer> damage= calculateDamage(user, target);
         /*
          * This implementation avoids the use of a map which isn't recommended
@@ -17,5 +17,5 @@ public abstract class OffensiveMove extends MoveAction {
         }
     }
 
-    public abstract List<Integer> calculateDamage(CharacterPG user, List<CharacterPG> target);
+    public abstract List<Integer> calculateDamage(CharacterPG user, List<? extends CharacterPG> target);
 }

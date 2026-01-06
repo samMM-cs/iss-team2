@@ -79,6 +79,8 @@ public class BattleController {
 
     private void nextPlayerAction() {
         if (allPlayerActed()) {
+            // Mosse del nemico
+            plannedActionList.add(new Action(battle.enemyAIString(), battle.getEnemy(), party.getMainPlayer()));
             // Esecuzione logica del turno
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();

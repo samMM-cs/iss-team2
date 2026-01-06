@@ -45,6 +45,10 @@ public class GameState {
         return GameState.instance;
     }
 
+    public static void destroy() {
+        instance = null;
+    }
+
     public int getNPlayers() {
         return this.nPlayers;
     }

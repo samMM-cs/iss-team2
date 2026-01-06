@@ -7,5 +7,5 @@ public abstract class MoveAction implements ActionStrategy {
     public Move move;
     
     @Override
-    public abstract void doAction(CharacterPG user, List<CharacterPG> target);
+    public abstract void doAction(CharacterPG user, List<? extends CharacterPG> target);
 }
