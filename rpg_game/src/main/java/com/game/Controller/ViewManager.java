@@ -10,7 +10,9 @@ import com.game.view.ShopView;
 import com.game.view.battleview.BattleView;
 import com.game.view.gameview.MainMenuView;
 import com.game.view.gameview.NewGameView;
+import com.game.view.gameview.ContinueGameView;
 import com.game.view.gameview.PauseMenu;
+import com.game.view.gameview.SaveMenuView;
 import com.game.view.mapview.ExplorationView;
 
 import javafx.scene.Scene;
@@ -27,7 +29,9 @@ public class ViewManager {
 
   private MainMenuView mainMenuView;
   private NewGameView newGameView;
+  private ContinueGameView continueGameView;
   private PauseMenu pauseMenu;
+  private SaveMenuView saveMenuView;
   private CharacterSelectionView characterSelectionView;
   private ExplorationView explorationView;
   private BattleView battleView;
@@ -58,15 +62,48 @@ public class ViewManager {
     newGameView.show();
   }
 
+  public void showContinueGameView(GameController gameController) {
+    root = (Pane) stage.getScene().getRoot();
+    if (continueGameView == null)
+      continueGameView = new ContinueGameView(gameController);
+    if (!root.getChildren().contains(continueGameView)) {
+      continueGameView.prefWidthProperty().bind(root.widthProperty());
+      continueGameView.prefHeightProperty().bind(root.heightProperty());
+      root.getChildren().add(continueGameView);
+    }
+    continueGameView.toFront();
+    continueGameView.show();
+  }
+
   // Menu pausa
-  public void initPauseMenu(Scene scene) {
+  public void initPauseMenu(Scene scene, GameController gameController) {
     if (pauseMenu == null) {
-      pauseMenu = new PauseMenu();
+      pauseMenu = new PauseMenu(gameController);
       pauseMenu.setVisible(false);
       pauseMenu.prefWidthProperty().bind(scene.widthProperty());
       pauseMenu.prefHeightProperty().bind(scene.heightProperty());
 
       ((Pane) scene.getRoot()).getChildren().add(pauseMenu);
+    }
+  }
+
+  // SaveMenu
+  public void showSaveMenu(Scene scene, GameController gameController) {
+    root = ((Pane) scene.getRoot());
+    if (saveMenuView == null) {
+      saveMenuView = new SaveMenuView(gameController);
+      saveMenuView.setVisible(true);
+      saveMenuView.prefWidthProperty().bind(scene.widthProperty());
+      saveMenuView.prefHeightProperty().bind(scene.heightProperty());
+
+      root.getChildren().add(saveMenuView);
+      saveMenuView.setVisible(true);
+      saveMenuView.toFront();
+      // Blur overlay
+      root.getChildren().forEach(node -> {
+        if (node != saveMenuView)
+          node.setEffect(new GaussianBlur(10));
+      });
     }
   }
 
@@ -108,9 +145,9 @@ public class ViewManager {
     characterSelectionView.show();
   }
 
-  public void showExplorationView(Map map) {
+  public void showExplorationView(Map map, GameController gameController) {
     if (explorationView == null)
-      explorationView = new ExplorationView(map);
+      explorationView = new ExplorationView(map, gameController);
     if (isUIVisible()) {
       if (battleView != null)
         battleView.setVisible(false);
@@ -141,13 +178,12 @@ public class ViewManager {
   }
 
   public void showDialogView(Scene scene, Player player, NPC target) {
-    System.out.println("Apro la DialogueView");
-    explorationView.stop();
     root = (Pane) scene.getRoot();
     if (dialogView == null) {
       dialogView = new DialogueView();
       if (dialogView.isVisible()) {
         dialogView.handleAdvance();
+        // Blocco il movimento una volta aperto il dialogo
         explorationView.stop();
       } else
         explorationView.showMap();
@@ -156,6 +192,7 @@ public class ViewManager {
         showShop(player, target);
         dialogView.setVisible(false);
         dialogView = null;
+        // Una volta finito il player riprende il movimento
         explorationView.start();
       });
       root.getChildren().add(dialogView);

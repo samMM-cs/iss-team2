@@ -3,6 +3,7 @@ package com.game.view.gameview;
 import javafx.geometry.Pos;
 
 import com.game.controller.ViewManager;
+import com.game.controller.GameController;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -15,9 +16,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 public class PauseMenu extends StackPane {
-
-    public PauseMenu() {
+    private final GameController gameController;
+    public PauseMenu(GameController gameController) {
         super();
+        this.gameController = gameController;
         // --- SFONDO SCURO SEMI-TRASPARENTE ---
         Rectangle overlay = new Rectangle();
         overlay.setFill(Color.rgb(255, 255, 255, 0.25));
@@ -47,9 +49,11 @@ public class PauseMenu extends StackPane {
         // --- PULSANTI ---
         Button resume = createMenuButton("Resume");
         resume.setOnAction(e -> ViewManager.getInstance().togglePause());
+        Button saveBtn = createMenuButton("Save Game");
+        saveBtn.setOnAction(e->ViewManager.getInstance().showSaveMenu(getScene(),gameController));
         Button quit = createMenuButton("Quit to Title");
         quit.setOnAction(e->ViewManager.getInstance().exit());
-        box.getChildren().addAll(title, resume, quit);
+        box.getChildren().addAll(title, resume, saveBtn, quit);
 
         getChildren().addAll(overlay, box);
         StackPane.setAlignment(box, Pos.CENTER);

@@ -14,18 +14,19 @@ import com.game.model.character.NPC;
 import com.game.model.character.Inventory;
 
 public class GameState {
-    private final int nPlayers;
-    private final boolean autoSaveEnabled;
-    private final List<Job> selectedCharacters;
+    public final int nPlayers;
+    public final boolean autoSaveEnabled;
+    public final List<Job> selectedCharacters;
     private final List<Enemy> enemies;
     private final List<NPC> npc;
-    private Party party;
-    private Inventory inventory;
-    private final Map<Event, Boolean> storyFlags;
-    private final WorldPosition worldPosition;
+    public Party party;
+    public Inventory inventory;
+    public final Map<Event, Boolean> storyFlags;
+    public final WorldPosition worldPosition;
     private static GameState instance;
     private final List<HasSpriteAndPosition> sprites = new ArrayList<>();
-    private com.game.model.map.Map map;
+    public com.game.model.map.Map map;
+    public String mapId;
 
     // Costruttore privato, il Builder lo costruisce
     private GameState(GameStateBuilder builder) {
@@ -147,6 +148,40 @@ public class GameState {
 
     public WorldPosition getWorldPosition() {
         return worldPosition;
+    }
+
+    public GameStateMemento saveToMemento() {
+        return new GameStateMemento(this);
+    }
+    
+    public void restoreFromMemento(GameStateMemento memento) {
+        //Per i player
+        this.selectedCharacters.clear();
+        this.selectedCharacters.addAll(memento.selectedCharacters);
+
+        //Posizione mond
+        this.worldPosition.setPosition(memento.worldPosition);
+
+        //flag storia
+        this.storyFlags.clear();
+        this.storyFlags.putAll(memento.storyFlags);
+
+        //this.inventory = memento.inventory.copy();
+
+        //Per la mappa
+        if (memento.mapId != null) {
+            try {
+                Class<?> mapClass = Class.forName(memento.mapId);
+                this.map = (com.game.model.map.Map) mapClass.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Entità base della mappa
+        createParty();
+        createEnemy();
+        createNpc();
     }
 
     // ----------------------------------------------------------------------------------------

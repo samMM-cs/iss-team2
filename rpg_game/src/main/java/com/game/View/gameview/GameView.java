@@ -1,6 +1,8 @@
 package com.game.view.gameview;
 
-public abstract class GameView {
+import javafx.scene.layout.Pane;
+
+public abstract class GameView extends Pane {
 
     public abstract void show(); // Costruisce e mostra la view
 

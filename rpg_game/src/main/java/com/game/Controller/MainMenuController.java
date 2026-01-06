@@ -2,6 +2,7 @@ package com.game.controller;
 
 import com.game.model.creator.GameCreator;
 import com.game.model.creator.NewGameCreator;
+import com.game.model.creator.ContinueGameCreator;
 import com.game.model.creator.Game;
 
 import javafx.event.ActionEvent;
@@ -20,13 +21,13 @@ public class MainMenuController {
         gameController.start();
     }
 
-    public void resumeGame(ActionEvent event) {
-        System.out.println("Seleziona lo slot");
-    }
+    public void onResumeGame(ActionEvent event) {
+        System.out.println("Riprendi partita");
+        GameCreator gameCreator = new ContinueGameCreator();
+        Game continueGame = gameCreator.createGame();
+        GameController gameController = new GameController(continueGame);
+        gameController.resume();
 
-    public void onSettings(ActionEvent event) {
-        // Carica la schermata settings
-        System.out.println("Impostazioni");
     }
 
     public void onExit(ActionEvent event) {

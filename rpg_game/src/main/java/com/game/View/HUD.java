@@ -1,99 +1,180 @@
 package com.game.view;
 
 import com.game.model.character.CharacterPG;
-
+import com.game.model.character.Stats;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-
-import com.game.model.character.Stats;
+import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 public class HUD extends VBox {
-    private ProgressBar hpBar;
-    private ProgressBar xpBar;
-    private Label level;
-    private Label hpLabel;
-    private Label xpLabel;
-    private Label playerName;
     private Stats statsCharacter;
-    private ImageView heart_view;
 
-    private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
+    // Riferimenti diretti ai componenti per evitare ClassCastException
+    private Rectangle hpFill;
+    private Rectangle xpFill;
+    private Label hpText;
+    private Label xpText;
+    private Label levelLabel;
+    private ImageView heartView;
+
+    private final double BAR_WIDTH = 180;
+    private final double BAR_HEIGHT = 12;
+
+    private final Image[] heartImages = {
+            new Image("/battle/icons/heart/Sprite_heart.png"),
             new Image("/battle/icons/heart/Sprite_heart_2.png"),
             new Image("/battle/icons/heart/Sprite_heart_3.png"),
-            new Image("/battle/icons/heart/Sprite_heart_4.png") };
+            new Image("/battle/icons/heart/Sprite_heart_4.png")
+    };
 
     public HUD(CharacterPG c) {
         this.statsCharacter = c.getCurrentStats();
-        setSpacing(10);
-        setPadding(new Insets(16));
-        setAlignment(Pos.TOP_LEFT);
 
+        // Setup Container principale
+        setSpacing(10);
+        setPadding(new Insets(15));
+        setMaxWidth(300);
         setStyle("""
-                    -fx-background-color: rgba(15, 15, 15, 0.8);
+                    -fx-background-color: rgba(25, 25, 25, 0.9);
                     -fx-background-radius: 12;
-                    -fx-border-radius: 12;
-                    -fx-border-color: #888;
+                    -fx-border-color: #444;
                     -fx-border-width: 2;
                 """);
 
-        playerName = new Label(String.valueOf(c.getJob()));
-        playerName.setFont(Font.font(18));
-        playerName.setStyle("""
-                -fx-text-fill: gold;
-                -fx-font-weight: bold;
-                    """);
-        // HP
-        hpBar = new ProgressBar();
-        hpBar.setPrefWidth(180);
-        hpBar.setStyle("""
-                    -fx-accent: linear-gradient(#ff4b4b, #b00000);
-                    -fx-control-inner-background: #400000;
-                    -fx-background-radius: 8;
-                """);
-        hpLabel = new Label("HP");
-        hpLabel.setStyle("-fx-text-fill: #eeeeee; -fx-font-size: 11;");
-        heart_view = new ImageView(heart_img[0]);
-        heart_view.setFitHeight(20);
-        heart_view.setFitWidth(20);
-        HBox hpBox = new HBox(6);
-        hpBox.setAlignment(Pos.CENTER_LEFT);
-        hpBox.getChildren().addAll(heart_view, hpBar, hpLabel);
+        // 1. Header: Nome e Livello
+        Label nameLabel = new Label(c.getJob().toString().toUpperCase());
+        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
+        nameLabel.setTextFill(Color.GOLD);
 
-        // XP
-        HBox xpBox = new HBox(6);
-        xpBar = new ProgressBar();
-        xpBar.setPrefWidth(180);
-        xpBar.setStyle("""
-                    -fx-accent: linear-gradient(#4b8bff, #0033aa);
-                    -fx-control-inner-background: #001a40;
-                    -fx-background-radius: 8;
-                """);
-        xpLabel = new Label("XP");
-        xpLabel.setStyle("-fx-text-fill: #eeeeee; -fx-font-size: 11;");
-        xpBox.getChildren().addAll(xpBar, xpLabel);
-        getChildren().addAll(playerName, hpBox, xpBox);
+        levelLabel = new Label();
+        levelLabel.setTextFill(Color.WHITE);
+        levelLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
+
+        HBox header = new HBox(15, nameLabel, levelLabel);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        // 2. Sezione HP
+        VBox hpSection = createHPSection();
+
+        // 3. Sezione XP
+        VBox xpSection = createXPSection();
+
+        getChildren().addAll(header, hpSection, xpSection);
+
+        // Primo aggiornamento dei valori
+        update();
     }
 
-    private int getHeartFrame(double hpPerc) {
-        int frame = (int) Math.floor((1 - hpPerc) * (heart_img.length - 1));
-        return Math.min(frame, heart_img.length - 1);
+    private VBox createHPSection() {
+        Label title = new Label("HEALTH");
+        title.setStyle("-fx-text-fill: #999; -fx-font-size: 9;");
+
+        // Il cuore
+        heartView = new ImageView(heartImages[0]);
+        heartView.setFitWidth(20);
+        heartView.setFitHeight(20);
+
+        // La barra disegnata
+        StackPane barContainer = new StackPane();
+        barContainer.setAlignment(Pos.CENTER_LEFT);
+
+        Rectangle bg = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.rgb(50, 20, 20));
+        bg.setArcWidth(8);
+        bg.setArcHeight(8);
+
+        hpFill = new Rectangle(0, BAR_HEIGHT);
+        hpFill.setArcWidth(8);
+        hpFill.setArcHeight(8);
+        hpFill.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.web("#ff5f5f")), new Stop(1, Color.web("#b00000"))));
+
+        barContainer.getChildren().addAll(bg, hpFill);
+
+        hpText = new Label();
+        hpText.setTextFill(Color.WHITE);
+        hpText.setFont(Font.font("Monospaced", 11));
+
+        HBox row = new HBox(8, heartView, barContainer, hpText);
+        row.setAlignment(Pos.CENTER_LEFT);
+
+        return new VBox(2, title, row);
+    }
+
+    private VBox createXPSection() {
+        Label title = new Label("EXPERIENCE");
+        title.setStyle("-fx-text-fill: #999; -fx-font-size: 9;");
+
+        StackPane barContainer = new StackPane();
+        barContainer.setAlignment(Pos.CENTER_LEFT);
+
+        // Sfondo della barra (Verde scurissimo quasi nero)
+        Rectangle bg = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.rgb(20, 40, 20));
+        bg.setArcWidth(8);
+        bg.setArcHeight(8);
+
+        xpFill = new Rectangle(0, BAR_HEIGHT);
+        xpFill.setEffect(new javafx.scene.effect.DropShadow(5, Color.web("#43a047")));
+        xpFill.setArcWidth(8);
+        xpFill.setArcHeight(8);
+
+        // GRADIENTE VERDE:
+        xpFill.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.web("#43a047")),
+                new Stop(1, Color.web("#1b5e20"))));
+
+        barContainer.getChildren().addAll(bg, xpFill);
+
+        xpText = new Label();
+        xpText.setTextFill(Color.WHITE);
+        xpText.setFont(Font.font("Monospaced", 11));
+
+        HBox row = new HBox(8, barContainer, xpText);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding(new Insets(0, 0, 0, 28));
+
+        return new VBox(2, title, row);
     }
 
     public void update() {
-        heart_view.setImage(heart_img[getHeartFrame(statsCharacter.getHpPerc())]);
-        hpBar.setProgress(statsCharacter.getHpPerc());
-        hpLabel.setText("HP: " + statsCharacter.getHp());
+        if (statsCharacter == null)
+            return;
 
-        xpBar.setProgress(statsCharacter.getXpPerc());
-        xpLabel.setText("XP: " + statsCharacter.getXp() + " / " + statsCharacter.getMaxXp());
+        double hpRatio = statsCharacter.getHpPerc();
+        double xpRatio = statsCharacter.getXpPerc();
 
-        level.setText("Level: " + statsCharacter.getLevel());
+        // Animazione della larghezza dei rettangoli
+        animateWidth(hpFill, hpRatio * BAR_WIDTH);
+        animateWidth(xpFill, xpRatio * BAR_WIDTH);
+
+        // Update testi
+        hpText.setText(statsCharacter.getHp() + "/" + statsCharacter.getMaxHp());
+        xpText.setText(statsCharacter.getXp() + "/" + statsCharacter.getMaxXp());
+        levelLabel.setText("LV. " + statsCharacter.getLevel());
+
+        // Update cuore
+        int frame = (int) Math.floor((1 - Math.max(0, Math.min(1, hpRatio))) * (heartImages.length - 1));
+        heartView.setImage(heartImages[Math.min(frame, heartImages.length - 1)]);
+    }
+
+    private void animateWidth(Rectangle rect, double targetWidth) {
+        Timeline timeline = new Timeline();
+        KeyValue kv = new KeyValue(rect.widthProperty(), targetWidth);
+        KeyFrame kf = new KeyFrame(Duration.millis(400), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
     }
 }

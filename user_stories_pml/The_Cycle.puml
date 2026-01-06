@@ -1,6 +1,6 @@
-@startuml GameLauncher
+@startuml The_Cycle
 
-title GameLauncher
+title The_Cycle - Class Diagram
 
 ' ===========================
 ' Launcher & Menu

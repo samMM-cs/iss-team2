@@ -50,6 +50,7 @@ public class MainMenuView {
 
         // Eventi
         newGameBtn.setOnAction(controller::onNewGame);
+        resumeBtn.setOnAction(controller::onResumeGame);
         exitBtn.setOnAction(controller::onExit);
 
         ViewManager.getInstance().setAndShowScene(scene);

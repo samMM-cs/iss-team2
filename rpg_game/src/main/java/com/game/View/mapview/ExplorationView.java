@@ -1,5 +1,6 @@
 package com.game.view.mapview;
 
+import com.game.controller.GameController;
 import com.game.controller.ViewManager;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
@@ -22,8 +23,9 @@ public class ExplorationView {
     private MapView mapView;
     private HUD hud;
     private AnimationTimer timer;
+    private GameController gameController;
 
-    public ExplorationView(Map map) {
+    public ExplorationView(Map map, GameController gameController) {
         TiledMapData mapData = MapBuilder.loadRawMapData(map.getFilePath());
 
         this.mapView = new MapBuilder()
@@ -41,6 +43,7 @@ public class ExplorationView {
         hud.setVisible(false);
 
         this.movementController = new ExplorationController(scene, mapView);
+        this.gameController = gameController;
 
         this.mapView.updatePlayerPosition(
                 GameState.getInstance().getParty().getMainPlayer()
@@ -54,7 +57,7 @@ public class ExplorationView {
     public void showMap() {
 
         ViewManager.getInstance().setAndShowScene(scene);
-        ViewManager.getInstance().initPauseMenu(scene);
+        ViewManager.getInstance().initPauseMenu(scene, gameController);
         ViewManager.getInstance().enableGlobalPause(scene);
 
         timer = new AnimationTimer() {

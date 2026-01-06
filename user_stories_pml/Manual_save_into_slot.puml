@@ -1,0 +1,33 @@
+@startuml US9 - Manual save into slot
+title US9 - Manual save into slot (Memento Pattern)
+
+'Usiamo il pattern Memento per salvare e ripristinare lo stato del gioco senza violare l'incapsulamento di GameState, mantenendo separata la logica di gioco dalla gestione dei salvataggi.'
+
+'Originator'
+class GameState{
+    +saveToMemento() :GameStateMemento
+    +restoreFromMemento(m:GameStateMemento)
+}
+
+class GameStateMemento{
+    - selectedCharacters: List<Job>
+    - worldPosition: WorldPosition
+    - storyFlags: Map<String, Boolean>
+
+    + getSelectedCharaters(): List<Job>
+    +getStoryFlags(): Map<String, Boolean>
+    +getWorldPosition(): WorldPosition
+    
+}
+
+'CareTaker'
+class SaveManager{
+    +saveGame(slot: int,state: GameState)
+    +continueGame(slot: int): GameState
+    +isSlotUsed(slot: int): boolean
+    +confirmOwerwrite(slot: int): boolean
+}
+
+GameState-->GameStateMemento: creates
+SaveManager-->GameStateMemento: stores
+SaveManager-->GameState: triggers restore
