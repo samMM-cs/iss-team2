@@ -27,8 +27,9 @@ public class GameStateMemento implements Serializable {
         this.nPlayers = gameState.nPlayers;
         this.autoSaveEnabled = gameState.autoSaveEnabled;
         this.inventory = gameState.inventory;
-        this.mapId=gameState.getMap() !=null ? gameState.getMap().getClass().getSimpleName() : null;
+        this.mapId = gameState.getMap() != null ? gameState.getMap().getClass().getSimpleName() : null;
     }
 
-    public GameStateMemento(){}
+    public GameStateMemento() {
+    }
 }

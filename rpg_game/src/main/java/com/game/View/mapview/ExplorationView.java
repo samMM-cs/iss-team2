@@ -62,9 +62,19 @@ public class ExplorationView {
 
         timer = new AnimationTimer() {
             @Override
+            public void start() {
+                System.out.println("Starting timer");
+                super.start();
+            }
+
+            @Override
+            public void stop() {
+                System.out.println("Stopping timer");
+                super.stop();
+            }
+
+            @Override
             public void handle(long now) {
-                if (ViewManager.getInstance().isPaused())
-                    return;
                 movementController.update();
                 mapView.requestLayout();
 
@@ -74,9 +84,7 @@ public class ExplorationView {
                         hud.update();
                     } else
                         hud.setVisible(false);
-
                 }
-
             }
         };
 
@@ -95,7 +103,7 @@ public class ExplorationView {
         }
     }
 
-    public void destroyMap() {
+    public void destroy() {
         mapView = null;
     }
 }

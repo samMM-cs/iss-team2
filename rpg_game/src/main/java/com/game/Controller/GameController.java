@@ -51,11 +51,11 @@ public class GameController {
 
     // Avvia l'esplorazione della mappa
     public void startExploration() {
-        if (gameState != null) {
-            gameState.createEnemy();
-            gameState.createParty();
-            gameState.createNpc();
-            ViewManager.getInstance().showExplorationView(gameState.getMap(), this);
+        if (GameState.getInstance() != null) {
+            GameState.getInstance().createEnemy();
+            GameState.getInstance().createParty();
+            GameState.getInstance().createNpc();
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(), this);
         }
     }
 
@@ -65,10 +65,8 @@ public class GameController {
     }
 
     public void saveGame(int slot) {
-        if (gameState == null)
-            return;
         try {
-            saveManager.saveGame(slot, gameState);
+            saveManager.saveGame(slot, GameState.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,18 +74,14 @@ public class GameController {
 
     public void loadGame(int slot) {
         try {
-            gameState = new GameState.GameStateBuilder().setMap(new Map1()).build();
-            saveManager.loadGame(slot, gameState);
-            ViewManager.getInstance().showExplorationView(gameState.getMap(), this);
+            new GameState.GameStateBuilder().setMap(new Map1()).build();
+            saveManager.loadGame(slot, GameState.getInstance());
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(), this);
             System.out.println("Game loaded successfully." + slot);
         } catch (Exception e) {
             System.out.println("Load failed: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public GameState getGameState() {
-        return gameState;
     }
 
     public SaveManager getSaveManager() {

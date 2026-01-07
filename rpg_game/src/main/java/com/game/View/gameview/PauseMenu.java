@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 
 public class PauseMenu extends StackPane {
     private final GameController gameController;
+
     public PauseMenu(GameController gameController) {
         super();
         this.gameController = gameController;
@@ -50,10 +51,10 @@ public class PauseMenu extends StackPane {
         Button resume = createMenuButton("Resume");
         resume.setOnAction(e -> ViewManager.getInstance().togglePause());
         Button saveBtn = createMenuButton("Save Game");
-        saveBtn.setOnAction(e->ViewManager.getInstance().showSaveMenu(getScene(),gameController));
+        saveBtn.setOnAction(e -> ViewManager.getInstance().showSaveMenu(getScene(), gameController));
         Button quit = createMenuButton("Quit to Title");
         quit.setOnAction(e -> ViewManager.getInstance().showMainMenu());
-        box.getChildren().addAll(title, resume, quit);
+        box.getChildren().addAll(title, resume, saveBtn, quit);
 
         getChildren().addAll(overlay, box);
         StackPane.setAlignment(box, Pos.CENTER);

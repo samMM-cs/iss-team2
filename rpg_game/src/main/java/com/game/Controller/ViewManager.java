@@ -51,9 +51,7 @@ public class ViewManager {
   }
 
   public void destroyViews() {
-    if (explorationView != null) {
-      explorationView.destroyMap();
-    }
+    pauseMenu = null;
     explorationView = null;
   }
 
