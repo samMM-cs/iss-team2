@@ -166,6 +166,13 @@ public class BattleView extends Pane {
     // ---------------- RENDER ----------------
 
     private void render() {
+        HBox playersBox = new HBox(15);
+        playersBox.setPadding(new Insets(20));
+        playersBox.getChildren().addAll(
+                party.getMembers().stream().map(HUD::new).toList());
+
+        uiOverlay.setTop(playersBox);
+
         double w = getWidth();
         double h = getHeight();
         if (w <= 0 || h <= 0)
