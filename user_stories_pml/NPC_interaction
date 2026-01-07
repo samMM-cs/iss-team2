@@ -1,2 +1,2 @@
-Per la US20 (NPC_interaction) una volta che il player interagisce con l'NPC blocco il movimento finché non finisce il dialogo e il player chiude lo shop.
+Per la US12 (NPC_interaction) una volta che il player interagisce con l'NPC blocco il movimento finché non finisce il dialogo e il player chiude lo shop.
 Tutto questo viene svolto nella classe ViewManager nel metodo shoDialogView

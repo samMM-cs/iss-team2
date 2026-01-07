@@ -4,7 +4,6 @@
 class Player{
     - name: String
     - HP: int
-    - inventory: List<Item>
     +learnMove(move: Move): void
 }
 
