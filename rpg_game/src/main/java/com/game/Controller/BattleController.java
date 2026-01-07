@@ -115,10 +115,7 @@ public class BattleController {
             // Esecuzione logica del turno
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
-
-            System.out.println(party.getMainPlayer().getCurrentStats().getHp());
             this.result = battle.nextTurn();
-            System.out.println(party.getMainPlayer().getCurrentStats().getHp());
             // Esegue i calcoli e restituisce il risultato
             handleBattleResult(this.result);
             view.enableInput();
