@@ -81,7 +81,7 @@ public class ExplorationView {
                 for (Player player : GameState.getInstance().getParty().getMembers()) {
                     if (player.isInCombat()) {
                         hud.setVisible(true);
-                        hud.update();
+                        hud.update(player);
                     } else
                         hud.setVisible(false);
                 }

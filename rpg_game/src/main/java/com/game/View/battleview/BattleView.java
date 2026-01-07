@@ -47,6 +47,7 @@ public class BattleView extends Pane {
     private final ListView<String> actionList = new ListView<>();
     private final ListView<String> moveList = new ListView<>();
     private final ListView<String> targetList = new ListView<>();
+    private List<HUD> playerHud = new ArrayList<>();
 
     private Image backgroundImage;
     private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
@@ -85,7 +86,7 @@ public class BattleView extends Pane {
         backgroundImage = new Image("/battle/Battleground.png");
         getChildren().add(canvas);
 
-        actionList.getItems().addAll("Move", "Item", "Flee");
+        actionList.getItems().addAll("Move", "Flee");
         actionList.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
         actionList.setPrefHeight(45);
         actionList.setStyle("-fx-font-size: 14px;");
@@ -110,9 +111,8 @@ public class BattleView extends Pane {
 
         HBox playersBox = new HBox(15);
         playersBox.setPadding(new Insets(20));
-        playersBox.getChildren().addAll(
-                party.getMembers().stream().map(HUD::new).toList());
-
+        playerHud = party.getMembers().stream().map(HUD::new).toList();
+        playersBox.getChildren().addAll(playerHud);
         uiOverlay.setTop(playersBox);
         uiOverlay.setBottom(bottomBox);
         uiOverlay.prefWidthProperty().bind(widthProperty());
@@ -225,6 +225,11 @@ public class BattleView extends Pane {
 
         drawPlayers(w, groundY, h);
         drawEnemy(w, groundY, h);
+
+        //Update HUD
+        for (int i = 0; i < playerHud.size(); i++) {
+            playerHud.get(i).update(party.getMembers().get(i));
+        }
     }
 
     private void drawPlayers(double w, double groundY, double h) {

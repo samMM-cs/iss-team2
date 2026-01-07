@@ -1,13 +1,15 @@
 package com.game.view;
 
-import com.game.model.character.CharacterPG;
+import com.game.model.character.Player;
 import com.game.model.character.Stats;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -21,9 +23,10 @@ import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
 public class HUD extends VBox {
+
     private Stats statsCharacter;
 
-    // Riferimenti diretti ai componenti per evitare ClassCastException
+    // Componenti principali
     private Rectangle hpFill;
     private Rectangle xpFill;
     private Label hpText;
@@ -32,7 +35,7 @@ public class HUD extends VBox {
     private ImageView heartView;
 
     private final double BAR_WIDTH = 180;
-    private final double BAR_HEIGHT = 12;
+    private final double BAR_HEIGHT = 14;
 
     private final Image[] heartImages = {
             new Image("/battle/icons/heart/Sprite_heart.png"),
@@ -41,72 +44,73 @@ public class HUD extends VBox {
             new Image("/battle/icons/heart/Sprite_heart_4.png")
     };
 
-    public HUD(CharacterPG c) {
-        this.statsCharacter = c.getCurrentStats();
+    public HUD(Player player) {
 
-        // Setup Container principale
-        setSpacing(10);
-        setPadding(new Insets(15));
-        setMaxWidth(300);
+        setSpacing(8);
+        setPadding(new Insets(12));
+        setAlignment(Pos.CENTER_LEFT);
+        setMaxWidth(320);
         setStyle("""
-                    -fx-background-color: rgba(25, 25, 25, 0.9);
-                    -fx-background-radius: 12;
-                    -fx-border-color: #444;
-                    -fx-border-width: 2;
+                -fx-background-color: rgba(30, 30, 30, 0.95);
+                -fx-background-radius: 14;
+                -fx-border-color: #555;
+                -fx-border-width: 2;
                 """);
 
-        // 1. Header: Nome e Livello
-        Label nameLabel = new Label(c.getJob().toString().toUpperCase());
+        // HEADER: Nome e Livello
+        Label nameLabel = new Label(player.getJob().toString().toUpperCase());
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
-        nameLabel.setTextFill(Color.GOLD);
+        nameLabel.setTextFill(Color.web("#FFD700")); // Oro brillante
 
         levelLabel = new Label();
-        levelLabel.setTextFill(Color.WHITE);
         levelLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
+        levelLabel.setTextFill(Color.WHITE);
 
-        HBox header = new HBox(15, nameLabel, levelLabel);
+        HBox header = new HBox(12, nameLabel, levelLabel);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // 2. Sezione HP
+        // HP Section
         VBox hpSection = createHPSection();
 
-        // 3. Sezione XP
+        // XP Section
         VBox xpSection = createXPSection();
 
         getChildren().addAll(header, hpSection, xpSection);
 
-        // Primo aggiornamento dei valori
-        update();
+        update(player);
     }
 
     private VBox createHPSection() {
         Label title = new Label("HEALTH");
-        title.setStyle("-fx-text-fill: #999; -fx-font-size: 9;");
+        title.setStyle("-fx-text-fill: #AAA; -fx-font-size: 10; -fx-font-weight: bold;");
 
-        // Il cuore
         heartView = new ImageView(heartImages[0]);
-        heartView.setFitWidth(20);
-        heartView.setFitHeight(20);
+        heartView.setFitWidth(22);
+        heartView.setFitHeight(22);
+        heartView.setEffect(new DropShadow(4, Color.BLACK));
 
-        // La barra disegnata
         StackPane barContainer = new StackPane();
         barContainer.setAlignment(Pos.CENTER_LEFT);
 
-        Rectangle bg = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.rgb(50, 20, 20));
-        bg.setArcWidth(8);
-        bg.setArcHeight(8);
+        Rectangle bg = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.rgb(60, 15, 15));
+        bg.setArcWidth(10);
+        bg.setArcHeight(10);
 
         hpFill = new Rectangle(0, BAR_HEIGHT);
-        hpFill.setArcWidth(8);
-        hpFill.setArcHeight(8);
-        hpFill.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.web("#ff5f5f")), new Stop(1, Color.web("#b00000"))));
+        hpFill.setArcWidth(10);
+        hpFill.setArcHeight(10);
+        hpFill.setFill(new LinearGradient(
+                0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.web("#FF6A6A")),
+                new Stop(1, Color.web("#FF0000")))
+        );
+        hpFill.setEffect(new DropShadow(4, Color.DARKRED));
 
         barContainer.getChildren().addAll(bg, hpFill);
 
         hpText = new Label();
         hpText.setTextFill(Color.WHITE);
-        hpText.setFont(Font.font("Monospaced", 11));
+        hpText.setFont(Font.font("Monospaced", 12));
 
         HBox row = new HBox(8, heartView, barContainer, hpText);
         row.setAlignment(Pos.CENTER_LEFT);
@@ -116,31 +120,30 @@ public class HUD extends VBox {
 
     private VBox createXPSection() {
         Label title = new Label("EXPERIENCE");
-        title.setStyle("-fx-text-fill: #999; -fx-font-size: 9;");
+        title.setStyle("-fx-text-fill: #AAA; -fx-font-size: 10; -fx-font-weight: bold;");
 
         StackPane barContainer = new StackPane();
         barContainer.setAlignment(Pos.CENTER_LEFT);
 
-        // Sfondo della barra (Verde scurissimo quasi nero)
-        Rectangle bg = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.rgb(20, 40, 20));
-        bg.setArcWidth(8);
-        bg.setArcHeight(8);
+        Rectangle bg = new Rectangle(BAR_WIDTH, BAR_HEIGHT, Color.rgb(15, 40, 15));
+        bg.setArcWidth(10);
+        bg.setArcHeight(10);
 
         xpFill = new Rectangle(0, BAR_HEIGHT);
-        xpFill.setEffect(new javafx.scene.effect.DropShadow(5, Color.web("#43a047")));
-        xpFill.setArcWidth(8);
-        xpFill.setArcHeight(8);
-
-        // GRADIENTE VERDE:
-        xpFill.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.web("#43a047")),
-                new Stop(1, Color.web("#1b5e20"))));
+        xpFill.setArcWidth(10);
+        xpFill.setArcHeight(10);
+        xpFill.setFill(new LinearGradient(
+                0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.web("#00FF7F")),
+                new Stop(1, Color.web("#32CD32"))
+        ));
+        xpFill.setEffect(new DropShadow(3, Color.DARKGREEN));
 
         barContainer.getChildren().addAll(bg, xpFill);
 
         xpText = new Label();
         xpText.setTextFill(Color.WHITE);
-        xpText.setFont(Font.font("Monospaced", 11));
+        xpText.setFont(Font.font("Monospaced", 12));
 
         HBox row = new HBox(8, barContainer, xpText);
         row.setAlignment(Pos.CENTER_LEFT);
@@ -149,32 +152,32 @@ public class HUD extends VBox {
         return new VBox(2, title, row);
     }
 
-    public void update() {
-        if (statsCharacter == null)
+    public void update(Player player) {
+        if (player.getCurrentStats() == null)
             return;
+
+        statsCharacter = player.getCurrentStats();
 
         double hpRatio = statsCharacter.getHpPerc();
         double xpRatio = statsCharacter.getXpPerc();
 
-        // Animazione della larghezza dei rettangoli
         animateWidth(hpFill, hpRatio * BAR_WIDTH);
         animateWidth(xpFill, xpRatio * BAR_WIDTH);
 
-        // Update testi
         hpText.setText(statsCharacter.getHp() + "/" + statsCharacter.getMaxHp());
         xpText.setText(statsCharacter.getXp() + "/" + statsCharacter.getMaxXp());
         levelLabel.setText("LV. " + statsCharacter.getLevel());
 
-        // Update cuore
         int frame = (int) Math.floor((1 - Math.max(0, Math.min(1, hpRatio))) * (heartImages.length - 1));
         heartView.setImage(heartImages[Math.min(frame, heartImages.length - 1)]);
     }
 
     private void animateWidth(Rectangle rect, double targetWidth) {
         Timeline timeline = new Timeline();
-        KeyValue kv = new KeyValue(rect.widthProperty(), targetWidth);
-        KeyFrame kf = new KeyFrame(Duration.millis(400), kv);
+        KeyValue kv = new KeyValue(rect.widthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
         timeline.getKeyFrames().add(kf);
         timeline.play();
+        rect.setFill(rect == hpFill ? rect.getFill() : rect.getFill());
     }
 }

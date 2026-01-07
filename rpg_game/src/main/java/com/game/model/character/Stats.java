@@ -158,4 +158,21 @@ public class Stats {
   public Stats copy() {
     return new Stats(this);
   }
+
+  @Override
+  public String toString() {
+    return "Stats{" +
+        "hp=" + hp +
+        ", maxHp=" + maxHp +
+        ", attack=" + attack +
+        ", defense=" + defense +
+        ", special=" + special +
+        ", speed=" + speed +
+        ", level=" + level +
+        ", xp=" + xp +
+        ", maxXp=" + maxXp +
+        ", moves=" + moves.size() +
+        ", money=" + money +
+        '}';
+  }
 }
