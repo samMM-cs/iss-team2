@@ -42,7 +42,7 @@ public class ViewManager {
 
   private ViewManager(Stage stage) {
     this.stage = stage;
-    this.stage.setTitle("RPG Game");
+    this.stage.setTitle("The Cycle");
     this.stage.setWidth(Screen.getPrimary().getBounds().getWidth());
     this.stage.setHeight(Screen.getPrimary().getBounds().getHeight());
     this.stage.centerOnScreen();
@@ -104,10 +104,9 @@ public class ViewManager {
       root.getChildren().add(saveMenuView);
       saveMenuView.setVisible(true);
       saveMenuView.toFront();
-      // Blur overlay
       root.getChildren().forEach(node -> {
         if (node != saveMenuView)
-          node.setEffect(new GaussianBlur(10));
+          node.setEffect(null);
       });
     }
   }
