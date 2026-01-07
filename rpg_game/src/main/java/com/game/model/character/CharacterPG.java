@@ -7,18 +7,24 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.game.model.Position;
 import com.game.model.battle.*;
 
 public abstract class CharacterPG implements HasSpriteAndPosition {
     private Job job;
+    @JsonIgnore
     private Stats baseStats;
 
     private Stats currentStats;
     private Position pos;
 
-    private Image img;
-    private ImageView sprite;
+    @JsonIgnore
+    private transient Image img;
+    @JsonIgnore
+    private transient ImageView sprite;
     private List<Move> currentMove;
 
     private boolean inCombat; // Stato del combattimento
@@ -31,6 +37,12 @@ public abstract class CharacterPG implements HasSpriteAndPosition {
         this.baseStats = job.getBaseStats().copy();
         this.currentStats = this.getBaseStats().copy();
         this.currentMove = new ArrayList<>(job.getEffectiveMoves());
+    }
+
+    @JsonCreator
+    public CharacterPG(Job job, Position pos, Image img, Stats currenStats) {
+        this(job, pos, img);
+        this.currentStats = currenStats;
     }
 
     public ImageView createCharacterSprite(Image img, Job job) {
@@ -61,11 +73,13 @@ public abstract class CharacterPG implements HasSpriteAndPosition {
         return pos;
     }
 
+    @JsonIgnore
     public Image getImg() {
         return img;
     }
 
     @Override
+    @JsonIgnore
     public ImageView getSprite() {
         return sprite;
     }

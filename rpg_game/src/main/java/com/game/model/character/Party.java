@@ -1,47 +1,41 @@
 package com.game.model.character;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.game.model.Position;
 
 public class Party {
-    private final List<Player> members;
+    private final List<Player> members = new ArrayList<>();
+
+    public Party() {
+    }
 
     public Party(List<Player> members) {
-        this.members = members;
+        this.members.addAll(members);
     }
 
     public void updateFollowPosition(Position newLeaderPos) {
         getMainPlayer().notifyFollower();
         getMainPlayer().setPosition(newLeaderPos);
-
-        // Salviamo i valori
-        // int prevX = mainPlayer.getPos().getX();
-        // int prevY = mainPlayer.getPos().getY();
-
-        // Muoviamo il leader: lo sprite scatterà automaticamente nella nuova cella
-        // mainPlayer.getPos().setX(newLeaderPos.getX());
-        // mainPlayer.getPos().setY(newLeaderPos.getY());
-        // for (int i = 1; i < members.size(); i++) {
-        // Player current = members.get(i);
-
-        // int tempX = current.getPos().getX();
-        // int tempY = current.getPos().getY();
-
-        // // Muoviamo il seguace: lo sprite si sposta da solo
-        // current.getPos().setX(prevX);
-        // current.getPos().setY(prevY);
-
-        // prevX = tempX;
-        // prevY = tempY;
-        // }
     }
 
     public final List<Player> getMembers() {
         return this.members;
     }
 
+    public final void setMembers(List<Player> members) {
+        this.members.addAll(members);
+    }
+
+    @JsonIgnore
     public final Player getMainPlayer() {
         return members.get(0);
     }
 
+    @Override
+    public String toString() {
+        return members.toString();
+    }
 }

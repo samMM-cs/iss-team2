@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.game.model.character.Enemy;
 import com.game.model.character.HasSpriteAndPosition;
 import com.game.model.character.Player;
+import com.game.model.map.Map1;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
 import com.game.model.character.NPC;
@@ -39,6 +40,28 @@ public class GameState {
         this.enemies = new ArrayList<>();
         this.npc = new ArrayList<>();
         this.map = builder.map;
+    }
+
+    // Costruttore privato, usato dal memento
+    private GameState(GameStateMemento memento) {
+        this.party = memento.party;
+        this.nPlayers = memento.party.getMembers().size();
+        this.enemies = memento.enemies;
+        this.worldPosition = memento.worldPosition;
+        this.storyFlags = memento.storyFlags;
+        if (memento.mapId != null) {
+            try {
+                Class<?> mapClass = Class.forName(memento.mapId);
+                this.map = (com.game.model.map.Map) mapClass.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else
+            this.map = new Map1();
+        this.autoSaveEnabled = memento.autoSaveEnabled;
+        this.selectedCharacters = memento.party.getMembers().stream().map(Player::getJob).toList();
+        this.inventory = null;
+        this.npc = memento.npc;
     }
 
     public static GameState getInstance() {
@@ -157,36 +180,6 @@ public class GameState {
     public GameStateMemento saveToMemento() {
         return new GameStateMemento(this);
     }
-    
-    public void restoreFromMemento(GameStateMemento memento) {
-        //Per i player
-        this.selectedCharacters.clear();
-        this.selectedCharacters.addAll(memento.selectedCharacters);
-
-        //Posizione mond
-        this.worldPosition.setPosition(memento.worldPosition);
-
-        //flag storia
-        this.storyFlags.clear();
-        this.storyFlags.putAll(memento.storyFlags);
-
-        //this.inventory = memento.inventory.copy();
-
-        //Per la mappa
-        if (memento.mapId != null) {
-            try {
-                Class<?> mapClass = Class.forName(memento.mapId);
-                this.map = (com.game.model.map.Map) mapClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Entità base della mappa
-        createParty();
-        createEnemy();
-        createNpc();
-    }
 
     // ----------------------------------------------------------------------------------------
 
@@ -257,5 +250,12 @@ public class GameState {
             }
             return GameState.instance;
         }
+
+        public GameState restoreFromMemento(GameStateMemento memento) {
+            // System.out.println(memento.toString());
+            GameState.instance = new GameState(memento);
+            return instance;
+        }
+
     }
 }

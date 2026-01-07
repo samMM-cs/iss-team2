@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.game.model.Position;
 import com.game.model.battle.*;
 
@@ -19,6 +21,14 @@ public class Player extends CharacterPG {
         super(job, position, img);
         learnedMoves
                 .addAll(job.getEffectiveMoves().stream().filter(m -> m.getCost() == 0).collect(Collectors.toList()));
+    }
+
+    @JsonCreator
+    public Player(@JsonProperty("job") Job job,
+            @JsonProperty("position") Position position,
+            @JsonProperty("currentMove") List<Move> moves) {
+        this(job, position);
+        learnedMoves = moves;
     }
 
     public void equipItem(Item item) {

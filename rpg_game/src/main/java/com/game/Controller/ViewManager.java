@@ -158,6 +158,7 @@ public class ViewManager {
   public void showExplorationView(Map map, GameController gameController) {
     if (explorationView == null)
       explorationView = new ExplorationView(map, gameController);
+    this.gameController = gameController;
     try {
       gameController.getSaveManager().autosave(GameState.getInstance());
     } catch (IOException e) {

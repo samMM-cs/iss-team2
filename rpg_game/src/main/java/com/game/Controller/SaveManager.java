@@ -33,8 +33,8 @@ public class SaveManager {
         if (gameState == null)
             gameState = GameState.getInstance();
         File autosaveFile = new File(AUTOSAVE_FILE + EXT);
-        GameStateMemento meme = gameState.saveToMemento();
-        objectMapper.writeValue(autosaveFile, meme);
+        GameStateMemento memento = gameState.saveToMemento();
+        objectMapper.writeValue(autosaveFile, memento);
     }
 
     public void saveGame(int slot, GameState gameState) throws IOException {
@@ -45,23 +45,23 @@ public class SaveManager {
         objectMapper.writeValue(file, memento);
     }
 
-    public void loadGame(int slot, GameState gameState) throws IOException, ClassNotFoundException {
+    public void loadGame(int slot) throws IOException, ClassNotFoundException {
         File file = new File(SLOT_PREFIX + slot + EXT);
         if (!file.exists()) {
             throw new IOException("Save slot does not exist.");
         }
 
         GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
-        gameState.restoreFromMemento(memento);
+        new GameState.GameStateBuilder().restoreFromMemento(memento);
     }
 
-    public void loadGameFromAutoSave(GameState gameState) throws IOException {
+    public void loadGameFromAutoSave() throws IOException {
         File file = new File(AUTOSAVE_FILE + EXT);
         if (!file.exists()) {
             throw new IOException("Save slot does not exist.");
         }
 
         GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
-        gameState.restoreFromMemento(memento);
+        new GameState.GameStateBuilder().restoreFromMemento(memento);
     }
 }

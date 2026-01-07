@@ -3,6 +3,8 @@ package com.game.model.character;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.game.model.battle.Move;
 
 public class Stats {
@@ -17,6 +19,35 @@ public class Stats {
   int speed;
   List<Move> moves;
   int money;
+
+  @JsonCreator
+  public Stats(
+      @JsonProperty("xp") int xp,
+      @JsonProperty("level") int level,
+      @JsonProperty("maxXp") int maxXp,
+      @JsonProperty("hp") int hp,
+      @JsonProperty("maxHp") int maxHp,
+      @JsonProperty("attack") int attack,
+      @JsonProperty("defense") int defense,
+      @JsonProperty("special") int special,
+      @JsonProperty("speed") int speed,
+      @JsonProperty("moves") List<Move> moves,
+      @JsonProperty("money") int money,
+      @JsonProperty("xpPerc") float xpPerc,
+      @JsonProperty("hpPerc") float hpPerc) {
+    // jackson constructor
+    this.xp = xp;
+    this.level = level;
+    this.maxXp = maxXp;
+    this.hp = hp;
+    this.maxHp = maxHp;
+    this.attack = attack;
+    this.defense = defense;
+    this.special = special;
+    this.speed = speed;
+    this.moves = moves;
+    this.money = money;
+  }
 
   public Stats(int hp, int attack, int defense, int special, int speed) {
     this.hp = hp;

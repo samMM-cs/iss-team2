@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.game.model.Position;
 import com.game.model.battle.*;
 import com.game.model.character.dialogue.Dialogue;
@@ -12,7 +14,8 @@ import com.game.view.ShopView;
 public class MovesNPC extends NPC {
     private static final Image img = new Image(MovesNPC.class.getResourceAsStream("/characters/rogues.png"));
 
-    public MovesNPC(Job job, Position pos) {
+    @JsonCreator
+    public MovesNPC(@JsonProperty("job") Job job, @JsonProperty("position") Position pos) {
         super(job, pos, img, new Dialogue(List.of(
                 "Welcome to my shop! I'm " + job,
                 "Take a look at my goods.")));

@@ -17,9 +17,10 @@ public class GameController {
     }
 
     public void start() {
-        if (game instanceof NewGame) {
-            GameState.destroy();
+        GameState.destroy();
+        if (ViewManager.getInstance() != null)
             ViewManager.getInstance().destroyViews();
+        if (game instanceof NewGame) {
             ViewManager.getInstance().showNewGameView(this);
         } else
             startExploration();
@@ -74,8 +75,7 @@ public class GameController {
 
     public void loadGame(int slot) {
         try {
-            new GameState.GameStateBuilder().build();
-            saveManager.loadGame(slot, GameState.getInstance());
+            saveManager.loadGame(slot);
             ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(), this);
             System.out.println("Game loaded successfully." + slot);
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class GameController {
     public void loadFromAutosave() {
         try {
             new GameState.GameStateBuilder().build();
-            saveManager.loadGameFromAutoSave(GameState.getInstance());
+            saveManager.loadGameFromAutoSave();
             ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(),
                     this);
             System.out.println("Autosave loaded successfully.");
