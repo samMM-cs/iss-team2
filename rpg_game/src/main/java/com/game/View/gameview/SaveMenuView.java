@@ -73,7 +73,7 @@ public class SaveMenuView extends VBox {
         styleButton(saveBtn, "#4CAF50");
 
         saveBtn.setOnAction(e -> {
-            used=gameController.getSaveManager().isSlotUsed(slot);
+            used = gameController.getSaveManager().isSlotUsed(slot);
             if (!used) {
                 try {
                     gameController.saveGame(slot);

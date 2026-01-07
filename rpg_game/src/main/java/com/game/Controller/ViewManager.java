@@ -1,5 +1,8 @@
 package com.game.controller;
 
+import java.io.IOException;
+
+import com.game.model.GameState;
 import com.game.model.battle.Battle;
 import com.game.model.character.NPC;
 import com.game.model.character.Player;
@@ -39,6 +42,7 @@ public class ViewManager {
   private ShopView shopView;
   private boolean paused = false;
   private Pane root;
+  private GameController gameController;
 
   private ViewManager(Stage stage) {
     this.stage = stage;
@@ -146,12 +150,20 @@ public class ViewManager {
   public void showCharacterSelectionView(GameController gameController) {
     if (characterSelectionView == null)
       characterSelectionView = new CharacterSelectionView(gameController);
+    if (this.gameController == null)
+      this.gameController = gameController;
     characterSelectionView.show();
   }
 
   public void showExplorationView(Map map, GameController gameController) {
     if (explorationView == null)
       explorationView = new ExplorationView(map, gameController);
+    try {
+      gameController.getSaveManager().autosave(GameState.getInstance());
+    } catch (IOException e) {
+      System.err.println("Failed to autosave");
+      e.printStackTrace();
+    }
     if (isUIVisible()) {
       if (battleView != null)
         battleView.setVisible(false);
@@ -164,6 +176,12 @@ public class ViewManager {
   }
 
   public void showExplorationView() {
+    try {
+      gameController.getSaveManager().autosave(GameState.getInstance());
+    } catch (IOException e) {
+      System.err.println("Failed to autosave");
+      e.printStackTrace();
+    }
     if (isUIVisible()) {
       if (battleView != null)
         battleView.setVisible(false);
@@ -179,6 +197,11 @@ public class ViewManager {
     explorationView.stop();
     battleView = new BattleView(battle);
     battleView.showBattle();
+    try {
+      gameController.getSaveManager().autosave(null);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void showDialogView(Scene scene, Player player, NPC target) {

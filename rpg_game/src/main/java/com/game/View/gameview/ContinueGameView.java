@@ -69,6 +69,7 @@ public class ContinueGameView extends GameView {
         for (int i = 0; i < SLOTS; i++) {
             panel.getChildren().add(createSlotRow(i));
         }
+        panel.getChildren().add(createAutosaveSlotRow());
 
         // 🔙 BACK BUTTON
         Button backBtn = new Button("Back to Menu");
@@ -158,6 +159,50 @@ public class ContinueGameView extends GameView {
                 showMessage("Game loaded from slot " + slot);
             } catch (Exception ex) {
                 showMessage("Error loading slot " + slot);
+                ex.printStackTrace();
+            }
+        });
+
+        row.getChildren().addAll(slotLabel, status, loadBtn);
+        return row;
+    }
+
+    private HBox createAutosaveSlotRow() {
+        HBox row = new HBox(15);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding(new Insets(10));
+        row.setStyle("""
+                        -fx-background-color: #3a3a3a;
+                        -fx-background-radius: 8;
+                """);
+
+        Label slotLabel = new Label("Autosave");
+        slotLabel.setPrefWidth(80);
+        slotLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14;");
+
+        boolean used = gameController.getSaveManager().isAutosaveUsed();
+
+        Label status = new Label(used ? "Saved" : "Empty");
+        status.setPrefWidth(80);
+        status.setStyle(used
+                ? "-fx-text-fill: lightgreen;"
+                : "-fx-text-fill: gray;");
+        Button loadBtn = new Button("Load");
+        loadBtn.setDisable(!used); // disabilita se vuoto
+        loadBtn.setPrefWidth(80);
+        loadBtn.setStyle("""
+                        -fx-background-color: #4CAF50;
+                        -fx-text-fill: white;
+                        -fx-font-size: 13;
+                        -fx-background-radius: 6;
+                """);
+
+        loadBtn.setOnAction(e -> {
+            try {
+                gameController.loadFromAutosave();
+                showMessage("Game loaded from autosave");
+            } catch (Exception ex) {
+                showMessage("Error loading autosave");
                 ex.printStackTrace();
             }
         });

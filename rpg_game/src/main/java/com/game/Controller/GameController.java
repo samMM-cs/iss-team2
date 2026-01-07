@@ -74,7 +74,7 @@ public class GameController {
 
     public void loadGame(int slot) {
         try {
-            new GameState.GameStateBuilder().setMap(new Map1()).build();
+            new GameState.GameStateBuilder().build();
             saveManager.loadGame(slot, GameState.getInstance());
             ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(), this);
             System.out.println("Game loaded successfully." + slot);
@@ -84,7 +84,21 @@ public class GameController {
         }
     }
 
+    public void loadFromAutosave() {
+        try {
+            new GameState.GameStateBuilder().build();
+            saveManager.loadGameFromAutoSave(GameState.getInstance());
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(),
+                    this);
+            System.out.println("Autosave loaded successfully.");
+        } catch (Exception e) {
+            System.out.println("Load failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public SaveManager getSaveManager() {
         return saveManager;
     }
+
 }
