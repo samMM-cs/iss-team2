@@ -6,6 +6,7 @@ import javafx.scene.control.ListView;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.battle.Battle;
+import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
@@ -27,12 +28,15 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BattleView extends Pane {
 
     private Battle battle;
     private final Party party;
+    private List<CharacterPG> battlingPGs;
+
 
     private BattleController controller;
 
@@ -42,6 +46,7 @@ public class BattleView extends Pane {
     private final BorderPane uiOverlay;
     private final ListView<String> actionList = new ListView<>();
     private final ListView<String> moveList = new ListView<>();
+    private final ListView<String> targetList = new ListView<>();
 
     private Image backgroundImage;
     private final Image[] heart_img = { new Image("/battle/icons/heart/Sprite_heart.png"),
@@ -56,6 +61,9 @@ public class BattleView extends Pane {
     public BattleView(Battle battle) {
         this.battle = battle;
         this.party = GameState.getInstance().getParty();
+        this.battlingPGs = new ArrayList<>();
+        battlingPGs.addAll(party.getMembers());
+        battlingPGs.add(battle.getEnemy());
         this.controller = new BattleController(battle, this);
 
         uiOverlay = new BorderPane();
@@ -89,7 +97,13 @@ public class BattleView extends Pane {
         moveList.setManaged(false); // IMPORTANTISSIMO per layout
         moveList.setOnMouseClicked(e -> controller.handleMoveSelection(moveList.getSelectionModel().getSelectedItem()));
 
-        HBox bottomBox = new HBox(10, actionList, moveList);
+        targetList.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        targetList.setStyle("-fx-font-size: 14px;");
+        targetList.setVisible(false); // nascosta di default
+        targetList.setManaged(false); // IMPORTANTISSIMO per layout
+        targetList.setOnMouseClicked(e -> controller.handleTargetSelection(targetList.getSelectionModel().getSelectedItem()));
+
+        HBox bottomBox = new HBox(10, actionList, moveList, targetList);
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setPadding(new Insets(20));
         bottomBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); -fx-background-radius: 10;");
@@ -115,6 +129,16 @@ public class BattleView extends Pane {
         list.setMaxHeight(height);
     }
 
+    public void showActionList() {
+        actionList.setVisible(true);
+        actionList.setManaged(true);
+    }
+
+    public void hideActionList() {
+        actionList.setVisible(false);
+        actionList.setManaged(false);
+    }
+
     public void updateMoveList(List<String> moves) {
         moveList.getItems().clear();
         moveList.getItems().addAll(moves);
@@ -123,9 +147,6 @@ public class BattleView extends Pane {
     }
 
     public void showMoveList() {
-        actionList.setVisible(false);
-        actionList.setManaged(false);
-
         moveList.setVisible(true);
         moveList.setManaged(true);
     }
@@ -134,10 +155,33 @@ public class BattleView extends Pane {
         moveList.setVisible(false);
         moveList.setManaged(false);
 
-        actionList.setVisible(true);
-        actionList.setManaged(true);
-
         moveList.getSelectionModel().clearSelection();
+    }
+
+    public void updateTargetList() {
+        targetList.getItems().clear();
+        targetList.getItems().addAll(battlingPGs
+            .stream()
+            .filter(player -> player.getCurrentStats().getHp() > 0)
+            .map(player -> player.getJob().name())
+            .toList());
+        
+        targetList.getItems().add("Back");
+
+        resizeListViewToFitItems(targetList);
+    }
+
+    public void showTargetList() {
+        updateTargetList();
+        targetList.setVisible(true);
+        targetList.setManaged(true);
+    }
+
+    public void hideTargetList() {
+        targetList.setVisible(false);
+        targetList.setManaged(false);
+
+        targetList.getSelectionModel().clearSelection();
     }
 
     public void setActivePlayer(int index) {
@@ -322,5 +366,11 @@ public class BattleView extends Pane {
         Scene scene = new Scene(this, ViewManager.getInstance().getWidth(),
                 ViewManager.getInstance().getHeight());
         ViewManager.getInstance().setAndShowScene(scene);
+    }
+
+    // ---------------- GETTER ---------------
+
+    public List<CharacterPG> getBattlingPGs() {
+        return this.battlingPGs;
     }
 }

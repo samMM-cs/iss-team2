@@ -19,14 +19,17 @@ public class BattleController {
     private BattleResult result;
     private BattleView view;
     private Party party;
+    private List<CharacterPG> battlingPGs;
     private int currentPlayerActingIndex = 0;
     private List<Action> plannedActionList = new ArrayList<>();
+    private CharacterPG currentPlayerActing;
+    private ActionStrategy actionStrategy;
 
     public BattleController(Battle battle, BattleView view) {
         this.battle = battle;
         this.view = view;
         this.party = GameState.getInstance().getParty();
-        this.currentPlayerActingIndex = getNextPlayerIndex();
+        this.battlingPGs = view.getBattlingPGs();
 
         updatePlayerUI();
     }
@@ -36,16 +39,19 @@ public class BattleController {
             return;
 
         switch (selected) {
-            case "Flee" ->
+            case "Flee" :
                 backToMap();
-            case "Move" ->
+            case "Move" : {
                 view.showMoveList();
+                view.hideActionList();
+            }
         }
     }
 
     public void handleMoveSelection(String moveName) {
         if (moveName == null || moveName.equals("Back")) {
             view.hideMoveList();
+            view.showActionList();
             return;
         }
         CharacterPG character = party.getMembers().get(currentPlayerActingIndex);
@@ -53,14 +59,39 @@ public class BattleController {
                 .findFirst()
                 .orElse(null);
         if (moveData != null) {
-            CharacterPG currentPlayerActing = party.getMembers().get(currentPlayerActingIndex);
-
-            ActionStrategy actionStrategy = moveData.getType().createMove(moveData);
-            plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(battle.getEnemy())));
-            nextPlayerAction();
+            currentPlayerActing = party.getMembers().get(currentPlayerActingIndex);
+            actionStrategy = moveData.getType().createMove(moveData);
+            
             view.hideMoveList();
+            view.showTargetList();
         }
 
+    }
+
+    public void handleTargetSelection(String target) {
+        switch (target) {
+            case ("Back") : {
+                view.hideTargetList();
+                view.showMoveList();
+                break;
+            }
+
+            default : {
+                CharacterPG suitableTarget = battlingPGs.stream()
+                    .filter(character -> character.getJob().name().equals(target))
+                    .findFirst()
+                    .orElse(null);
+                
+
+                plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(suitableTarget)));
+
+                nextPlayerAction();
+                view.hideTargetList();
+                view.hideMoveList();
+                view.showActionList();
+                break;
+            }
+        }
     }
 
     private void updatePlayerUI() {
@@ -85,25 +116,17 @@ public class BattleController {
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
 
+            System.out.println(party.getMainPlayer().getCurrentStats().getHp());
             this.result = battle.nextTurn();
+            System.out.println(party.getMainPlayer().getCurrentStats().getHp());
             // Esegue i calcoli e restituisce il risultato
             handleBattleResult(this.result);
-
-            // Se la battglia non è finita
-            if (result == BattleResult.ONGOING) {
-                // Reset per il prossimo round
-                plannedActionList.clear();
-                view.hideMoveList(); // Menu principale per il nuovo round
-                currentPlayerActingIndex = getNextPlayerIndex();
-
-                updatePlayerUI();
-                view.enableInput();
-            }
-        } else {
-            currentPlayerActingIndex = getNextPlayerIndex();
-            updatePlayerUI();
-            view.hideMoveList();
+            view.enableInput();
         }
+        currentPlayerActingIndex = getNextPlayerIndex();
+        updatePlayerUI();
+        view.hideMoveList();
+        view.showActionList();
     }
 
     private void handleBattleResult(BattleResult br) {
