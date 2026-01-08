@@ -6,7 +6,6 @@ title US9 - Manual save into slot (Memento Pattern)
 'Originator'
 class GameState{
     +saveToMemento() :GameStateMemento
-    +restoreFromMemento(m:GameStateMemento)
 }
 
 class GameStateMemento{

@@ -96,13 +96,6 @@ public class ExplorationController {
         enemiesList.add(e);
         Battle battle = new Battle(e);
 
-        /*
-         * battleView = new BattleView(this.stage, battle);
-         * battleView.showBattle();
-         */
-
-        // Battle battle = new Battle(enemiesList);
-
         ViewManager.getInstance().showBattleView(battle);
 
         GameState.getInstance().getParty().updateFollowPosition(prevPosition);

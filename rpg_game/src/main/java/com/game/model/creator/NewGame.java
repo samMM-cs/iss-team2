@@ -1,7 +1,8 @@
 package com.game.model.creator;
 
+import com.game.model.GameState;
 public class NewGame extends Game {
-    public NewGame() {
-        super("New game started");
+    public NewGame(GameState gameState) {
+        super(gameState);
     }
 }

@@ -18,11 +18,12 @@ class GameLauncher {
     + launch(): void
 }
 
-class MainMenu {
+class MainMenuView {
     + show(): void
 }
 
-GameLauncher --> MainMenu : launch()
+GameLauncher --> MainMenuView : launch()
+MainMenuView-->MainMenuController
 
 ' ===========================
 ' Game Creation (Factory Method)
@@ -44,26 +45,57 @@ GameCreator <|-- NewGameCreator
 GameCreator <|-- ContinueGameCreator
 GameCreator --> Game : create()
 
+'Pattern Memento'
+class GameState {
+    - party : Party
+    - inventory : Inventory
+    - map : Map
+    - enemies : List<Enemy>
+    - npc : List<NPC>
+    - storyFlags : Map<Event, Boolean>
+    - worldPosition : WorldPosition
+
+    + saveToMemento() : GameStateMemento
+}
+
+class GameStateMemento{
+    - selectedCharacters: List<Job>
+    - worldPosition: WorldPosition
+    - storyFlags: Map<String, Boolean>
+
+    + getSelectedCharaters(): List<Job>
+    +getStoryFlags(): Map<String, Boolean>
+    +getWorldPosition(): WorldPosition
+    
+}
+
+'CareTaker'
+class SaveManager{
+    +saveGame(slot: int,state: GameState)
+    +continueGame(slot: int): GameState
+    +isSlotUsed(slot: int): boolean
+    +confirmOwerwrite(slot: int): boolean
+}
+
+GameState-->GameStateMemento: creates
+SaveManager-->GameStateMemento: stores
+SaveManager-->GameState: triggers restore
 abstract class Game {
     - gameState: GameState
 }
+
+Game --> GameState : holds
+GameState o-- Party
+GameState o-- Inventory
+GameState o-- Map
+GameState o-- Enemy
+GameState o-- NPC
 
 class NewGame
 class ContinueGame
 
 Game <|-- NewGame
 Game <|-- ContinueGame
-
-class NewGameView {
-    + render(): void
-}
-
-class SaveMenuView {
-    + render(): void
-}
-
-NewGame --> NewGameView
-ContinueGameCreator --> SaveMenuView
 
 ' ===========================
 ' Singleton GameInstance
@@ -78,10 +110,26 @@ class GameInstance {
 GameInstance --> GameCreator
 
 class MainMenuController {
-    + handleSelection(option: String): void
+    + onNewGame(event: ActionEvent): void
+    + onResumeGame(event: ActionEvent): void
+    + onExit(event: ActionEvent): void
+}
+abstract class GameView{
+    + show(): void
+}
+class NewGameView extends GameView{
+    + show(): void
+    + getSelectedPlayers(group: ToggleGroup): int
 }
 
-MainMenu --> MainMenuController : user input
+class ContinueGameView extends GameView{
+    + show(): void
+    + createSlotRow(slot: int): HBox
+    + createAutosaveSlotRow(): HBox
+}
+
+NewGame --> NewGameView
+ContinueGame-->ContinueGameView
 MainMenuController --> GameCreator : createGame()
 MainMenuController --> GameView : render()
 
@@ -269,12 +317,19 @@ class MapBuilder {
 }
 
 class ExplorationView {
-    + renderMap()
+    + showMap(): void
+    + start(): void
+    + stop(): void
+    + destroy(): void
 }
 
 class ExplorationController {
-    + movePlayer(direction)
-    + updatePartyFollow()
+    + updatePositionLimit(): void
+    + update(): void
+    + handlePossibleInteractions(): void
+    + handleBattle(e: Enemy): void
+    + movePlayer(key: KeyCode): void
+    + canGoThere(nextPosition: Position): void
 }
 
 ExplorationView --> ExplorationController
