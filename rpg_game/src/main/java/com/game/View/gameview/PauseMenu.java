@@ -51,7 +51,10 @@ public class PauseMenu extends StackPane {
         Button saveBtn = createMenuButton("Save Game");
         saveBtn.setOnAction(e -> ViewManager.getInstance().showSaveMenu(getScene(), gameController));
         Button quit = createMenuButton("Quit to Title");
-        quit.setOnAction(e -> ViewManager.getInstance().showMainMenu());
+        quit.setOnAction(e -> {
+            ViewManager.getInstance().togglePause();
+            ViewManager.getInstance().showMainMenu();
+        });
         box.getChildren().addAll(title, resume, saveBtn, quit);
 
         getChildren().addAll(overlay, box);

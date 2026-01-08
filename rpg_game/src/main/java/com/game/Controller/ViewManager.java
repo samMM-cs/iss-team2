@@ -57,11 +57,14 @@ public class ViewManager {
   public void destroyViews() {
     pauseMenu = null;
     explorationView = null;
+    newGameView = null;
   }
 
   public void showMainMenu() {
     if (mainMenuView == null)
       mainMenuView = new MainMenuView();
+    if (explorationView != null)
+      explorationView.stop();
     mainMenuView.show();
   }
 
@@ -147,6 +150,7 @@ public class ViewManager {
           node.setEffect(null);
       });
       explorationView.showMap();
+      explorationView.start();
       pauseMenu.setVisible(paused);
     }
   }
@@ -159,10 +163,9 @@ public class ViewManager {
     characterSelectionView.show();
   }
 
-  public void showExplorationView(Map map/* , GameController gameController */) {
+  public void showExplorationView(Map map) {
     if (explorationView == null)
       explorationView = new ExplorationView(map, gameController);
-    // this.gameController = gameController;
     try {
       gameController.getSaveManager().autosave(GameState.getInstance());
     } catch (IOException e) {
@@ -178,6 +181,7 @@ public class ViewManager {
         shopView.setVisible(false);
     }
     explorationView.showMap();
+    explorationView.start();
   }
 
   public void showExplorationView() {
@@ -196,6 +200,7 @@ public class ViewManager {
         shopView.setVisible(false);
     }
     explorationView.showMap();
+    explorationView.start();
   }
 
   public void showBattleView(Battle battle) {
@@ -217,8 +222,10 @@ public class ViewManager {
         dialogView.handleAdvance();
         // Blocco il movimento una volta aperto il dialogo
         explorationView.stop();
-      } else
+      } else {
         explorationView.showMap();
+        explorationView.start();
+      }
       dialogView.showDialogue(target.getDialogue());
       dialogView.setOnCloseClick(() -> {
         showShop(player, target);
