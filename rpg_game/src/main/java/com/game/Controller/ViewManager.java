@@ -66,12 +66,16 @@ public class ViewManager {
   }
 
   public void showNewGameView(GameController gameController) {
+    if (this.gameController == null)
+      this.gameController = gameController;
     if (newGameView == null)
       newGameView = new NewGameView(gameController);
     newGameView.show();
   }
 
   public void showContinueGameView(GameController gameController) {
+    if (this.gameController == null)
+      this.gameController = gameController;
     root = (Pane) stage.getScene().getRoot();
     if (continueGameView == null)
       continueGameView = new ContinueGameView(gameController);
@@ -155,10 +159,10 @@ public class ViewManager {
     characterSelectionView.show();
   }
 
-  public void showExplorationView(Map map, GameController gameController) {
+  public void showExplorationView(Map map/* , GameController gameController */) {
     if (explorationView == null)
       explorationView = new ExplorationView(map, gameController);
-    this.gameController = gameController;
+    // this.gameController = gameController;
     try {
       gameController.getSaveManager().autosave(GameState.getInstance());
     } catch (IOException e) {

@@ -56,7 +56,7 @@ public class GameController {
             GameState.getInstance().createEnemy();
             GameState.getInstance().createParty();
             GameState.getInstance().createNpc();
-            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(), this);
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
         }
     }
 
@@ -76,7 +76,7 @@ public class GameController {
     public void loadGame(int slot) {
         try {
             saveManager.loadGame(slot);
-            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(), this);
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
             System.out.println("Game loaded successfully." + slot);
         } catch (Exception e) {
             System.out.println("Load failed: " + e.getMessage());
@@ -88,8 +88,7 @@ public class GameController {
         try {
             new GameState.GameStateBuilder().build();
             saveManager.loadGameFromAutoSave();
-            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap(),
-                    this);
+            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
             System.out.println("Autosave loaded successfully.");
         } catch (Exception e) {
             System.out.println("Load failed: " + e.getMessage());
