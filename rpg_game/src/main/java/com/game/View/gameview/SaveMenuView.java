@@ -10,119 +10,137 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.text.Font;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 
 public class SaveMenuView extends VBox {
+
     private static final int SLOTS = 3;
     private final GameController gameController;
-    private boolean used;
 
     public SaveMenuView(GameController gameController) {
         this.gameController = gameController;
-        setSpacing(20);
-        setPadding(new Insets(30));
-        setAlignment(Pos.CENTER);
-        setStyle("-fx-background-color: #2b2b2b;");
 
-        // Label
-        Label title = new Label("Save Game");
-        title.setFont(Font.font(26));
-        title.setStyle("-fx-text-fill: white;");
+        setSpacing(25);
+        setPadding(new Insets(40));
+        setAlignment(Pos.CENTER);
+        setStyle("-fx-background-color: linear-gradient(to bottom, #1f1f1f, #2b2b2b);");
+
+        Label title = new Label("SAVE GAME");
+        title.setFont(Font.font("Arial Black", 28));
+        title.setStyle("-fx-text-fill: #eaeaea;");
 
         getChildren().add(title);
 
         for (int i = 0; i < SLOTS; i++) {
-            getChildren().add(createSlotRow(i));
+            getChildren().add(createSlotCard(i));
         }
+
         Button backBtn = new Button("Back to Menu");
-        backBtn.setVisible(true);
-        backBtn.setPrefWidth(200);
+        backBtn.setPrefWidth(220);
         backBtn.setStyle("""
-                            -fx-background-color: #555;
-                            -fx-text-fill: white;
-                            -fx-font-size: 14;
+                -fx-background-color: #444;
+                -fx-text-fill: white;
+                -fx-font-size: 14;
+                -fx-background-radius: 10;
                 """);
-        backBtn.setOnAction(e -> {
-            this.setVisible(false);
-            getChildren().forEach(node -> node.setEffect(null));
-        });
+
+        backBtn.setOnMouseEntered(e -> backBtn.setStyle("""
+                -fx-background-color: #666;
+                -fx-text-fill: white;
+                -fx-font-size: 14;
+                -fx-background-radius: 10;
+                """));
+
+        backBtn.setOnMouseExited(e -> backBtn.setStyle("""
+                -fx-background-color: #444;
+                -fx-text-fill: white;
+                -fx-font-size: 14;
+                -fx-background-radius: 10;
+                """));
+
+        backBtn.setOnAction(e -> setVisible(false));
 
         getChildren().add(backBtn);
     }
 
-    private HBox createSlotRow(int slot) {
-        HBox row = new HBox(15);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(10));
-        row.setStyle("""
-                    -fx-background-color: #3a3a3a;
-                    -fx-background-radius: 8;
+    // ------------------------------------------------------------
+
+    private VBox createSlotCard(int slot) {
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.setPrefWidth(360);
+        card.setStyle("""
+                -fx-background-color: #333;
+                -fx-background-radius: 12;
                 """);
 
         Label slotLabel = new Label("Slot " + slot);
-        slotLabel.setPrefWidth(80);
-        slotLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14;");
+        slotLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16;");
 
         Label statusLabel = new Label();
-        statusLabel.setPrefWidth(80);
-        statusLabel.setStyle("-fx-text-fill: gray;");
+        statusLabel.setFont(Font.font(13));
 
-        Button saveBtn = new Button("Save");
-        styleButton(saveBtn, "#4CAF50");
+        Button saveBtn = new Button("SAVE");
+        saveBtn.setPrefWidth(100);
 
-        saveBtn.setOnAction(e -> {
-            used = gameController.getSaveManager().isSlotUsed(slot);
-            if (!used) {
-                try {
-                    gameController.saveGame(slot);
-                    statusLabel.setText("Saved");
-                    statusLabel.setStyle("-fx-text-fill: lightgreen;");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            } else
-                askOverwrite(slot, statusLabel);
-        });
+        updateSlotStatus(slot, statusLabel, saveBtn);
 
-        row.getChildren().addAll(slotLabel, statusLabel, saveBtn);
-        return row;
+        saveBtn.setOnAction(e -> handleSave(slot, statusLabel, saveBtn));
+
+        card.getChildren().addAll(
+                slotLabel,
+                new Separator(),
+                new HBox(20, statusLabel, saveBtn)
+        );
+
+        return card;
     }
 
-    private void styleButton(Button button, String color) {
-        button.setPrefWidth(80);
-        button.setStyle("""
-                    -fx-background-color: %s;
-                    -fx-text-fill: white;
-                    -fx-font-size: 13;
-                    -fx-background-radius: 6;
-                """.formatted(color));
-    }
-
-    private void askOverwrite(int slot, Label statusLabel) {
+    private void updateSlotStatus(int slot, Label status, Button btn) {
         boolean used = gameController.getSaveManager().isSlotUsed(slot);
 
-        if (!used) {
-            statusLabel.setText("Empty");
-            return;
+        if (used) {
+            status.setText("USED");
+            status.setStyle("-fx-text-fill: #ffb347;");
+            styleButton(btn, "#ff9800");
+        } else {
+            status.setText("EMPTY");
+            status.setStyle("-fx-text-fill: #8bc34a;");
+            styleButton(btn, "#4caf50");
         }
+    }
 
+    private void handleSave(int slot, Label status, Button btn) {
+        boolean used = gameController.getSaveManager().isSlotUsed(slot);
+
+        if (used && !confirmOverwrite(slot)) return;
+
+        gameController.saveGame(slot);
+        updateSlotStatus(slot, status, btn);
+    }
+
+    // ------------------------------------------------------------
+
+    private boolean confirmOverwrite(int slot) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Overwrite Save");
         alert.setHeaderText("Overwrite existing save?");
         alert.setContentText("Slot " + slot + " already contains a save.");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                gameController.saveGame(slot);
-                statusLabel.setText("Saved");
-                statusLabel.setStyle("-fx-text-fill: lightgreen;");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
+    private void styleButton(Button button, String color) {
+        button.setStyle("""
+                -fx-background-color: %s;
+                -fx-text-fill: white;
+                -fx-font-size: 13;
+                -fx-background-radius: 8;
+                """.formatted(color));
+    }
 }

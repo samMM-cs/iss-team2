@@ -74,10 +74,10 @@ public class ShopView extends VBox {
                         "-fx-background-radius: 10;" +
                         "-fx-border-radius: 10;"));
 
-        Label nameLabel = new Label(move.getName() + " - " + move.getCost() + " €");
+        Label nameLabel = new Label(move.getName());
         nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;");
 
-        Button buyButton = new Button("Buy");
+        Button buyButton = new Button("Impara");
         buyButton.setStyle(
                 "-fx-background-color: #228B22;" +
                         "-fx-text-fill: white;" +
@@ -96,13 +96,9 @@ public class ShopView extends VBox {
 
         buyButton.setCursor(Cursor.HAND);
         buyButton.setOnAction(e -> {
-            if (player.getCurrentStats().getMoney() >= move.getCost()) {
-                player.getCurrentStats().removeMoney(move.getCost());
                 player.learnMove(move);
-                updateUI();
                 showFeedback(move.getName());
                 buyButton.setDisable(true); // disabilita il pulsante dopo l'acquisto
-            }
         });
 
         itemBox.getChildren().addAll(nameLabel, buyButton);
@@ -110,15 +106,11 @@ public class ShopView extends VBox {
     }
 
     private void showFeedback(String moveName) {
-        feedbackLabel.setText("Hai acquistato " + moveName);
+        feedbackLabel.setText("Hai imparato " + moveName);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(e -> feedbackLabel.setText(""));
         delay.play();
-    }
-
-    public void updateUI() {
-        goldLabel.setText("Money: " + player.getCurrentStats().getMoney());
     }
 
     public void open(NPC npc) {

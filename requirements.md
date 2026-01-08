@@ -6,7 +6,7 @@
 4. The system lets the players make plot choices which influence the ending.
 5. The system saves and loads the players' progress.
 6. The game updates the game state based on Destruction's progress.
-7. The system manages dialogues, players' inventories and quests.
+7. The system manages dialogues, players' inventories.
 8. The system manages boss fights against Destruction and its emanations.
 9. The system allows multiple endings based on the players' decisions.
 

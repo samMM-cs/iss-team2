@@ -1,375 +1,148 @@
 @startuml MVC
-skinparam Linetype ortho
 title MVC Architecture for RPG Game
-skinparam nodesep 70
-skinparam ranksep 80
-
-class Client{
-    + main(): void
-}
-
-Client-->GameLauncher: calls getIstance()
-
-class GameLauncher {
-    - static instance : GameLauncher
-    - GameLauncher()
-    + static getIstance(): GameLauncher
-    + launch() : void
-}
 
 package "Model" {
 
     interface ActionStrategy{
-        + execute(user: Character, target: Character)
     }
 
-    class AttackAction implements ActionStrategy{
-        - combatStrategy: CombatCalculationStrategy
-        + execute(user,target)
+    class AttackAction{
     }
 
-    class ItemAction implements ActionStrategy{
-        - item: Item
-        + execute(user, target)
+    class ItemAction{
     }
 
     class Stats {
-        - int hp
-        - int attack
-        - int defense
-        - int special
-        - int speed
     }
 
     class ItemStats {
-        - int damage
-        - int cure
-        - int durability
-    }
-
-    class Event {
-        - string name
     }
 
     class GameState {
-        - int n_players
-        - bool autoSaveEnabled
-        - string currentScene
-        - Map<Event,bool> storyFlags
-        - List<string> playerChoices
-        - WorldPosition worldPosition
-        + applyChoice(choice)
-        + setFlag(flag)
-        + getFlag(flag)
+    }
+    class GameStateMemento{}
+
+    class CharacterPG {
     }
 
-    class SaveSystem {
-        - SaveSlot[3] slots
-        + save(slot)
-        + load(slot)
-        + isCorrupted(slot)
+    class Player{
     }
+    class Enemy{
 
-    class SaveSlot {
-        - GameState savedState
-        - DateTime lastSaved
-    }
-
-    class Character {
-        - string name
-        - List<Ability> abilities
-        - Stats stats
-    }
-
-    class Player extends Character {
-        - int xp
-        - string name
-        - Job job
-        - Inventory inventory
-        - Position position
-        - Player follower
-        - List<Ability> abilities
-        + equipItem(item)
-        + learnAbility(ability)
-        + notifyFollower()
-        + subscribeToFollowed(player)
-        + unsubscribeFromFollowed(player)
     }
 
     class Job {
-        - string name
-        - string description
-        - Stats baseStats
     }
 
     class Inventory {
-        - List<Item> items
-        + addItem(item)
-        + removeItem(item)
-        + getEquipable(slot)
     }
 
     class Item {
-        - string name
-        - ItemType type
-        - ItemStats bonus
     }
 
     class NPC {
-        - string name
-        - List<Item> shopItems
-        + talk()
-        + openShop()
+    }
+    class MovesNPC
+
+    class WorldPosition {
     }
 
-    class WorldMap {
-    }
-
+    class Position{}
     class Party {
-        - Player mainPlayer
-        - List<Player> members
-        + updateFollowPositions()
     }
 
     class Battle {
-        - List<Enemy> enemies
-        - List<Player> party
-        - int turnIndex
-        - RewardStrategy rewardStrategy
-        - observer : BattleView
-        + calculateDamage(attacker, defender)
-        + nextTurn()
-        + isBattleOver() : bool
-        + endBattle()
-        + assignRewards()
-        + notifyObservers()
     }
 
     
 
     interface TurnStrategy {
-    + sortAction(characters: List<Character>) : void
-    + getTurnIterator() : TurnIterator
     }
 
-    class StaticSpeedTurn implements TurnStrategy {
-    - List<Character> characterList
-    + sortAction(characters: List<Character>) : void
-    + getTurnIterator() : TurnIterator
+    class StaticSpeedTurn {
     }
 
     class Ability {
-        - string name
-        - string description
-        - Effect effect
-    }
-
-    class Effect {
-        - int power
-        - StatusType status
-    }
-
-    class Enemy extends Character {
-
     }
 
     interface TurnIterator {
-        + hasCharacters()
-        + nextCharacter()
     }
 
-    class ConcreteTurnIterator implements TurnIterator {
-        + hasCharacters()
-        + nextCharacter()
+    class ConcreteTurnIterator {
     }
 
     interface RewardStrategy {
-    ' Reward class will get a List<Item> from db through calculateRewards method '
-    + calculateRewards(List<Enemy>): Reward
+    
     }
 
-    class StandardRewardStrategy implements RewardStrategy{
-        + calculateRewards(List<Enemy>): Reward
+    class StandardRewardStrategy{
     }
 
-    class NoRewardStrategy implements RewardStrategy {
-        + calculateRewards(List<Enemy>): Reward
+    class NoRewardStrategy {
     }
 
     class Reward {
-        - int xp
-        - List<Item> : drop
-        + assignXP(int: xp)
-        + assignItem(Item : item)
     }
 }
 
 package "Controller" {
 
     class MainMenuController {
-        + startNewGame()
-        + continueGame(slot)
-        + openSettings()
-    }
-
-    class SaveController {
-        + showSlots()
-        + saveToSlot(slot)
-        + loadFromSlot(slot)
+       
     }
 
     class GameController {
-        + startExploration()
-        + handleStoryChoice(choice)
-    }
-
-    class InventoryController {
-        + openInventory()
-        + equipItem(item)
-    }
-
-    class NPCController {
-        + startInteraction(npc)
-        + buyItem(npc, item)
     }
 
     class MovementController {
-        + movePlayer(direction)
-        + updatePartyFollow()
     }
 
     class BattleController {
-        - TurnIterator turnIterator
-        + startBattle(enemies)
-        + playerTurn(action)
-        + enemyTurn()
-    }
-
-    class AbilityController {
-        + notifyNewAbility()
-        + learnAbility(ability)
     }
 
     abstract class GameViewCreator {
-        + createGameView(): Game
     }
 
-    class NewGameViewCreator implements GameViewCreator {
-        + createGameView(): Game
+    class NewGameViewCreator {
     }
 
-    class ContinueGameViewCreator implements GameViewCreator {
-        + createGameView(): Game
+    class ContinueGameViewCreator {
     }
+    
+    class ExplorationController{}
+    class MapBuilder{}
+    class SaveManager{}
+    class ViewManager{}
 
 }
 
 package "View" {
 
     class MainMenuView {
-        + displayMenu()
     }
 
     class SaveMenuView {
-        + displaySlots()
-    }
-
-    class InventoryView {
-        + showInventory()
     }
 
     class DialogueView {
-        + showDialogue(npc)
     }
 
     class BattleView {
-        + showBattleState()
-        + showTurn()
-        + subscribe(battleController : BattleController)
-        + unsubscribe(battleController : BattleController)
     }
 
     class ExplorationView {
-        + renderMap()
-    }
-
-    class AbilityView {
-        + displayAbilities()
     }
 
     abstract class GameView {
-        - Stage stage
-        - GameController GameController
-        + load()
     }
 
-    class NewGameView implements GameView {
-        - Stage stage
-        - GameController GameController
-        + load()
+    class NewGameView {
     }
 
-    class ContinueGameView implements GameView {
-        - Stage stage
-        - GameController GameController
-        + load()
+    class ContinueGameView {
     }
+
+    class HUD
+    class ShopView
 }
-
-Battle--> RewardStrategy
-Battle-->TurnStrategy
-
-TurnStrategy-->TurnIterator
-
-RewardStrategy--> Reward
-
-MainMenuController --> GameState
-MainMenuController --> GameCreator
-MainMenuController --> SaveSystem
-
-SaveController --> SaveSystem
-SaveController --> ContinueGameCreator
-
-GameController --> GameState
-GameController --> WorldMap
-GameController --> NPC
-
-InventoryController --> Inventory
-InventoryController --> Player
-
-NPCController --> NPC
-NPCController --> Inventory
-
-MovementController --> Player
-MovementController --> Party
-MovementController --> WorldMap
-
-BattleController --> Battle
-BattleController --> Character
-
-
-AbilityController --> Ability
-AbilityController --> Player
-
-
-GameLauncher --> MainMenuView: launch
-MainMenuView --> MainMenuController
-SaveMenuView --> SaveController
-InventoryView --> InventoryController
-DialogueView --> NPCController
-ExplorationView --> GameController
-BattleView --> BattleController
-AbilityView --> AbilityController
-ExplorationView --> MovementController
-
-Character --> ActionStrategy
-BattleView-->Player: update
-
-GameViewCreator --> GameView : create
-' ContinueGameCreator -[hidden]left-> NewGameCreator
-' NewGameCreator -[hidden]left--> Game
-' SaveController -[hidden]left-> MainMenuController
-' NPCController -[hidden]left-> SaveController
-
-MainMenuController -[hidden]left-> SaveController
 @enduml
