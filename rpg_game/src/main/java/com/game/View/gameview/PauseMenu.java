@@ -16,11 +16,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 public class PauseMenu extends StackPane {
-    private final GameController gameController;
 
     public PauseMenu(GameController gameController) {
         super();
-        this.gameController = gameController;
         // --- SFONDO SCURO SEMI-TRASPARENTE ---
         Rectangle overlay = new Rectangle();
         overlay.setFill(Color.rgb(255, 255, 255, 0.25));

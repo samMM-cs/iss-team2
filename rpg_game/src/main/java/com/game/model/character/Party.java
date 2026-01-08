@@ -27,6 +27,9 @@ public class Party {
 
     public final void setMembers(List<Player> members) {
         this.members.addAll(members);
+        for (int i = 1; i < this.members.size(); i++) {
+            this.members.get(i).subscribeToFollowed(this.members.get(i - 1));
+        }
     }
 
     @JsonIgnore
