@@ -3,39 +3,29 @@ package com.game.model.character;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.game.model.Position;
+import com.game.model.battle.Move;
+import com.game.model.battle.MoveReader;
+
+import java.util.List;
 
 public class PlayerTest {
     Player setUpPlayer(Position pos) {
         return new Player(Job.ARCHER, pos);
     }
 
-    // Passa dalla view
-    /*
-     * @Test
-     * public void testCreateTestPlayers() {
-     * Job j1= Job.ARCHER;
-     * Job j2= Job.WARRIOR;
-     * Player p1= new Player(j1, new Position(j1.getX(), 0));
-     * Player p2= new Player(j2, new Position(j2.getX(), 0));
-     * GameState gameState= new GameState(2, false);
-     * GameController gameController= new GameController(mock(Stage.class));
-     * 
-     * Player.createTestPlayers(null)
-     * }
-     */
-
-    // Not yet implemented
     @Test
-    void testEquipItem() {
+    void testLearnMove() {
+        Player player = new Player(Job.WARRIOR, new Position(0, 0));
+        List<Move> moves = MoveReader.readMove("/battle/moves.json");
 
-    }
+        Move addMove = moves.get(0);
 
-    // Not yet implemented
-    @Test
-    void testLearnAbility() {
+        player.learnMove(addMove);
 
+        assertTrue(player.getLearnedMoves().contains(addMove));
     }
 
     @Test

@@ -73,4 +73,8 @@ public class Player extends CharacterPG {
     public void setPosition(Position pos) {
         this.setPos(pos);
     }
+
+    public List<Move> getLearnedMoves() {
+        return learnedMoves;
+    }
 }

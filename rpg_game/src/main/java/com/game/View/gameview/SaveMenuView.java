@@ -66,8 +66,6 @@ public class SaveMenuView extends VBox {
         getChildren().add(backBtn);
     }
 
-    // ------------------------------------------------------------
-
     private VBox createSlotCard(int slot) {
         VBox card = new VBox(10);
         card.setPadding(new Insets(15));
@@ -94,36 +92,39 @@ public class SaveMenuView extends VBox {
         card.getChildren().addAll(
                 slotLabel,
                 new Separator(),
-                new HBox(20, statusLabel, saveBtn)
-        );
+                new HBox(20, statusLabel, saveBtn));
 
         return card;
     }
 
     private void updateSlotStatus(int slot, Label status, Button btn) {
         boolean used = gameController.getSaveManager().isSlotUsed(slot);
+        boolean isValid = gameController.getSaveManager().isSlotValid(slot);
 
-        if (used) {
-            status.setText("USED");
-            status.setStyle("-fx-text-fill: #ffb347;");
-            styleButton(btn, "#ff9800");
-        } else {
+        if (!used) {
             status.setText("EMPTY");
             status.setStyle("-fx-text-fill: #8bc34a;");
             styleButton(btn, "#4caf50");
+        } else if (!isValid) {
+            status.setText("CORRUPTED");
+            status.setStyle("-fx-text-fill: #f44336;"); // rosso
+            styleButton(btn, "#e53935");
+        } else {
+            status.setText("USED");
+            status.setStyle("-fx-text-fill: #ffb347;");
+            styleButton(btn, "#ff9800");
         }
     }
 
     private void handleSave(int slot, Label status, Button btn) {
         boolean used = gameController.getSaveManager().isSlotUsed(slot);
 
-        if (used && !confirmOverwrite(slot)) return;
+        if (used && !confirmOverwrite(slot))
+            return;
 
         gameController.saveGame(slot);
         updateSlotStatus(slot, status, btn);
     }
-
-    // ------------------------------------------------------------
 
     private boolean confirmOverwrite(int slot) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

@@ -50,9 +50,15 @@ public class SaveManager {
         if (!file.exists()) {
             throw new IOException("Save slot does not exist.");
         }
+        try {
+            GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
+            if (memento == null)
+                throw new IOException("Corrupted File");
+            new GameState.GameStateBuilder().restoreFromMemento(memento);
 
-        GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
-        new GameState.GameStateBuilder().restoreFromMemento(memento);
+        } catch (IOException e) {
+            throw e;
+        }
     }
 
     public void loadGameFromAutoSave() throws IOException {
@@ -60,8 +66,27 @@ public class SaveManager {
         if (!file.exists()) {
             throw new IOException("Save slot does not exist.");
         }
+        try {
+            GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
 
-        GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
-        new GameState.GameStateBuilder().restoreFromMemento(memento);
+            if (memento == null)
+                throw new IOException("Corrupted File");
+            new GameState.GameStateBuilder().restoreFromMemento(memento);
+
+        } catch (IOException e) {
+            throw e;
+        }
+    }
+
+    public boolean isSlotValid(int slot) {
+        File file = new File(SLOT_PREFIX + slot + EXT);
+        if (!file.exists())
+            return false;
+        try {
+            GameStateMemento memento = objectMapper.readValue(file, GameStateMemento.class);
+            return memento != null;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

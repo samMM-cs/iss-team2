@@ -34,4 +34,12 @@ public class Action {
     public CharacterPG getUser() {
         return this.user;
     }
+
+    public String getAction() {
+        return action;
+    }
+
+    public ActionStrategy getAction2() {
+        return action2;
+    }
 }
