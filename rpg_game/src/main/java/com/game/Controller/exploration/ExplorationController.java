@@ -54,24 +54,31 @@ public class ExplorationController {
     }
 
     public void update() {
-        // System.out.println("Gamestate: " + GameState.getInstance());
-        Optional<Enemy> optEnemy = GameState.getInstance().getEnemies().stream()
-                .filter(enemy -> enemy.getPosition().equals(
-                        GameState.getInstance().getParty().getMainPlayer().getPosition()))
-                .findFirst();
-        if (!battleStarted && optEnemy.isPresent()) {
-            battleStarted = true;
-            optEnemy.ifPresent(this::handleBattle);
-            battleStarted = false;
-        }
+        if (GameState.getInstance() == null)
+            return;
+        if (GameState.getInstance().getEnemies().isEmpty()
+                && !GameState.getInstance().getMap().getEnemies().isEmpty()) {
+            GameState.getInstance().nextMap();
+            ViewManager.getInstance().updateMaps();
+        } else {
+            Optional<Enemy> optEnemy = GameState.getInstance().getEnemies().stream()
+                    .filter(enemy -> enemy.getPosition().equals(
+                            GameState.getInstance().getParty().getMainPlayer().getPosition()))
+                    .findFirst();
+            if (!battleStarted && optEnemy.isPresent()) {
+                battleStarted = true;
+                optEnemy.ifPresent(this::handleBattle);
+                battleStarted = false;
+            }
 
-        KeyCode key = activeKeys.poll();
-        if (!ViewManager.getInstance().isUIVisible() && key != null) {
-            if (movementKeys.contains(key))
-                movePlayer(key);
+            KeyCode key = activeKeys.poll();
+            if (!ViewManager.getInstance().isUIVisible() && key != null) {
+                if (movementKeys.contains(key))
+                    movePlayer(key);
 
-            if (key == KeyCode.E)
-                handlePossibleInteractions();
+                if (key == KeyCode.E)
+                    handlePossibleInteractions();
+            }
         }
     }
 

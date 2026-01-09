@@ -26,11 +26,12 @@ public class GameState {
     public final WorldPosition worldPosition;
     private static GameState instance;
     private final List<HasSpriteAndPosition> sprites = new ArrayList<>();
-    public com.game.model.map.Map map;
+    public final List<com.game.model.map.Map> maps;
+
+    private int mapInd;
     public String mapId;
     public FlagMap flagMap;
     public StoryNode currentStoryNode;
-    
 
     // Costruttore privato, il Builder lo costruisce
     private GameState(GameStateBuilder builder) {
@@ -41,7 +42,8 @@ public class GameState {
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
         this.npc = new ArrayList<>();
-        this.map = builder.map;
+        this.maps = builder.maps;
+        this.mapInd = 0;
     }
 
     // Costruttore privato, usato dal memento
@@ -50,23 +52,36 @@ public class GameState {
         this.nPlayers = memento.party.getMembers().size();
         this.enemies = memento.enemies;
         this.worldPosition = memento.worldPosition;
-        if (memento.mapId != null) {
-            try {
-                Class<?> mapClass = Class.forName(memento.mapId);
-                this.map = (com.game.model.map.Map) mapClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else
-            this.map = new Map1();
+        this.storyFlags = memento.storyFlags;
+        if (memento.maps != null && !memento.maps.isEmpty()) {
+            this.maps = memento.maps.stream().map(GameState::idToMap).toList();
+            this.mapInd = memento.mapInd;
+        } else {
+            this.maps = List.of(new Map1());
+        }
         this.autoSaveEnabled = memento.autoSaveEnabled;
         this.selectedCharacters = memento.party.getMembers().stream().map(Player::getJob).toList();
         this.inventory = null;
         this.npc = memento.npc;
     }
 
+    private static com.game.model.map.Map idToMap(String id) {
+        com.game.model.map.Map map = new Map1();
+        try {
+            Class<?> mapClass = Class.forName(id);
+            map = (com.game.model.map.Map) mapClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
     public static GameState getInstance() {
         return GameState.instance;
+    }
+
+    public List<com.game.model.map.Map> getMaps() {
+        return maps;
     }
 
     public static void destroy() {
@@ -75,6 +90,20 @@ public class GameState {
 
     public int getNPlayers() {
         return this.nPlayers;
+    }
+
+    public int getMapInd() {
+        return mapInd;
+    }
+
+    public void nextMap() {
+        if (mapInd < this.maps.size() - 1) {
+            mapInd++;
+            createEnemy();
+            createNpc();
+            party.setPositions(maps.get(mapInd).getPlayerPositions(nPlayers));
+            // createParty();
+        }
     }
 
     public boolean isAutoSaveEnable() {
@@ -99,7 +128,7 @@ public class GameState {
         for (int i = 0; i < selectedCharacters.size(); i++) {
             Job selectedJob = selectedCharacters.get(i);
 
-            Player p = new Player(selectedJob, map.getPlayerPosition(selectedCharacters.size(), i));
+            Player p = new Player(selectedJob, maps.get(mapInd).getPlayerPosition(selectedCharacters.size(), i));
             if (i > 0)
                 p.subscribeToFollowed(players.get(i - 1));
             players.add(p);
@@ -110,14 +139,14 @@ public class GameState {
     public void createEnemy() {
         enemies.clear();
         Job.initAllMoves();
-        enemies.addAll(map.getEnemies());
+        enemies.addAll(maps.get(mapInd).getEnemies());
     }
 
     public void createNpc() {
         this.npc.clear();
 
         Job.initAllMoves();
-        this.npc.addAll(map.getNpcs());
+        this.npc.addAll(maps.get(mapInd).getNpcs());
     }
 
     public List<HasSpriteAndPosition> getSpritesAndPositions() {
@@ -135,7 +164,7 @@ public class GameState {
     }
 
     public com.game.model.map.Map getMap() {
-        return map;
+        return maps.get(mapInd);
     }
 
     public Inventory getInventory() {
@@ -193,7 +222,7 @@ public class GameState {
     // ----------------------------------------------------------------------------------------
 
     public static class GameStateBuilder {
-        public com.game.model.map.Map map;
+        public List<com.game.model.map.Map> maps;
 
         public int nPlayers = 2;
         public boolean autoSaveEnabled = false;
@@ -205,8 +234,8 @@ public class GameState {
         public StoryNode storyNode;
         public WorldPosition worldPosition = new WorldPosition();
 
-        public GameStateBuilder setMap(com.game.model.map.Map map) {
-            this.map = map;
+        public GameStateBuilder setMaps(List<com.game.model.map.Map> maps) {
+            this.maps = maps;
             return this;
         }
 

@@ -8,7 +8,7 @@ import com.game.model.character.NPC;
 
 public class Map2 implements Map {
     private static final String MAP_FILE_PATH = "/maps/samplemap2.tmj";
-    private static final int spriteIndex = 3;
+    private static final int spriteIndex = 2;
 
     public Map2() {
     }
