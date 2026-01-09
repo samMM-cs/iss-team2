@@ -8,6 +8,7 @@ import com.game.model.creator.ContinueGame;
 import com.game.model.creator.Game;
 import com.game.model.map.Map1;
 import com.game.model.map.Map2;
+import com.game.model.map.Map3;
 
 public class GameController {
     private Game game;
@@ -37,7 +38,7 @@ public class GameController {
         }
 
         new GameState.GameStateBuilder().setNPlayers(players)
-                .enableAutoSave(autoSave).setMaps(List.of(new Map1(), new Map2()))
+                .enableAutoSave(autoSave).setMaps(List.of(new Map1(), new Map2(), new Map3()))
                 .build();
         ViewManager.getInstance().showCharacterSelectionView(this);
     }

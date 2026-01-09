@@ -43,7 +43,7 @@ public class GameState {
         this.enemies = new ArrayList<>();
         this.npc = new ArrayList<>();
         this.maps = builder.maps;
-        this.mapInd = 0;
+        // this.mapInd = 0;
     }
 
     // Costruttore privato, usato dal memento
@@ -52,7 +52,7 @@ public class GameState {
         this.nPlayers = memento.party.getMembers().size();
         this.enemies = memento.enemies;
         this.worldPosition = memento.worldPosition;
-        this.storyFlags = memento.storyFlags;
+        this.flagMap = memento.flagMap;
         if (memento.maps != null && !memento.maps.isEmpty()) {
             this.maps = memento.maps.stream().map(GameState::idToMap).toList();
             this.mapInd = memento.mapInd;

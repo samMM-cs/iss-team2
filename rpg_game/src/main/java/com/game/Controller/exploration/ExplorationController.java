@@ -27,7 +27,7 @@ public class ExplorationController {
     private MapView mapView;
     private static final Set<KeyCode> movementKeys = Set.of(KeyCode.W, KeyCode.A, KeyCode.S,
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
-    private Position prevPosition = Position.Origin;
+    private Position prevPosition = null;
     private boolean battleStarted = false;
 
     public ExplorationController(Scene scene, MapView mapView) {
@@ -57,9 +57,11 @@ public class ExplorationController {
         if (GameState.getInstance() == null)
             return;
         if (GameState.getInstance().getEnemies().isEmpty()
-                && !GameState.getInstance().getMap().getEnemies().isEmpty()) {
+                && !GameState.getInstance().getMap().getEnemies().isEmpty()
+                && GameState.getInstance().getMapInd() != GameState.getInstance().getMaps().size() - 1) {
             GameState.getInstance().nextMap();
             ViewManager.getInstance().updateMaps();
+            prevPosition = null;
         } else {
             Optional<Enemy> optEnemy = GameState.getInstance().getEnemies().stream()
                     .filter(enemy -> enemy.getPosition().equals(
@@ -105,8 +107,8 @@ public class ExplorationController {
         Battle battle = new Battle(e);
 
         ViewManager.getInstance().showBattleView(battle);
-
-        GameState.getInstance().getParty().updateFollowPosition(prevPosition);
+        if (prevPosition != null)
+            GameState.getInstance().getParty().updateFollowPosition(prevPosition);
         System.out.println("starting battle with: " + e.toString());
     }
 

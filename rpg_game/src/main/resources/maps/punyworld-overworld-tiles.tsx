@@ -431,6 +431,21 @@
    <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
+ <tile id="113">
+  <properties>
+   <property name="walkable" type="bool" value="false"/>
+  </properties>
+ </tile>
+ <tile id="114">
+  <properties>
+   <property name="walkable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="115">
+  <properties>
+   <property name="walkable" type="bool" value="false"/>
+  </properties>
+ </tile>
  <tile id="117">
   <properties>
    <property name="walkable" type="bool" value="true"/>
@@ -499,6 +514,21 @@
  <tile id="139">
   <properties>
    <property name="walkable" type="bool" value="false"/>
+  </properties>
+ </tile>
+ <tile id="140">
+  <properties>
+   <property name="walkable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="141">
+  <properties>
+   <property name="walkable" type="bool" value="false"/>
+  </properties>
+ </tile>
+ <tile id="142">
+  <properties>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="143">
@@ -577,6 +607,21 @@
   </properties>
  </tile>
  <tile id="166">
+  <properties>
+   <property name="walkable" type="bool" value="false"/>
+  </properties>
+ </tile>
+ <tile id="167">
+  <properties>
+   <property name="walkable" type="bool" value="false"/>
+  </properties>
+ </tile>
+ <tile id="168">
+  <properties>
+   <property name="walkable" type="bool" value="true"/>
+  </properties>
+ </tile>
+ <tile id="169">
   <properties>
    <property name="walkable" type="bool" value="false"/>
   </properties>

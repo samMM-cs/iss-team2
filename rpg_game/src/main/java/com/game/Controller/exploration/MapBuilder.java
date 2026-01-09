@@ -22,7 +22,7 @@ public class MapBuilder {
     private int spriteLayerIndex;
     private int tileSize, width, height;
     private boolean[][] walkableTiles;
-    private int renderedTileSize = 50;
+    private int renderedTileSize = 55;
     private Image tileSet;
 
     public static TiledMapData loadRawMapData(String mapFilePath) {
