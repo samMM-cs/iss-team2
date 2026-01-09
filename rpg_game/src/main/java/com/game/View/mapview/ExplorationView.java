@@ -18,6 +18,7 @@ public class ExplorationView {
     private static final String TILESET_IMAGE_PATH = "/images/punyworld-overworld-tileset.png";
     private static final String TILESET_DATA_PATH = "/maps/punyworld-overworld-tiles.tsx";
     private ExplorationController movementController;
+    private boolean isRunning = false;
     private Pane root;
     private Scene scene;
     private MapView mapView;
@@ -61,15 +62,26 @@ public class ExplorationView {
         ViewManager.getInstance().enableGlobalPause(scene);
 
         timer = new AnimationTimer() {
+
             @Override
             public void start() {
-                System.out.println("Starting timer");
+                if (isRunning)
+                    System.out.println("Already running");
+                else {
+                    System.out.println("Starting timer");
+                    isRunning = true;
+                }
                 super.start();
             }
 
             @Override
             public void stop() {
-                System.out.println("Stopping timer");
+                if (isRunning) {
+                    System.out.println("Stopping timer");
+                    isRunning = false;
+                } else {
+                    System.out.println("Already stopped");
+                }
                 super.stop();
             }
 
@@ -88,17 +100,17 @@ public class ExplorationView {
             }
         };
 
-        timer.start();
+        // timer.start();
     }
 
     public void stop() {
-        if (this.timer != null) {
+        if (this.timer != null && isRunning) {
             this.timer.stop();
         }
     }
 
     public void start() {
-        if (this.timer != null) {
+        if (this.timer != null && !isRunning) {
             this.timer.start();
         }
     }

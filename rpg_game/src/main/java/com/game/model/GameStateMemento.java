@@ -1,13 +1,13 @@
 package com.game.model;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.game.model.character.*;
+import com.game.model.story.FlagMap;
+import com.game.model.story.StoryNode;
 
 public class GameStateMemento implements Serializable {
     public int nPlayers;
@@ -15,7 +15,8 @@ public class GameStateMemento implements Serializable {
 
     public Party party;
     public WorldPosition worldPosition;
-    public Map<Event, Boolean> storyFlags;
+    public FlagMap flagMap;
+    public StoryNode currentStoryNode;
     public List<Enemy> enemies;
 
     // public Inventory inventory;
@@ -34,7 +35,8 @@ public class GameStateMemento implements Serializable {
         this.party = gameState.getParty();
         this.enemies = gameState.getEnemies();
         this.worldPosition = gameState.worldPosition;
-        this.storyFlags = new HashMap<>(gameState.storyFlags);
+        this.flagMap = gameState.getFlagMap();
+        this.currentStoryNode = gameState.getCurrentStoryNode();
         this.nPlayers = gameState.nPlayers;
         this.autoSaveEnabled = gameState.autoSaveEnabled;
         // this.inventory = gameState.inventory;
@@ -55,7 +57,7 @@ public class GameStateMemento implements Serializable {
                 ", party=" + (party != null ? party.toString() : "null") +
                 ", enemies=" + (enemies != null ? enemies.size() + " enemies" : "null") +
                 ", npc=" + (npc != null ? npc.size() + " npcs" : "null") +
-                ", storyFlags=" + (storyFlags != null ? storyFlags.size() + " flags" : "null") +
+                //", flagMap=" + (flagMap != null ? flagMap + " flags" : "null") +
                 '}';
     }
 }

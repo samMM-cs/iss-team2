@@ -4,7 +4,6 @@ import com.game.model.GameState;
 import com.game.model.character.Job;
 import com.game.model.creator.ContinueGame;
 import com.game.model.creator.Game;
-import com.game.model.creator.NewGame;
 import com.game.model.map.Map1;
 
 public class GameController {
@@ -20,11 +19,7 @@ public class GameController {
         GameState.destroy();
         if (ViewManager.getInstance() != null)
             ViewManager.getInstance().destroyViews();
-        if (game instanceof NewGame) {
-            ViewManager.getInstance().showNewGameView(this);
-        } else
-            startExploration();
-
+        ViewManager.getInstance().showNewGameView(this);
     }
 
     public void resume() {

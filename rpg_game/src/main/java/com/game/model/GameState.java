@@ -2,13 +2,14 @@ package com.game.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 import com.game.model.character.Enemy;
 import com.game.model.character.HasSpriteAndPosition;
 import com.game.model.character.Player;
 import com.game.model.map.Map1;
+import com.game.model.story.Flag;
+import com.game.model.story.FlagMap;
+import com.game.model.story.StoryNode;
 import com.game.model.character.Party;
 import com.game.model.character.Job;
 import com.game.model.character.NPC;
@@ -22,12 +23,14 @@ public class GameState {
     private final List<NPC> npc;
     public Party party;
     public Inventory inventory;
-    public final Map<Event, Boolean> storyFlags;
     public final WorldPosition worldPosition;
     private static GameState instance;
     private final List<HasSpriteAndPosition> sprites = new ArrayList<>();
     public com.game.model.map.Map map;
     public String mapId;
+    public FlagMap flagMap;
+    public StoryNode currentStoryNode;
+    
 
     // Costruttore privato, il Builder lo costruisce
     private GameState(GameStateBuilder builder) {
@@ -35,7 +38,6 @@ public class GameState {
         this.autoSaveEnabled = builder.autoSaveEnabled;
         this.selectedCharacters = builder.selectedCharacters;
         this.inventory = builder.inventory;
-        this.storyFlags = builder.storyFlags;
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
         this.npc = new ArrayList<>();
@@ -48,7 +50,6 @@ public class GameState {
         this.nPlayers = memento.party.getMembers().size();
         this.enemies = memento.enemies;
         this.worldPosition = memento.worldPosition;
-        this.storyFlags = memento.storyFlags;
         if (memento.mapId != null) {
             try {
                 Class<?> mapClass = Class.forName(memento.mapId);
@@ -141,12 +142,24 @@ public class GameState {
         return this.inventory;
     }
 
-    public void setFlag(Event flag) {
-        this.storyFlags.replace(flag, true);
+    public void setFlag(Flag flag) {
+        this.flagMap.setFlag(flag, true);
     }
 
-    public boolean getFlag(Event flag) {
-        return this.storyFlags.get(flag);
+    public boolean isFlagSet(Flag flag) {
+        return this.flagMap.getFlag(flag);
+    }
+
+    public FlagMap getFlagMap() {
+        return this.flagMap;
+    }
+
+    public StoryNode getCurrentStoryNode() {
+        return this.currentStoryNode;
+    }
+
+    public void setCurrentStoryNode(StoryNode newStoryNode) {
+        this.currentStoryNode = newStoryNode;
     }
 
     public boolean isAutoSaveEnabled() {
@@ -169,10 +182,6 @@ public class GameState {
         return party;
     }
 
-    public Map<Event, Boolean> getStoryFlags() {
-        return storyFlags;
-    }
-
     public WorldPosition getWorldPosition() {
         return worldPosition;
     }
@@ -192,7 +201,8 @@ public class GameState {
         public List<Enemy> enemies = new ArrayList<>();
         public List<NPC> npc = new ArrayList<>();
         public Inventory inventory;
-        public Map<Event, Boolean> storyFlags = new HashMap<>();
+        public FlagMap flagMap = new FlagMap();
+        public StoryNode storyNode;
         public WorldPosition worldPosition = new WorldPosition();
 
         public GameStateBuilder setMap(com.game.model.map.Map map) {
@@ -230,8 +240,8 @@ public class GameState {
             return this;
         }
 
-        public GameStateBuilder setStoryFlags(Map<Event, Boolean> flags) {
-            this.storyFlags = flags;
+        public GameStateBuilder setFlagMap(FlagMap flagMap) {
+            this.flagMap = flagMap;
             return this;
         }
 
