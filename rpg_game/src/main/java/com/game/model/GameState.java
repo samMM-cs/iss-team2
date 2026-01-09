@@ -39,6 +39,8 @@ public class GameState {
         this.autoSaveEnabled = builder.autoSaveEnabled;
         this.selectedCharacters = builder.selectedCharacters;
         this.inventory = builder.inventory;
+        this.flagMap = builder.flagMap;
+        this.currentStoryNode = builder.storyNode;
         this.worldPosition = builder.worldPosition;
         this.enemies = new ArrayList<>();
         this.npc = new ArrayList<>();
@@ -53,6 +55,7 @@ public class GameState {
         this.enemies = memento.enemies;
         this.worldPosition = memento.worldPosition;
         this.flagMap = memento.flagMap;
+        this.currentStoryNode = memento.currentStoryNode;
         if (memento.maps != null && !memento.maps.isEmpty()) {
             this.maps = memento.maps.stream().map(GameState::idToMap).toList();
             this.mapInd = memento.mapInd;
@@ -271,6 +274,11 @@ public class GameState {
 
         public GameStateBuilder setFlagMap(FlagMap flagMap) {
             this.flagMap = flagMap;
+            return this;
+        }
+
+        public GameStateBuilder setStoryNode(StoryNode storyNode) {
+            this.storyNode = storyNode;
             return this;
         }
 
