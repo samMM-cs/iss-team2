@@ -5,7 +5,7 @@ import com.game.controller.ViewManager;
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Player;
-import com.game.model.map.Map;
+import com.game.model.map.MapData;
 import com.game.model.map.TiledMapData;
 import com.game.model.GameState;
 import com.game.view.HUD;
@@ -26,7 +26,7 @@ public class ExplorationView {
     private AnimationTimer timer;
     private GameController gameController;
 
-    public ExplorationView(Map map, GameController gameController) {
+    public ExplorationView(MapData map, GameController gameController) {
         TiledMapData mapData = MapBuilder.loadRawMapData(map.getFilePath());
 
         this.mapView = new MapBuilder()

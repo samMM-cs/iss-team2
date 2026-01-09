@@ -9,7 +9,7 @@ import com.game.model.character.Job;
 import com.game.model.character.MovesNPC;
 import com.game.model.character.NPC;
 
-public class Map1 implements Map {
+public class Map1 implements MapData {
     private static final String MAP_FILE_PATH = "/maps/samplemap1.tmj";
     private static final int spriteIndex = 2;
 

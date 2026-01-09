@@ -14,6 +14,7 @@ import com.game.model.character.Party;
 import com.game.model.character.Job;
 import com.game.model.character.NPC;
 import com.game.model.character.Inventory;
+import com.game.model.map.MapData;
 
 public class GameState {
     public final int nPlayers;
@@ -26,7 +27,7 @@ public class GameState {
     public final WorldPosition worldPosition;
     private static GameState instance;
     private final List<HasSpriteAndPosition> sprites = new ArrayList<>();
-    public final List<com.game.model.map.Map> maps;
+    public final List<MapData> maps;
 
     private int mapInd;
     public String mapId;
@@ -68,11 +69,11 @@ public class GameState {
         this.npc = memento.npc;
     }
 
-    private static com.game.model.map.Map idToMap(String id) {
-        com.game.model.map.Map map = new Map1();
+    private static MapData idToMap(String id) {
+        MapData map = new Map1();
         try {
             Class<?> mapClass = Class.forName(id);
-            map = (com.game.model.map.Map) mapClass.getDeclaredConstructor().newInstance();
+            map = (MapData) mapClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,7 +84,7 @@ public class GameState {
         return GameState.instance;
     }
 
-    public List<com.game.model.map.Map> getMaps() {
+    public List<MapData> getMaps() {
         return maps;
     }
 
@@ -166,7 +167,7 @@ public class GameState {
 
     }
 
-    public com.game.model.map.Map getMap() {
+    public MapData getMap() {
         return maps.get(mapInd);
     }
 
@@ -225,7 +226,7 @@ public class GameState {
     // ----------------------------------------------------------------------------------------
 
     public static class GameStateBuilder {
-        public List<com.game.model.map.Map> maps;
+        public List<MapData> maps;
 
         public int nPlayers = 2;
         public boolean autoSaveEnabled = false;
@@ -237,7 +238,7 @@ public class GameState {
         public StoryNode storyNode;
         public WorldPosition worldPosition = new WorldPosition();
 
-        public GameStateBuilder setMaps(List<com.game.model.map.Map> maps) {
+        public GameStateBuilder setMaps(List<MapData> maps) {
             this.maps = maps;
             return this;
         }

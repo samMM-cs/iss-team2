@@ -7,7 +7,7 @@ import com.game.model.Position;
 import com.game.model.character.Enemy;
 import com.game.model.character.NPC;
 
-public interface Map {
+public interface MapData {
   public String getFilePath();
 
   public int getSpriteindex();

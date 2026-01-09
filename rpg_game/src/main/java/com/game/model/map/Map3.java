@@ -8,7 +8,7 @@ import com.game.model.character.Enemy;
 import com.game.model.character.Job;
 import com.game.model.character.NPC;
 
-public class Map3 implements Map {
+public class Map3 implements MapData {
   private static final String MAP_FILE_PATH = "/maps/samplemap3.tmj";
   private static final int spriteIndex = 2;
 
