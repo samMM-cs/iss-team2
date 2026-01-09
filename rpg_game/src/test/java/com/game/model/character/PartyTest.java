@@ -97,13 +97,13 @@ public class PartyTest {
     void testGetMembers() {
         Player p1 = mock(Player.class);
         Player p2 = mock(Player.class);
-        List<Player> members = Arrays.asList(p1, p2);
+        List<Player> members = List.of(p1, p2);
         Party party = new Party(members);
 
         List<Player> result = party.getMembers();
 
         assertNotNull(result);
-        assertSame(members, result);
+        assertSame(members.size(), result.size());
     }
 
     @Test

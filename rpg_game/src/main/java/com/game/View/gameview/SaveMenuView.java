@@ -99,16 +99,12 @@ public class SaveMenuView extends VBox {
 
     private void updateSlotStatus(int slot, Label status, Button btn) {
         boolean used = gameController.getSaveManager().isSlotUsed(slot);
-        boolean isValid = gameController.getSaveManager().isSlotValid(slot);
+        //boolean isValid = gameController.getSaveManager().isSlotValid(slot);
 
         if (!used) {
             status.setText("EMPTY");
             status.setStyle("-fx-text-fill: #8bc34a;");
             styleButton(btn, "#4caf50");
-        } else if (!isValid) {
-            status.setText("CORRUPTED");
-            status.setStyle("-fx-text-fill: #f44336;"); // rosso
-            styleButton(btn, "#e53935");
         } else {
             status.setText("USED");
             status.setStyle("-fx-text-fill: #ffb347;");
