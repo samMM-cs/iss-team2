@@ -6,7 +6,6 @@ import com.game.model.GameState;
 import com.game.model.battle.Battle;
 import com.game.model.character.NPC;
 import com.game.model.character.Player;
-import com.game.model.map.Map;
 import com.game.view.CharacterSelectionView;
 import com.game.view.DialogueView;
 import com.game.view.ShopView;
@@ -163,28 +162,10 @@ public class ViewManager {
     characterSelectionView.show();
   }
 
-  public void showExplorationView(Map map) {
-    if (explorationView == null)
-      explorationView = new ExplorationView(map, gameController);
-    try {
-      gameController.getSaveManager().autosave(GameState.getInstance());
-    } catch (IOException e) {
-      System.err.println("Failed to autosave");
-      e.printStackTrace();
-    }
-    if (isUIVisible()) {
-      if (battleView != null)
-        battleView.setVisible(false);
-      if (dialogView != null)
-        dialogView.setVisible(false);
-      if (shopView != null)
-        shopView.setVisible(false);
-    }
-    explorationView.showMap();
-    explorationView.start();
-  }
-
   public void showExplorationView() {
+    System.out.println("noparams");
+    if (explorationView == null)
+      explorationView = new ExplorationView(GameState.getInstance().getMap(), gameController);
     try {
       gameController.getSaveManager().autosave(GameState.getInstance());
     } catch (IOException e) {
@@ -288,6 +269,12 @@ public class ViewManager {
       instance = new ViewManager(stage);
       return instance;
     }
+  }
+
+  public void updateMaps() {
+    explorationView = null;
+    pauseMenu = null;
+    showExplorationView();
   }
 
 }

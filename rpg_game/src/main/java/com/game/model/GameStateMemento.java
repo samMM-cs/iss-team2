@@ -18,10 +18,10 @@ public class GameStateMemento implements Serializable {
     public FlagMap flagMap;
     public StoryNode currentStoryNode;
     public List<Enemy> enemies;
-
+    public List<String> maps;
     // public Inventory inventory;
 
-    public String mapId; // es: "Map1"
+    public int mapInd; // es: "Map1"
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
     @JsonSubTypes({
@@ -40,7 +40,8 @@ public class GameStateMemento implements Serializable {
         this.nPlayers = gameState.nPlayers;
         this.autoSaveEnabled = gameState.autoSaveEnabled;
         // this.inventory = gameState.inventory;
-        this.mapId = gameState.getMap() != null ? gameState.getMap().getClass().getName() : null;
+        this.mapInd = gameState.getMapInd();
+        this.maps = gameState.getMaps().stream().map(m -> m.getClass().getName()).toList();
         this.npc = gameState.getNpc();
     }
 
@@ -52,7 +53,7 @@ public class GameStateMemento implements Serializable {
         return "GameStateMemento{" +
                 "nPlayers=" + nPlayers +
                 ", autoSaveEnabled=" + autoSaveEnabled +
-                ", mapId=" + mapId +
+                ", mapInd=" + mapInd +
                 ", worldPosition=" + (worldPosition != null ? worldPosition.toString() : "null") +
                 ", party=" + (party != null ? party.toString() : "null") +
                 ", enemies=" + (enemies != null ? enemies.size() + " enemies" : "null") +

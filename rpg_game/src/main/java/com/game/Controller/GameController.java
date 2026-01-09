@@ -1,10 +1,13 @@
 package com.game.controller;
 
+import java.util.List;
+
 import com.game.model.GameState;
 import com.game.model.character.Job;
 import com.game.model.creator.ContinueGame;
 import com.game.model.creator.Game;
 import com.game.model.map.Map1;
+import com.game.model.map.Map2;
 
 public class GameController {
     private Game game;
@@ -34,7 +37,7 @@ public class GameController {
         }
 
         new GameState.GameStateBuilder().setNPlayers(players)
-                .enableAutoSave(autoSave).setMap(new Map1())
+                .enableAutoSave(autoSave).setMaps(List.of(new Map1(), new Map2()))
                 .build();
         ViewManager.getInstance().showCharacterSelectionView(this);
     }
@@ -51,7 +54,7 @@ public class GameController {
             GameState.getInstance().createEnemy();
             GameState.getInstance().createParty();
             GameState.getInstance().createNpc();
-            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
+            ViewManager.getInstance().showExplorationView();
         }
     }
 
@@ -71,7 +74,7 @@ public class GameController {
     public void loadGame(int slot) {
         try {
             saveManager.loadGame(slot);
-            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
+            ViewManager.getInstance().showExplorationView();
             System.out.println("Game loaded successfully." + slot);
         } catch (Exception e) {
             System.out.println("Load failed: " + e.getMessage());
@@ -83,7 +86,7 @@ public class GameController {
         try {
             new GameState.GameStateBuilder().build();
             saveManager.loadGameFromAutoSave();
-            ViewManager.getInstance().showExplorationView(GameState.getInstance().getMap());
+            ViewManager.getInstance().showExplorationView();
             System.out.println("Autosave loaded successfully.");
         } catch (Exception e) {
             System.out.println("Load failed: " + e.getMessage());

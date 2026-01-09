@@ -41,4 +41,10 @@ public class Party {
     public String toString() {
         return members.toString();
     }
+
+    public void setPositions(List<Position> playerPositions) {
+        for (int i = 0; i < playerPositions.size(); i++) {
+            this.members.get(i).setPosition(playerPositions.get(i));
+        }
+    }
 }

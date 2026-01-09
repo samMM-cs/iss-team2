@@ -19,13 +19,11 @@ public class App extends Application {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            e.printStackTrace();
-        });
-        System.setErr(new PrintStream(
-                new FileOutputStream("app.log", true),
-                true,
-                StandardCharsets.UTF_8));
+        // Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+        // e.printStackTrace();
+        // });
+        // System.setErr(new PrintStream(new FileOutputStream("app.log", true), true,
+        // StandardCharsets.UTF_8));
         launch(args);
     }
 }
