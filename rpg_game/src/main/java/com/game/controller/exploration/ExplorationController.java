@@ -54,11 +54,13 @@ public class ExplorationController {
     }
 
     public void update() {
-        if (GameState.getInstance() == null)
+        if (GameState.getInstance() == null) {
             return;
+        }
         if (GameState.getInstance().getEnemies().isEmpty()
                 && !GameState.getInstance().getMap().getEnemies().isEmpty()
                 && GameState.getInstance().getMapInd() != GameState.getInstance().getMaps().size() - 1) {
+
             GameState.getInstance().nextMap();
             ViewManager.getInstance().updateMaps();
             prevPosition = null;
@@ -84,7 +86,7 @@ public class ExplorationController {
         }
     }
 
-    private void handlePossibleInteractions() {
+    public void handlePossibleInteractions() {
         NPC target = null;
         Player mainPlayer = GameState.getInstance().getParty().getMainPlayer();
         for (NPC npc : GameState.getInstance().getNpc()) {
@@ -100,7 +102,7 @@ public class ExplorationController {
         }
     }
 
-    private void handleBattle(Enemy e) {
+    public void handleBattle(Enemy e) {
         // Versatile for multiple enemy
         List<Enemy> enemiesList = new ArrayList<>();
         enemiesList.add(e);
@@ -112,7 +114,7 @@ public class ExplorationController {
         System.out.println("starting battle with: " + e.toString());
     }
 
-    void movePlayer(KeyCode key) {
+    public void movePlayer(KeyCode key) {
         Player mainPlayer = GameState.getInstance().getParty().getMainPlayer();
         int dx = 0;
         int dy = 0;
@@ -146,5 +148,13 @@ public class ExplorationController {
 
     public Position getPosLimit() {
         return posLimit;
+    }
+
+    public Queue<KeyCode> getActiveKeys() {
+        return activeKeys;
+    }
+
+    public Position getPrevPosition() {
+        return prevPosition;
     }
 }
