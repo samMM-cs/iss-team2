@@ -201,6 +201,7 @@ public class ViewManager {
       dialogView = new DialogueView();
       if (dialogView.isVisible()) {
         dialogView.handleAdvance();
+        
         // Blocco il movimento una volta aperto il dialogo
         explorationView.stop();
       } else {
