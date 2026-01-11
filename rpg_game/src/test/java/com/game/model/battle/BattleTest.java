@@ -90,7 +90,7 @@ public class BattleTest {
         assertNotNull(action);
     }
 
-    //T7
+    // T7
     @Test
     void nextTurn_testAllPlayerAlive() {
         GameState gameState = GameState.getInstance();
@@ -105,9 +105,8 @@ public class BattleTest {
         assertEquals(BattleResult.ONGOING, result);
         assertEquals(1, battle.getTurnIndex());
     }
-    
 
-    //T10
+    // T10
     @Test
     void test_AssignRewards() throws Exception{
         battle = new Battle(enemy);
@@ -116,10 +115,11 @@ public class BattleTest {
 
         assertEquals(10, gameState.getParty().getMainPlayer().getCurrentStats().getXp());
     }
+
     private GameState createGameState() {
         GameState gameState = new GameState.GameStateBuilder()
                 .setNPlayers(2)
-                .setSelectedCharacters(List.of(Job.ARCHER,Job.WARRIOR))
+                .setSelectedCharacters(List.of(Job.ARCHER, Job.WARRIOR))
                 .enableAutoSave(true)
                 .setInventory()
                 .setFlagMap(new FlagMap())
