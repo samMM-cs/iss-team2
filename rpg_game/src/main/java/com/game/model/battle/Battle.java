@@ -3,6 +3,7 @@ package com.game.model.battle;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,7 +15,7 @@ public class Battle {
     private int turnIndex;
     private TurnStrategy turnStrategy;
     private RewardStrategy rewardStrategy;
-    private List<Action> plannedActionList;
+    private List<Action> plannedActionList = new ArrayList<>();
 
     public Battle(Enemy enemy) {
         this.gameState = GameState.getInstance();
@@ -108,7 +109,9 @@ public class Battle {
     }
 
     public void setPlannedActionList(List<Action> plannedActionList) {
-        this.plannedActionList = plannedActionList;
+        // this.plannedActionList = plannedActionList;
+        this.plannedActionList.clear();
+        this.plannedActionList.addAll(plannedActionList);
     }
 
     private Action getCurrentAction(CharacterPG character) {
