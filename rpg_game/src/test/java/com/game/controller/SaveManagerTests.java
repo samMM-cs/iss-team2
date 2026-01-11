@@ -16,9 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,13 +34,13 @@ public class SaveManagerTests {
         new File("save_slot2.json").delete();
     }
 
-    //T1 - isSlotUsed()==false
+    //T1
     @Test
     void testIsSlotUsed_slotNotExists() throws IOException {
         assertFalse(saveManager.isSlotUsed(1));
     }
     
-    //T2 - isSlotUsed()==true
+    //T2
     @Test
     void testIsSlotUsed_slotExists() throws IOException {
         GameState gameState = trueGameState();

@@ -22,14 +22,13 @@ import javafx.scene.text.FontWeight;
 import com.game.controller.GameController;
 import com.game.controller.ViewManager;
 import com.game.model.character.Job;
-import com.game.view.gameview.*;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 
-public class CharacterSelectionView extends GameView {
+public class CharacterSelectionView {
     private GameController gameController;
 
     private VBox selectedCard = null;
@@ -39,7 +38,6 @@ public class CharacterSelectionView extends GameView {
         this.gameController = gameController;
     }
 
-    @Override
     public void show() {
         Label title = new Label("Scegli il personaggio");
         title.setStyle("""
@@ -176,8 +174,4 @@ public class CharacterSelectionView extends GameView {
         return btn;
     }
 
-    @Override
-    public void showMessage(String msg) {
-        System.out.println(msg);
-    }
 }

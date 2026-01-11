@@ -133,6 +133,21 @@ ContinueGame-->ContinueGameView
 MainMenuController --> GameCreator : createGame()
 MainMenuController --> GameView : render()
 
+class GameController{
+    - game: Game
+    - saveManager: SaveManager
+
+    +start(): void
+    +resume(): void
+    +onNewGameConfirmed(players: int, autosave: boolean): void
+    +onCharacterSelected(job: Job): void
+    +startExploration(): void
+    +handleStoryChoice(choice: String): void
+    +saveGame(slot: int): void
+    +loadGame(slot: int): void
+    +loadFromAutosave(): void
+}
+
 ' ===========================
 ' Character Creation (Abstract Factory)
 ' ===========================
@@ -212,6 +227,21 @@ enum Job{
     + getEffectiveMoves(): List<Move>
 }
 
+class CharacterSelectionView{
+    - gameController: GameController
+    - selectedCard: VBox
+    - startGameBtn: Button
+
+    + show(): void
+    + createCard(job: Job): VBox
+    +selectCharacter(): void
+}
+
+class Party{
+    -members: List<Player>
+
+    +updateFollowPosition(newLeaderPos: Position): void
+}
 CharacterSelectionView --> GameController : user selects job
 NewGameView --> CharacterSelectionView : selectJobs()
 GameController --> Player : createParty()
