@@ -11,7 +11,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <javafx.version>21.0.2</javafx.version>
-        <main.class>com.game.App</main.class>
+        <main.class>com.game.Main</main.class>
     </properties>
 
     <dependencies>
@@ -55,6 +55,15 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                </resource>
+        </resources>
+
         <plugins>
 
             <!--JavaFX Plugin -->
@@ -97,6 +106,16 @@
                                     <mainClass>${main.class}</mainClass>
                                 </transformer>
                             </transformers>
+                            <filters>
+                                <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>

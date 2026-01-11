@@ -1,6 +1,5 @@
 package com.game.controller.exploration;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class MapBuilder {
         try {
             URL url = MapBuilder.class.getResource(path);
             String regex = "<tile id=\"(\\d*)\">\\s*<properties>\\s*<property name=\"walkable\" type=\"bool\" value=\"true\"/>\\s*</properties>\\s*</tile>";
-            String content = new String(((BufferedInputStream) url.getContent()).readAllBytes());
+            String content = new String(url.openStream().readAllBytes());
             walkableId = Pattern.compile(regex)
                     .matcher(content)
                     .results()
