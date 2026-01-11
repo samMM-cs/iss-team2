@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
+import com.game.controller.StoryController;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.Position;
@@ -14,6 +15,7 @@ import com.game.model.battle.Battle;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Enemy;
+import com.game.view.StoryView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -29,6 +31,8 @@ public class ExplorationController {
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = null;
     private boolean battleStarted = false;
+    private StoryView storyView = new StoryView(GameState.getInstance().getCurrentStoryNode());
+    private StoryController storyController = new StoryController(storyView);
 
     public ExplorationController(Scene scene, MapView mapView) {
         this.scene = scene;
@@ -82,6 +86,11 @@ public class ExplorationController {
 
                 if (key == KeyCode.E)
                     handlePossibleInteractions();
+            }
+            else {
+                storyController.enter();
+                storyView.setStoryNode(GameState.getInstance().getCurrentStoryNode());
+                storyController = new StoryController(storyView);
             }
         }
     }

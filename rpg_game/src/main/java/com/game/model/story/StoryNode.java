@@ -25,6 +25,10 @@ public class StoryNode {
         this.trigger = sNodeBuilder.getTrigger();
     }
 
+    public void addChoice(Choice choice) {
+        this.choices.add(choice);
+    }
+
     public String getName() {
         return name;
     }

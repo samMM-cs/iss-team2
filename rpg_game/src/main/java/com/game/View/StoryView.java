@@ -13,9 +13,14 @@ public class StoryView {
     public void show() {
         DialogueView dialogueView = new DialogueView();
         dialogueView.showDialogue(new Dialogue(storyNode.getDialogues()));
+        //dialogueView.close();
     }
 
     public StoryNode getStoryNode() {
         return storyNode;
+    }
+
+    public void setStoryNode(StoryNode storyNode) {
+        this.storyNode = storyNode;
     }
 }
