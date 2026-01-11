@@ -34,13 +34,22 @@ public class SaveManagerTests {
         new File("save_slot2.json").delete();
     }
 
+<<<<<<< HEAD
     //T1
+=======
+    // T1 - isSlotUsed()==false
+>>>>>>> f6ef368c91f634f473a77f5d0b9da936348c87fd
     @Test
     void testIsSlotUsed_slotNotExists() throws IOException {
         assertFalse(saveManager.isSlotUsed(1));
     }
+<<<<<<< HEAD
     
     //T2
+=======
+
+    // T2 - isSlotUsed()==true
+>>>>>>> f6ef368c91f634f473a77f5d0b9da936348c87fd
     @Test
     void testIsSlotUsed_slotExists() throws IOException {
         GameState gameState = trueGameState();
@@ -48,13 +57,13 @@ public class SaveManagerTests {
         assertTrue(new File("save_slot1.json").exists());
     }
 
-    //T3
+    // T3
     @Test
     void testAutosave_NotExists() {
         assertFalse(saveManager.isAutosaveUsed());
     }
 
-    //T4
+    // T4
     @Test
     void testAutosave_exists() throws IOException {
         GameState gameState = trueGameState();
@@ -62,22 +71,23 @@ public class SaveManagerTests {
         assertTrue(saveManager.isAutosaveUsed());
     }
 
-    //T5
+    // T5
     @Test
-    void testAutosaveGameStateValid() throws IOException{
+    void testAutosaveGameStateValid() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
         assertTrue(new File("autosave.json").exists());
     }
-    //T6
+
+    // T6
     @Test
     void testAutosaveGameStateNull() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
         assertTrue(new File("autosave.json").exists());
     }
-    
-    //T7
+
+    // T7
     @Test
     void testSaveGame_InSlotValid() throws IOException {
         GameState gameState = trueGameState();
@@ -85,32 +95,33 @@ public class SaveManagerTests {
         saveManager.saveGame(1, gameState);
         assertTrue(new File("save_slot1.json").exists());
     }
-    
-    //T8
-     @Test
+
+    // T8
+    @Test
     void testLoadGame_SlotValid() throws IOException {
         GameState gameState = trueGameState();
         gameState.getParty();
         saveManager.saveGame(1, gameState);
 
-        assertDoesNotThrow(()->saveManager.loadGame(1));
+        assertDoesNotThrow(() -> saveManager.loadGame(1));
     }
-    //T9
+
+    // T9
     @Test
     void testLoadGame_SlotNotValid() {
         assertThrows(IOException.class, () -> saveManager.loadGame(99));
     }
 
-    //T10
+    // T10
     @Test
-    void testLoadFromAutosave_Valid() throws IOException{
+    void testLoadFromAutosave_Valid() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
-    
+
         assertDoesNotThrow(() -> saveManager.loadGameFromAutoSave());
     }
-   
-    //T11
+
+    // T11
     @Test
     void testLoadFromAutosave_NotValid() {
         assertThrows(IOException.class, () -> saveManager.loadGameFromAutoSave());
@@ -118,14 +129,14 @@ public class SaveManagerTests {
 
     private GameState trueGameState() {
         GameState gameState = new GameState.GameStateBuilder()
-            .setNPlayers(1)
-            .setSelectedCharacters(List.of(Job.ARCHER))
-            .enableAutoSave(true)
-            .setInventory()
-            .setFlagMap(new FlagMap())
-            .setWorldPosition(new WorldPosition(0, 0))
-            .setMaps(List.of(new Map1(), new Map2(), new Map3()))
-            .build();
+                .setNPlayers(1)
+                .setSelectedCharacters(List.of(Job.ARCHER))
+                .enableAutoSave(true)
+                .setInventory()
+                .setFlagMap(new FlagMap())
+                .setWorldPosition(new WorldPosition(0, 0))
+                .setMaps(List.of(new Map1(), new Map2(), new Map3()))
+                .build();
         gameState.createParty();
         return gameState;
     }

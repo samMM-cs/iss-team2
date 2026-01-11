@@ -10,6 +10,6 @@ public class StandardRewardStrategy implements RewardStrategy {
     @Override
     public Reward calculateRewards(Enemy enemy) {
         // Logic has to be implemented when database is ready
-        return new Reward(0, new ArrayList<Item>());
+        return new Reward(10, new ArrayList<Item>());
     }
 }

@@ -37,10 +37,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
-/*
- * ID  | Metodo                       | Scenario                       | Input                                        | Azione                                       | Risultato atteso
- * T16 | handleBattle()               | Inizia la Battle con il nemico | Enemy presente                               | showBattleView + updateFollowPosition        | Battle creato e BattleView.show()
- */
 public class ExplorationControllerTest {
   Scene scene;
 
