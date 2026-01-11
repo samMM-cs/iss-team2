@@ -1,8 +1,8 @@
 package com.game.view.mapview;
 
+import com.game.controller.exploration.ExplorationController;
 import com.game.controller.GameController;
 import com.game.controller.ViewManager;
-import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
 import com.game.model.character.Player;
 import com.game.model.map.MapData;

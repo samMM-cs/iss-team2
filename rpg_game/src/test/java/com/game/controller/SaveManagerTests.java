@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.game.model.GameState;
-import com.game.model.GameStateMemento;
 import com.game.model.WorldPosition;
 import com.game.model.character.Job;
 import com.game.model.map.Map1;
@@ -118,15 +117,6 @@ public class SaveManagerTests {
     @Test
     void testLoadFromAutosave_NotValid() {
         assertThrows(IOException.class, () -> saveManager.loadGameFromAutoSave());
-    }
-    
-    //Lo uso per evitare codice duplicatp
-    private GameState mockGameState() {
-        GameState gameState = mock(GameState.class);
-        GameStateMemento memento = mock(GameStateMemento.class);
-
-        when(gameState.saveToMemento()).thenReturn(memento);
-        return gameState;
     }
 
     private GameState trueGameState() {
