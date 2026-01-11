@@ -5,13 +5,14 @@ import com.game.model.story.StoryNode;
 
 public class StoryView {
     private StoryNode storyNode;
+    public DialogueView dialogueView;
 
-    public StoryView (StoryNode storyNode) {
+    public StoryView(StoryNode storyNode) {
         this.storyNode = storyNode;
     }
 
     public void show() {
-        DialogueView dialogueView = new DialogueView();
+        dialogueView = new DialogueView();
         dialogueView.showDialogue(new Dialogue(storyNode.getDialogues()));
     }
 
@@ -21,5 +22,9 @@ public class StoryView {
 
     public void setStoryNode(StoryNode storyNode) {
         this.storyNode = storyNode;
+    }
+
+    public DialogueView getDialogueView() {
+        return dialogueView;
     }
 }

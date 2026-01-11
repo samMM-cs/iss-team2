@@ -9,6 +9,7 @@ import com.game.model.character.Player;
 import com.game.view.CharacterSelectionView;
 import com.game.view.DialogueView;
 import com.game.view.ShopView;
+import com.game.view.StoryView;
 import com.game.view.battleview.BattleView;
 import com.game.view.gameview.MainMenuView;
 import com.game.view.gameview.NewGameView;
@@ -42,6 +43,8 @@ public class ViewManager {
   private boolean paused = false;
   private Pane root;
   private GameController gameController;
+  private StoryView storyView;
+  private StoryController storyController;
 
   private ViewManager(Stage stage) {
     this.stage = stage;
@@ -163,9 +166,9 @@ public class ViewManager {
   }
 
   public void showExplorationView() {
-    System.out.println("noparams");
-    if (explorationView == null)
+    if (explorationView == null) {
       explorationView = new ExplorationView(GameState.getInstance().getMap(), gameController);
+    }
     try {
       gameController.getSaveManager().autosave(GameState.getInstance());
     } catch (IOException e) {
@@ -195,13 +198,30 @@ public class ViewManager {
     }
   }
 
+  public void showStory(Scene scene) {
+    root = (Pane) scene.getRoot();
+    if (storyView == null) {
+      storyView = new StoryView(GameState.getInstance().getCurrentStoryNode());
+      storyController = new StoryController(storyView);
+      storyController.enter();
+
+      DialogueView dialogueView = storyView.getDialogueView();
+      if (dialogueView.isVisible())
+        explorationView.stop();
+      else
+        explorationView.start();
+
+      root.getChildren().add(dialogueView);
+    }
+  }
+
   public void showDialogView(Scene scene, Player player, NPC target) {
     root = (Pane) scene.getRoot();
     if (dialogView == null) {
       dialogView = new DialogueView();
       if (dialogView.isVisible()) {
         dialogView.handleAdvance();
-        
+
         // Blocco il movimento una volta aperto il dialogo
         explorationView.stop();
       } else {
