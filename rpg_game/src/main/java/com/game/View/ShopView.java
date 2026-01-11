@@ -15,7 +15,6 @@ import javafx.util.Duration;
 
 public class ShopView extends VBox {
     private final Player player;
-    private Label goldLabel;
     private VBox movesBox;
     private Label titleLabel;
     private Label feedbackLabel;
@@ -41,7 +40,7 @@ public class ShopView extends VBox {
         closeBtn.setStyle("-fx-background-color: #ff4444; -fx-text-fill: white; -fx-font-weight: bold;");
         closeBtn.setOnAction(e -> closed());
 
-        this.getChildren().addAll(titleLabel, goldLabel, movesBox, closeBtn, feedbackLabel);
+        this.getChildren().addAll(titleLabel, movesBox, closeBtn, feedbackLabel);
     }
 
     private void addShopItem(Move move) {
