@@ -2,24 +2,24 @@ package com.game.model.story;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import com.game.model.GameState;
+import com.game.model.SerializablePredicate;
 
 public class StoryNodeBuilder {
     private String name;
     private List<String> dialogues = new ArrayList<>();
     private List<Choice> choices = new ArrayList<>();
-    private Predicate<GameState> trigger = value -> true;
+    private SerializablePredicate<GameState> trigger = new SerializablePredicate.ConstantTrue<GameState>();
 
-    public StoryNodeBuilder () {
+    public StoryNodeBuilder() {
     }
 
     public StoryNodeBuilder setName(String name) {
         this.name = name;
         return this;
     }
-    
+
     public StoryNodeBuilder addDialogue(String dialogue) {
         this.dialogues.add(dialogue);
         return this;
@@ -40,7 +40,7 @@ public class StoryNodeBuilder {
         return this;
     }
 
-    public StoryNodeBuilder setTrigger(Predicate<GameState> trigger) {
+    public StoryNodeBuilder setTrigger(SerializablePredicate<GameState> trigger) {
         this.trigger = trigger;
         return this;
     }
@@ -61,7 +61,7 @@ public class StoryNodeBuilder {
         return this.choices;
     }
 
-    public Predicate<GameState> getTrigger() {
+    public SerializablePredicate<GameState> getTrigger() {
         return this.trigger;
     }
 }

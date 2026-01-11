@@ -3,16 +3,25 @@ package com.game.model.story;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.game.model.GameState;
+import com.game.model.SerializablePredicate;
 
 public class StoryNode {
     private String name;
     private List<String> dialogues;
     private List<Choice> choices;
-    private Predicate<GameState> trigger;
+    @JsonTypeInfo(use = Id.CLASS)
+    private SerializablePredicate<GameState> trigger;
 
-    @Deprecated
-    public StoryNode(String name, List<String> dialogues, List<Choice> choices) {
+    @JsonCreator
+    public StoryNode(
+            @JsonProperty("name") String name,
+            @JsonProperty("dialogues") List<String> dialogues,
+            @JsonProperty("choices") List<Choice> choices) {
         this.name = name;
         this.dialogues = dialogues;
         this.choices = choices;

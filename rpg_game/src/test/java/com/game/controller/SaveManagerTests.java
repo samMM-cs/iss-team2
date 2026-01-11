@@ -34,22 +34,13 @@ public class SaveManagerTests {
         new File("save_slot2.json").delete();
     }
 
-<<<<<<< HEAD
-    //T1
-=======
     // T1 - isSlotUsed()==false
->>>>>>> f6ef368c91f634f473a77f5d0b9da936348c87fd
     @Test
     void testIsSlotUsed_slotNotExists() throws IOException {
         assertFalse(saveManager.isSlotUsed(1));
     }
-<<<<<<< HEAD
-    
-    //T2
-=======
 
     // T2 - isSlotUsed()==true
->>>>>>> f6ef368c91f634f473a77f5d0b9da936348c87fd
     @Test
     void testIsSlotUsed_slotExists() throws IOException {
         GameState gameState = trueGameState();

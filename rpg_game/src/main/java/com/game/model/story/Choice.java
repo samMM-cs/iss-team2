@@ -1,11 +1,14 @@
 package com.game.model.story;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Choice {
     private final StoryNode nextNode;
     private final String text;
 
-    
-    public Choice(StoryNode nextNode, String text) {
+    @JsonCreator
+    public Choice(@JsonProperty("nextNode") StoryNode nextNode, @JsonProperty("text") String text) {
         this.nextNode = nextNode;
         this.text = text;
     }
