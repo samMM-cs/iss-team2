@@ -23,21 +23,22 @@ public class MainMenuControllerTest {
     void setup() {
         controller = spy(new MainMenuController());
 
-        //Sostituisco i creato reali
+        // Sostituisco i creato reali
         controller.newGameCreator = mock(GameCreator.class);
         controller.continueGameCreator = mock(GameCreator.class);
         controller.viewManager = mock(ViewManager.class);
         game = mock(Game.class);
-        
-        //quando createGameController viene chiamato restituisco il mock
+
+        // quando createGameController viene chiamato restituisco il mock
         gameController = mock(GameController.class);
         doReturn(gameController).when(controller).createGameController(game);
 
-        //Quando viene chiamato createGame() dal creator restituisco il mock Game
+        // Quando viene chiamato createGame() dal creator restituisco il mock Game
         when(controller.newGameCreator.createGame()).thenReturn(game);
         when(controller.continueGameCreator.createGame()).thenReturn(game);
     }
-    //T1
+
+    // T1
     @Test
     void onNewGame_test() {
         controller.onNewGame(null);
@@ -46,17 +47,18 @@ public class MainMenuControllerTest {
         verify(gameController).start();
         verifyNoInteractions(controller.continueGameCreator);
     }
-    
-    //T2
+
+    // T2
     @Test
     void onResumeGame_test() {
         controller.onResumeGame(null);
-        
+
         verify(controller.continueGameCreator).createGame();
         verify(gameController).resume();
         verifyNoInteractions(controller.newGameCreator);
     }
-    //T3
+
+    // T3
     @Test
     void testOnExit() {
         assertDoesNotThrow(() -> controller.onExit(null));

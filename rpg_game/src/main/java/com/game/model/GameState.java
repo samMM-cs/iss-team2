@@ -223,6 +223,24 @@ public class GameState {
         return new GameStateMemento(this);
     }
 
+    @Override
+    public String toString() {
+        return "GameState{" +
+                "nPlayers=" + nPlayers +
+                ", autoSaveEnabled=" + autoSaveEnabled +
+                ", selectedCharacters=" + selectedCharacters +
+                ", enemies=" + enemies +
+                ", npc=" + npc +
+                ", party=" + party +
+                ", inventory=" + inventory +
+                ", worldPosition=" + worldPosition +
+                ", mapInd=" + mapInd +
+                ", mapId='" + mapId + '\'' +
+                ", currentStoryNode=" + currentStoryNode +
+                ", maps=" + (maps != null ? maps.size() + " maps" : "null") +
+                '}';
+    }
+
     // ----------------------------------------------------------------------------------------
 
     public static class GameStateBuilder {

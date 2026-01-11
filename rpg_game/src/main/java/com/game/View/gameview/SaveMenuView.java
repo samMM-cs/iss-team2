@@ -99,7 +99,7 @@ public class SaveMenuView extends VBox {
 
     private void updateSlotStatus(int slot, Label status, Button btn) {
         boolean used = gameController.getSaveManager().isSlotUsed(slot);
-        //boolean isValid = gameController.getSaveManager().isSlotValid(slot);
+        // boolean isValid = gameController.getSaveManager().isSlotValid(slot);
 
         if (!used) {
             status.setText("EMPTY");
