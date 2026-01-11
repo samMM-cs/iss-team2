@@ -16,10 +16,11 @@ public class StoryController {
 
     public void enter() {
         if (storyNode != null && storyNode.getTrigger().test(GameState.getInstance())) {
-            System.out.println("entered");
+            System.out.println(storyNode.getName());
             view.show();
             //Only for purpose test
-            GameState.getInstance().setCurrentStoryNode(storyNode.getChoices().getFirst().getNextNode());
+            StoryNode nextsn = storyNode.getChoices().getFirst().getNextNode();
+            GameState.getInstance().setCurrentStoryNode(nextsn);
         }
     }
 

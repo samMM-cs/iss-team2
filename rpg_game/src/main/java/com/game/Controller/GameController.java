@@ -42,7 +42,7 @@ public class GameController {
         new GameState.GameStateBuilder().setNPlayers(players)
                 .enableAutoSave(autoSave).setMaps(List.of(new Map1(), new Map2(), new Map3()))
                 .setFlagMap(new FlagMap())
-                .setStoryNode(new StoryNodeLoader().start)
+                .setStoryNode(StoryNodeLoader.load())
                 .build();
         ViewManager.getInstance().showCharacterSelectionView(this);
     }
