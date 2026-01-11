@@ -8,30 +8,28 @@ import com.game.model.creator.Game;
 import javafx.event.ActionEvent;
 
 public class MainMenuController {
+    public GameCreator newGameCreator = new NewGameCreator();
+    public GameCreator continueGameCreator = new ContinueGameCreator();
+    public ViewManager viewManager = ViewManager.getInstance();
 
     public MainMenuController() {
     }
 
-    public void onNewGame(ActionEvent event) {
-        System.out.println("Avvio nuova partita");
+    public GameController createGameController(Game game) {
+        return new GameController(game);
+    }
 
-        GameCreator gameCreator = new NewGameCreator();
-        Game newGame = gameCreator.createGame();
-        GameController gameController = new GameController(newGame);
-        gameController.start();
+    public void onNewGame(ActionEvent event) {
+        Game newGame = newGameCreator.createGame();
+        createGameController(newGame).start();
     }
 
     public void onResumeGame(ActionEvent event) {
-        System.out.println("Riprendi partita");
-        GameCreator gameCreator = new ContinueGameCreator();
-        Game continueGame = gameCreator.createGame();
-        GameController gameController = new GameController(continueGame);
-        gameController.resume();
-
+        Game continueGame = continueGameCreator.createGame();
+        createGameController(continueGame).resume();
     }
 
     public void onExit(ActionEvent event) {
-        // Chiusura del gioco
-        ViewManager.getInstance().exit();
+        viewManager.exit();
     }
 }

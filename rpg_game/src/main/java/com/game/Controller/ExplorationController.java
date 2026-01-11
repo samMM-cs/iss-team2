@@ -1,4 +1,4 @@
-package com.game.controller.exploration;
+package com.game.controller;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
-import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.Position;
 import com.game.model.battle.Battle;

@@ -55,6 +55,7 @@ public class Move {
     public List<String> getReq() {
         return req;
     }
+
     public String getDescription() {
         return this.description;
     }

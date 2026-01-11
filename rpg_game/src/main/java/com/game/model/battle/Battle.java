@@ -56,7 +56,7 @@ public class Battle {
                 if (action != null) {
                     System.out.println("Azione di: " + character);
                     action.execute();
-                    BattleResult flag= isBattleOver();
+                    BattleResult flag = isBattleOver();
                     if (flag != BattleResult.ONGOING) {
                         return flag;
                     }
@@ -82,13 +82,6 @@ public class Battle {
         boolean enemydead = true;
         if (enemy.getCurrentStats().getHp() > 0)
             enemydead = false;
-        /*
-         * for (CharacterPG c : enemies) {
-         * if (c.getCurrentStats().getHp() > 0) {
-         * enemydead= false;
-         * }
-         * }
-         */
         if (partyWiped)
             return BattleResult.PARTY_DEFEATED;
         if (enemydead)
@@ -104,6 +97,14 @@ public class Battle {
 
     public Enemy getEnemy() {
         return enemy;
+    }
+
+    public TurnStrategy getTurnStrategy() {
+        return turnStrategy;
+    }
+
+    public RewardStrategy getRewardStrategy() {
+        return rewardStrategy;
     }
 
     public void setPlannedActionList(List<Action> plannedActionList) {

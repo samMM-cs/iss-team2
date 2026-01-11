@@ -34,9 +34,6 @@ public class ShopView extends VBox {
         feedbackLabel = new Label("");
         feedbackLabel.setStyle("-fx-text-fill: #00ff00; -fx-font-size: 14; -fx-font-weight: bold;");
 
-        goldLabel = new Label("Money: " + player.getCurrentStats().getMoney());
-        goldLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 18;");
-
         movesBox = new VBox(10);
         movesBox.setAlignment(Pos.CENTER);
 
@@ -77,7 +74,7 @@ public class ShopView extends VBox {
         Label nameLabel = new Label(move.getName());
         nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;");
 
-        Button buyButton = new Button("Impara");
+        Button buyButton = new Button("Learn");
         buyButton.setStyle(
                 "-fx-background-color: #228B22;" +
                         "-fx-text-fill: white;" +
