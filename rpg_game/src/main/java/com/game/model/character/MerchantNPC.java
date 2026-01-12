@@ -28,9 +28,7 @@ public class MerchantNPC extends NPC {
     }
 
     @Override
-    public void interact(Player player) {
-        System.out.println("Parla il merchant");
-
+    public void interact(Party party) {
         if (getDialogue() != null) {
             DialogueView view = new DialogueView();
             view.showDialogue(getDialogue());

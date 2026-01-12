@@ -6,6 +6,7 @@ import com.game.model.GameState;
 import com.game.model.battle.Battle;
 import com.game.model.character.NPC;
 import com.game.model.character.Player;
+import com.game.model.character.Party;
 import com.game.view.CharacterSelectionView;
 import com.game.view.DialogueView;
 import com.game.view.ShopView;
@@ -230,7 +231,7 @@ public class ViewManager {
       }
       dialogView.showDialogue(target.getDialogue());
       dialogView.setOnCloseClick(() -> {
-        showShop(player, target);
+        showShop(player, target,GameState.getInstance().getParty());
         dialogView.setVisible(false);
         dialogView = null;
         // Una volta finito il player riprende il movimento
@@ -240,10 +241,10 @@ public class ViewManager {
     }
   }
 
-  public void showShop(Player player, NPC npc) {
+  public void showShop(Player player, NPC npc,Party party) {
     root = (Pane) ViewManager.getInstance().getStage().getScene().getRoot();
     if (shopView == null) {
-      shopView = new ShopView(player);
+      shopView = new ShopView(party);
       root.getChildren().add(shopView);
     }
     shopView.open(npc);

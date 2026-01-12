@@ -106,7 +106,6 @@ public class GameState {
             createEnemy();
             createNpc();
             party.setPositions(maps.get(mapInd).getPlayerPositions(nPlayers));
-            // createParty();
         }
     }
 
@@ -313,12 +312,16 @@ public class GameState {
         public GameState build() {
             if (GameState.instance == null) {
                 GameState.instance = new GameState(this);
+
+                if (!selectedCharacters.isEmpty())
+                    GameState.getInstance().createParty();
+                GameState.getInstance().createEnemy();
+                GameState.getInstance().createNpc();
             }
             return GameState.instance;
         }
 
         public GameState restoreFromMemento(GameStateMemento memento) {
-            // System.out.println(memento.toString());
             GameState.instance = new GameState(memento);
             return instance;
         }

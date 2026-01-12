@@ -2,9 +2,7 @@ package com.game.model.character;
 
 import javafx.scene.image.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,12 +13,9 @@ public class Player extends CharacterPG {
     private Inventory inventory;
     private Player follower;
     private static final Image img = new Image(Player.class.getResourceAsStream("/characters/rogues.png"));
-    private List<Move> learnedMoves = new ArrayList<>();
 
     public Player(Job job, Position position) {
         super(job, position, img);
-        learnedMoves
-                .addAll(job.getEffectiveMoves().stream().filter(m -> m.getCost() == 0).collect(Collectors.toList()));
     }
 
     @JsonCreator
@@ -28,7 +23,6 @@ public class Player extends CharacterPG {
             @JsonProperty("position") Position position,
             @JsonProperty("currentMove") List<Move> moves) {
         this(job, position);
-        learnedMoves = moves;
     }
 
     public void equipItem(Item item) {
@@ -42,8 +36,9 @@ public class Player extends CharacterPG {
     }
 
     public void learnMove(Move move) {
-        if (!learnedMoves.contains(move))
-            learnedMoves.add(move);
+        if (!this.getCurrentMove().contains(move)) {
+            this.getCurrentMove().add(move);
+        }
     }
 
     public void subscribeToFollowed(Player player) {
@@ -72,9 +67,5 @@ public class Player extends CharacterPG {
 
     public void setPosition(Position pos) {
         this.setPos(pos);
-    }
-
-    public List<Move> getLearnedMoves() {
-        return learnedMoves;
     }
 }

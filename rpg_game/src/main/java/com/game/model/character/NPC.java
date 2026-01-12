@@ -80,7 +80,7 @@ public abstract class NPC implements Interactable, HasSpriteAndPosition {
     }
 
     @Override
-    public void interact(Player player) {
+    public void interact(Party party) {
         DialogueView view = new DialogueView();
         view.showDialogue(this.getDialogue());
     }
