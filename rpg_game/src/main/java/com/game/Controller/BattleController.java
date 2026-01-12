@@ -95,16 +95,11 @@ public class BattleController {
     }
 
     private void updatePlayerUI() {
-        // 1. Diciamo alla View chi evidenziare graficamente
         view.setActivePlayer(currentPlayerActingIndex);
 
         CharacterPG character = party.getMembers().get(currentPlayerActingIndex);
-        // 2. Estraiamo i nomi delle mosse dal JSON (availableMoves)
-        // Se ogni personaggio ha mosse diverse, qui puoi filtrare per Job o Id.
-        // Per ora prendiamo tutti i nomi delle mosse caricate:
         List<String> moveNames = character.getCurrentMove().stream().map(Move::getName).collect(Collectors.toList());
 
-        // 3. Inviamo i nomi alla View
         view.updateMoveList(moveNames);
     }
 
@@ -117,8 +112,7 @@ public class BattleController {
             for (int i = 0; i < battle.getEnemies().size(); i++) {
                 plannedActionList.add(new Action(battle.enemyAIString(i), battle.getEnemies().get(i), target));
             }
-            // Mosse del nemico
-            // Esecuzione logica del turno
+            
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
             this.result = battle.nextTurn();
@@ -135,7 +129,6 @@ public class BattleController {
     private void handleBattleResult(BattleResult br) {
         switch (br) {
             case BattleResult.ONGOING:
-                // Reset per il prossimo round
                 plannedActionList.clear();
                 break;
             case BattleResult.PARTY_DEFEATED: {
@@ -144,7 +137,6 @@ public class BattleController {
             }
             case BattleResult.PARTY_WON: {
                 battle.assignRewards();
-                // battle.getEnemy().hide();
                 GameState.getInstance().getEnemies().remove(battle.getEnemies().get(0));
                 backToMap();
                 break;
@@ -153,7 +145,6 @@ public class BattleController {
 
     }
 
-    // Calcolo l'indice del prossimo player vivo. Salta chi ha getHp()<=0
     private int getNextPlayerIndex() {
         int size = party.getMembers().size();
         for (int i = 1; i <= size; i++) {
