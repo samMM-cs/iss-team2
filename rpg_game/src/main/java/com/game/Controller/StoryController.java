@@ -29,7 +29,10 @@ public class StoryController {
             .filter(choice -> choice.getText().equals(choiceText))
             .findFirst()
             .orElse(null);
-        updateCurrentStoryNode(chosenOne.getNextNode());
+        if (chosenOne != null) {
+            chosenOne.getChoiceAftermath().accept(GameState.getInstance());
+            updateCurrentStoryNode(chosenOne.getNextNode());
+        }
     }
 
     public void updateCurrentStoryNode(StoryNode newStoryNode) {

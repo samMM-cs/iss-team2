@@ -1,0 +1,53 @@
+@startuml US10
+title Choices affect story
+
+class StoryNode {
+    - name: String
+    - dialogues: List<String>
+    - choices: List<Choice>
+    - trigger: SerializablePredicate<GameState>
+    + addChoice(Choice choice): void
+}
+
+class StoryNodeBuilder {
+    - name: String
+    - dialogues: List<String>
+    - choices: List<Choice>
+    - trigger: SerializablePredicate<GameState>
+    + setName(String name): StoryNodeBuilder
+    + addDialogue(String dialogue): StoryNodeBuilder
+    + addChoice(Choice choice): StoryNodeBuilder
+    + setDialogues(List<String> dialogues): StoryNodeBuilder
+    + setChoices(List<Choice> choices): StoryNodeBuilder
+    + setTrigger(SerializablePredicate<GameState> trigger): StoryNodeBuilder
+    + buildStoryNode(): StoryNode
+}
+
+class StoryNodeLoader {
+    + load(): StoryNode
+}
+
+class Choice {
+    - nextNode: StoryNode
+    - text: String
+    + getNextNode(): StoryNode
+    + getText(): String
+}
+
+enum Flag {
+
+}
+
+class FlagMap {
+    - flags: EnumMap<Flag, Boolean>
+    + getFlag(Flag flag): boolean
+    + setFlag(Flag flag): void
+}
+
+StoryNodeBuilder --> StoryNode
+StoryNodeLoader --> StoryNodeBuilder
+StoryNode --> Choice
+
+FlagMap *-- Flag
+
+@enduml

@@ -1,32 +1,19 @@
-package com.game.controller;
-
-import com.game.model.creator.GameCreator;
-import com.game.model.creator.NewGameCreator;
-import com.game.model.creator.ContinueGameCreator;
-import com.game.model.creator.Game;
+package com.game.controller;    
 
 import javafx.event.ActionEvent;
 
 public class MainMenuController {
-    public GameCreator newGameCreator = new NewGameCreator();
-    public GameCreator continueGameCreator = new ContinueGameCreator();
     public ViewManager viewManager = ViewManager.getInstance();
 
     public MainMenuController() {
     }
 
-    public GameController createGameController(Game game) {
-        return new GameController(game);
-    }
-
     public void onNewGame(ActionEvent event) {
-        Game newGame = newGameCreator.createGame();
-        createGameController(newGame).start();
+        GameControllerFactory.createController(GameMode.NEW_GAME).start();
     }
 
     public void onResumeGame(ActionEvent event) {
-        Game continueGame = continueGameCreator.createGame();
-        createGameController(continueGame).resume();
+        GameControllerFactory.createController(GameMode.CONTINUE_GAME).start();
     }
 
     public void onExit(ActionEvent event) {

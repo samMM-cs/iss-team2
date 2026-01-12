@@ -1,6 +1,5 @@
 package com.game.controller;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,10 +16,8 @@ import org.mockito.MockedStatic;
 
 import com.game.model.GameState;
 import com.game.model.character.Job;
-import com.game.model.creator.NewGame;
 
 public class GameControllerTest {
-
     @BeforeEach
     public void setup() {
         GameState.destroy();
@@ -28,20 +25,16 @@ public class GameControllerTest {
 
     @Test
     public void T1_GameControllerCreation() {
-        assertDoesNotThrow(() -> {
-            NewGame newGame = mock(NewGame.class);
-            GameController gc = new GameController(newGame);
-            Field game = GameController.class.getDeclaredField("game");
-            game.setAccessible(true);
-            assertInstanceOf(SaveManager.class, gc.getSaveManager());
-            assertInstanceOf(NewGame.class, game.get(gc));
-        });
+        GameController newGameController = GameControllerFactory.createController(GameMode.NEW_GAME);
+        GameController continueGameController = GameControllerFactory.createController(GameMode.CONTINUE_GAME);
+
+        assertInstanceOf(NewGameController.class, newGameController);
+        assertInstanceOf(ContinueGameController.class, continueGameController);
     }
 
     @Test
     public void T2_onNewGameConfirmed() throws Exception {
-        NewGame newGame = mock(NewGame.class);
-        GameController gc = new GameController(newGame);
+        NewGameController gc = (NewGameController) GameControllerFactory.createController(GameMode.NEW_GAME);
 
         try (MockedStatic<ViewManager> mockedViewManager = mockStatic(ViewManager.class)) {
             ViewManager mockViewManagerInstance = mock(ViewManager.class);
@@ -65,8 +58,7 @@ public class GameControllerTest {
 
     @Test
     public void T3_addCharacter() {
-        NewGame newGame = mock(NewGame.class);
-        GameController gc = new GameController(newGame);
+        NewGameController gc = (NewGameController) GameControllerFactory.createController(GameMode.NEW_GAME);
         try (MockedStatic<ViewManager> vm = mockStatic(ViewManager.class);) {
             ViewManager vminst = mock(ViewManager.class);
             vm.when(ViewManager::getInstance).thenReturn(vminst);
@@ -79,8 +71,7 @@ public class GameControllerTest {
 
     @Test
     public void T4_DoNotAddCharacterIfFull() {
-        NewGame newGame = mock(NewGame.class);
-        GameController gc = new GameController(newGame);
+        NewGameController gc = (NewGameController) GameControllerFactory.createController(GameMode.NEW_GAME);
         try (MockedStatic<ViewManager> vm = mockStatic(ViewManager.class);) {
             ViewManager vminst = mock(ViewManager.class);
             vm.when(ViewManager::getInstance).thenReturn(vminst);
@@ -95,8 +86,7 @@ public class GameControllerTest {
 
     @Test
     public void T5_startExploration() {
-        NewGame newGame = mock(NewGame.class);
-        GameController gc = new GameController(newGame);
+        NewGameController gc = (NewGameController) GameControllerFactory.createController(GameMode.NEW_GAME);
         try (MockedStatic<ViewManager> vm = mockStatic(ViewManager.class);
                 MockedStatic<GameState> gs = mockStatic(GameState.class)) {
             ViewManager vminst = mock(ViewManager.class);

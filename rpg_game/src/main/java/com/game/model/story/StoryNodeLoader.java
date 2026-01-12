@@ -1,6 +1,7 @@
 package com.game.model.story;
 
 import com.game.model.GameState;
+import com.game.model.SerializableConsumer;
 import com.game.model.SerializablePredicate;
 
 //Basically the factory of a StoryNode Tree
@@ -13,7 +14,7 @@ public class StoryNodeLoader {
 
         StoryNode secondLevel = new StoryNodeBuilder().setName("second level")
                 .addDialogue("You are in the second level of the story")
-                .addChoice(new Choice(null, "Your story has ended"))
+                .addChoice(new Choice(null, "Your story has ended", new SerializableConsumer.DoNothing<GameState>()))
                 // .setTrigger(gs -> gs.getMapInd() == 1)
                 .setTrigger(new SecondLevelTrigger())
                 .buildStoryNode();
