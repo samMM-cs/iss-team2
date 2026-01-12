@@ -108,7 +108,7 @@ public class ExplorationController {
         if (gameState.getCurrentStoryNode() != null
                 && !ViewManager.getInstance().getDialogView().isVisible()) {
             if (storyView != null) {
-                storyView.show(gameState.getCurrentStoryNode(), gameState);
+                storyView.showDialogue(gameState.getCurrentStoryNode(), gameState);
                 storyController.enter();
             }
         }

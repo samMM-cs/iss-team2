@@ -18,8 +18,10 @@ public class StoryController {
 
     public void enter() {
         StoryNode node = gameState.getCurrentStoryNode();
-        if (node != null && node.getTrigger().test(GameState.getInstance()))
-            view.show(node, gameState);
+        if (node != null && node.getTrigger().test(GameState.getInstance())) {
+            view.showDialogue(node, gameState);
+            view.showChoices(node);
+        }
     }
 
     public void onChoice(String choiceText) {
@@ -30,7 +32,6 @@ public class StoryController {
         if (chosenOne != null) {
             chosenOne.getChoiceAftermath().accept(GameState.getInstance());
             gameState.setCurrentStoryNode(chosenOne.getNextNode());
-            enter();
         }
     }
 }

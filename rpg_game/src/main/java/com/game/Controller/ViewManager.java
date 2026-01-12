@@ -215,7 +215,7 @@ public class ViewManager {
 
     explorationView.stop();// Blocca il movimento
 
-    storyView.show(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());// Mostra la storia corrente
+    storyView.showDialogue(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());// Mostra la storia corrente
 
     if (!dialogView.isVisible())
       dialogView.handleAdvance();
