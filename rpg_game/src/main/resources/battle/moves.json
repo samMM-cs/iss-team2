@@ -14,7 +14,7 @@
     "type": "ATTACK",
     "value": 15,
     "cost": 20,
-    "requirements": ["WARRIOR", "TRAINER"],
+    "requirements": ["WARRIOR", "TRAINER", "BOSS"],
     "description": "Colpisce con lo scudo"
   },
   {
@@ -23,7 +23,7 @@
     "type": "ATTACK",
     "value": 25,
     "cost": 30,
-    "requirements": ["ROGUE", "TRAINER"],
+    "requirements": ["ROGUE", "TRAINER", "BOSS"],
     "description": "Colpisce alle spalle"
   },
   {
@@ -32,7 +32,7 @@
     "type": "ATTACK",
     "value": 20,
     "cost": 25,
-    "requirements": ["ARCHER", "TRAINER"],
+    "requirements": ["ARCHER", "TRAINER", "BOSS"],
     "description": "Scaglia due frecce contemporaneamente"
   },
 
@@ -60,7 +60,7 @@
     "type": "MAGIC_ATTACK",
     "value": 30,
     "cost": 100,
-    "requirements": ["MAGE", "TRAINER"],
+    "requirements": ["MAGE", "TRAINER", "BOSS"],
     "description": "Danni da fuoco"
   },
   {
@@ -79,7 +79,7 @@
     "value": 12,
     "cost": 0,
     "price": 0,
-    "requirements": ["GOBLIN", "TROLL"],
+    "requirements": ["GOBLIN", "TROLL", "BOSS"],
     "description": "Morso ferocissimo dei Goblin."
   }
 ]

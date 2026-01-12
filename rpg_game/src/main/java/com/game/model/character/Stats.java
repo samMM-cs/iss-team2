@@ -58,7 +58,7 @@ public class Stats {
 
   public Stats(int hp, int attack, int defense, int special, int speed) {
     this.hp = hp;
-    this.maxHp = 100;
+    this.maxHp = hp;
     this.attack = attack;
     this.defense = defense;
     this.special = special;

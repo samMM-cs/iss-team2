@@ -2,6 +2,7 @@ package com.game.model.battle;
 
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Enemy;
+import com.game.model.character.Job;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,12 @@ public class Battle {
     public Battle(Enemy enemy) {
         this.gameState = GameState.getInstance();
         this.turnIndex = 0;
-        if (enemy != null)
-            this.enemies = enemy.clones(GameState.getInstance().getNPlayers());
+        if (enemy != null) {
+            if (!enemy.getJob().equals(Job.BOSS))
+                this.enemies = enemy.clones(GameState.getInstance().getNPlayers());
+            else
+                this.enemies = List.of(enemy);
+        }
         this.turnStrategy = new StaticSpeedTurn(gameState.getParty(), this.enemies);
         this.rewardStrategy = new StandardRewardStrategy();
     }

@@ -278,8 +278,12 @@ public class BattleView extends Pane {
             if (enemy.getCurrentStats().getHp() <= 0)
                 continue;
 
-            double size = Math.floor(h * 0.3);
-            double x = Math.floor(w * 0.80 - i * size * .6);
+            double size = Math.floor(h * (enemy.getJob().equals(Job.BOSS) ? 0.5 : 0.3));
+            double x;
+            if (enemy.getJob().equals(Job.BOSS))
+                x = Math.floor(w * .6);
+            else
+                x = Math.floor(w * 0.80 - i * size * .6);
 
             // Compensa lo spazio vuoto nello sprite sheet
             double enemyYOffset = size * 0.20;

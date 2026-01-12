@@ -14,10 +14,13 @@ import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
 
 import com.game.controller.exploration.ExplorationController;
 import com.game.controller.exploration.MapBuilder;
@@ -29,6 +32,7 @@ import com.game.model.map.Map1;
 import com.game.model.map.Map2;
 import com.game.model.map.Map3;
 import com.game.model.story.FlagMap;
+import com.game.view.DialogueView;
 import com.game.view.mapview.MapView;
 
 import javafx.application.Platform;
@@ -38,12 +42,29 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
 public class ExplorationControllerTest {
-    Scene scene;
+    private Scene scene;
+    private MockedStatic<ViewManager> vm;
+    private ViewManager inst;
 
     @BeforeEach
     public void setup() {
         scene = new Scene(new Pane());
         trueGameState();
+        var mock = mockStatic(ViewManager.class);
+        ViewManager vmin = mock(ViewManager.class);
+        DialogueView dv = mock(DialogueView.class);
+        when(vmin.getDialogView()).thenReturn(dv);
+        when(vmin.isUIVisible()).thenReturn(false);
+        when(vmin.isPaused()).thenReturn(false);
+        mock.when(ViewManager::getInstance).thenReturn(vmin);
+        vm = mock;
+        inst = vmin;
+    }
+
+    @AfterEach
+    public void closeUp() throws Exception {
+        if (vm != null)
+            vm.close();
     }
 
     @BeforeAll
@@ -72,16 +93,9 @@ public class ExplorationControllerTest {
     public void T3_UpdateCallsMovePlayer() {
         ExplorationController contr = spy(new ExplorationController(scene, niceMapView()));
         contr.getActiveKeys().offer(KeyCode.W);
+        contr.update();
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-
-            contr.update();
-
-            verify(contr).movePlayer(KeyCode.W);
-        }
+        verify(contr).movePlayer(KeyCode.W);
     }
 
     @Test
@@ -90,13 +104,9 @@ public class ExplorationControllerTest {
         GameState.getInstance().getParty()
                 .updateFollowPosition(GameState.getInstance().getEnemies().get(0).getPosition());
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
-            verify(contr).handleBattle(GameState.getInstance().getEnemies().get(0));
-        }
+        contr.update();
+        verify(contr).handleBattle(GameState.getInstance().getEnemies().get(0));
+
     }
 
     @Test
@@ -106,14 +116,9 @@ public class ExplorationControllerTest {
 
         contr.getActiveKeys().offer(KeyCode.W);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 19));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 19));
     }
 
     @Test
@@ -123,14 +128,9 @@ public class ExplorationControllerTest {
 
         contr.getActiveKeys().offer(KeyCode.D);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(21, 20));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(21, 20));
     }
 
     @Test
@@ -138,14 +138,9 @@ public class ExplorationControllerTest {
         ExplorationController contr = spy(new ExplorationController(scene, niceMapView()));
         GameState.getInstance().getParty().updateFollowPosition(new Position(20, 20));
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 20));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 20));
     }
 
     @Test
@@ -155,15 +150,10 @@ public class ExplorationControllerTest {
         contr.getActiveKeys().offer(KeyCode.W);
         contr.getActiveKeys().offer(KeyCode.D);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
-            contr.update();
+        contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(21, 19));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(21, 19));
     }
 
     @Test
@@ -173,14 +163,9 @@ public class ExplorationControllerTest {
         GameState.getInstance().getParty().updateFollowPosition(pos);
         contr.getActiveKeys().offer(KeyCode.D);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), pos);
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), pos);
     }
 
     @Test
@@ -195,14 +180,9 @@ public class ExplorationControllerTest {
         partyField.setAccessible(true);
         partyField.set(GameState.getInstance(), spyParty);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            verify(spyParty).updateFollowPosition(any());
-        }
+        verify(spyParty).updateFollowPosition(any());
     }
 
     @Test
@@ -211,15 +191,10 @@ public class ExplorationControllerTest {
         GameState.getInstance().getParty().updateFollowPosition(new Position(20, 20));
         contr.getActiveKeys().offer(KeyCode.D);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(21, 20));
-            assertEquals(GameState.getInstance().getParty().getMembers().get(1).getPosition(), new Position(20, 20));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(21, 20));
+        assertEquals(GameState.getInstance().getParty().getMembers().get(1).getPosition(), new Position(20, 20));
     }
 
     @Test
@@ -231,14 +206,9 @@ public class ExplorationControllerTest {
         contr.getActiveKeys().offer(KeyCode.A);
         contr.getActiveKeys().offer(KeyCode.S);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 19));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 19));
     }
 
     @Test
@@ -248,14 +218,9 @@ public class ExplorationControllerTest {
         assertNull(contr.getPrevPosition());
         contr.getActiveKeys().offer(KeyCode.W);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
+        contr.update();
 
-            assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 19));
-        }
+        assertEquals(GameState.getInstance().getParty().getMainPlayer().getPosition(), new Position(20, 19));
     }
 
     @Test
@@ -271,14 +236,9 @@ public class ExplorationControllerTest {
         Position pos = GameState.getInstance().getNpc().get(0).getPosition().add(new Position(-1, 0));
         GameState.getInstance().getParty().updateFollowPosition(pos);
         contr.getActiveKeys().offer(KeyCode.E);
+        contr.update();
+        verify(contr).handlePossibleInteractions();
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
-            verify(contr).handlePossibleInteractions();
-        }
     }
 
     @Test
@@ -287,14 +247,9 @@ public class ExplorationControllerTest {
         Position battleStartPos = GameState.getInstance().getEnemies().get(0).getPosition();
         GameState.getInstance().getParty().updateFollowPosition(battleStartPos);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
-            verify(contr).handleBattle(any());
-            verify(vminst).showBattleView(any());
-        }
+        contr.update();
+        verify(contr).handleBattle(any());
+        verify(inst).showBattleView(any());
     }
 
     @Test
@@ -303,17 +258,12 @@ public class ExplorationControllerTest {
         GameState.getInstance().getParty().updateFollowPosition(new Position(20, 20));
         contr.getActiveKeys().offer(KeyCode.D);
 
-        try (var mockVm = mockStatic(ViewManager.class)) {
-            ViewManager vminst = mock(ViewManager.class);
-            when(vminst.isUIVisible()).thenReturn(false);
-            mockVm.when(ViewManager::getInstance).thenReturn(vminst);
-            contr.update();
-            verify(contr).movePlayer(KeyCode.D);
-            ArgumentCaptor<Position> posCaptor = ArgumentCaptor.forClass(Position.class);
-            verify(contr).canGoThere(posCaptor.capture());
+        contr.update();
+        verify(contr).movePlayer(KeyCode.D);
+        ArgumentCaptor<Position> posCaptor = ArgumentCaptor.forClass(Position.class);
+        verify(contr).canGoThere(posCaptor.capture());
 
-            assertTrue(contr.canGoThere(posCaptor.getValue()));
-        }
+        assertTrue(contr.canGoThere(posCaptor.getValue()));
     }
 
     private GameState trueGameState() {

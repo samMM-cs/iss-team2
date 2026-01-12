@@ -18,7 +18,8 @@ public enum Job {
     TROLL(0, 1, 100, 4, 3, 0, 2, false),
     // NPC
     TRAINER(3, 4, 0, 0, 0, 0, 0, false),
-    ;
+    // BOSS
+    BOSS(0, 11, 500, 10, 6, 0, 5, false);
 
     public static final int SIZE = 32;
 
@@ -63,7 +64,9 @@ public enum Job {
                     .filter(move -> move.getReq().contains(shopTrainer) && move.getCost() > 0)
                     .collect(Collectors.toList());
         }
-
+        BOSS.effectiveMoves = allMoves.stream()
+                .filter(move -> move.getReq().contains(shopTrainer))
+                .collect(Collectors.toList());
     }
 
     public List<Move> getShopMoves() {

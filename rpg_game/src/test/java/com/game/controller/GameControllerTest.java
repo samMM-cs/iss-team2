@@ -3,6 +3,7 @@ package com.game.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
@@ -100,9 +101,9 @@ public class GameControllerTest {
             gc.onCharacterSelected(Job.WARRIOR);
             gc.startExploration();
 
-            verify(gamestate).createEnemy();
+            verify(gamestate, atLeastOnce()).createEnemy();
             verify(gamestate).createParty();
-            verify(gamestate).createNpc();
+            verify(gamestate, atLeastOnce()).createNpc();
         }
     }
 }

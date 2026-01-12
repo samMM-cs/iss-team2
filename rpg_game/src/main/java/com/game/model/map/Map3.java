@@ -2,6 +2,7 @@ package com.game.model.map;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import com.game.model.Position;
 import com.game.model.character.Enemy;
@@ -24,12 +25,11 @@ public class Map3 implements MapData {
 
   @Override
   public Position getPlayerPosition(int N, int i) {
-    System.out.println(N - i);
     return switch (N - i) {
-      case 0 -> new Position(18, 0); // last player
-      case 1 -> new Position(17, 0);
-      case 2 -> new Position(17, 1);
-      case 3 -> new Position(17, 2);
+      case 1 -> new Position(18, 0); // last player
+      case 2 -> new Position(17, 0);
+      case 3 -> new Position(17, 1);
+      case 4 -> new Position(17, 2);
       default -> null; // unreachable
     };
   }
@@ -40,7 +40,12 @@ public class Map3 implements MapData {
         new Position(20, 25), new Position(22, 25), new Position(24, 25));
     List<Job> jobs = List.of(Job.GOBLIN, Job.TROLL);
     Random rand = new Random();
-    return pos.stream().map(p -> new Enemy(jobs.get(rand.nextInt(jobs.size())), p, rand.nextInt(3, 7))).toList();
+    List<Enemy> enemies = pos.stream()
+        .map(p -> new Enemy(jobs.get(rand.nextInt(jobs.size())), p, rand.nextInt(3,
+            7)))
+        .collect(Collectors.toList());
+    enemies.add(new Enemy(Job.BOSS, new Position(22, 27), 1));
+    return enemies;
   }
 
   @Override
