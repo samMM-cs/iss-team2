@@ -22,7 +22,7 @@ public class Battle {
         this.gameState = GameState.getInstance();
         this.turnIndex = 0;
         if (enemy != null) {
-            if (!enemy.getJob().equals(Job.BOSS))
+            if (!List.of(Job.BOSS, Job.BOSS2, Job.BOSS3).contains(enemy.getJob()))
                 this.enemies = enemy.clones(GameState.getInstance().getNPlayers());
             else
                 this.enemies = List.of(enemy);

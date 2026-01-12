@@ -19,7 +19,9 @@ public enum Job {
     // NPC
     TRAINER(3, 4, 0, 0, 0, 0, 0, false),
     // BOSS
-    BOSS(0, 11, 500, 10, 6, 0, 5, false);
+    BOSS(0, 11, 500, 10, 6, 0, 5, false),
+    BOSS2(2, 12, 500, 10, 6, 0, 5, false),
+    BOSS3(2, 4, 500, 10, 6, 0, 5, false);
 
     public static final int SIZE = 32;
 
@@ -65,7 +67,13 @@ public enum Job {
                     .collect(Collectors.toList());
         }
         BOSS.effectiveMoves = allMoves.stream()
-                .filter(move -> move.getReq().contains(shopTrainer))
+                .filter(move -> move.getReq().contains(BOSS.name()))
+                .collect(Collectors.toList());
+        BOSS2.effectiveMoves = allMoves.stream()
+                .filter(move -> move.getReq().contains(BOSS.name()))
+                .collect(Collectors.toList());
+        BOSS3.effectiveMoves = allMoves.stream()
+                .filter(move -> move.getReq().contains(BOSS.name()))
                 .collect(Collectors.toList());
     }
 
