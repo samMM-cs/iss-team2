@@ -114,8 +114,10 @@ public class BattleController {
             Player target = party.getMembers()
                     .get((int) (party.getMembers().size()
                             * Math.random() / Math.nextDown(1.0)));
+            for (int i = 0; i < battle.getEnemies().size(); i++) {
+                plannedActionList.add(new Action(battle.enemyAIString(i), battle.getEnemies().get(i), target));
+            }
             // Mosse del nemico
-            plannedActionList.add(new Action(battle.enemyAIString(), battle.getEnemy(), target));
             // Esecuzione logica del turno
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
@@ -143,7 +145,7 @@ public class BattleController {
             case BattleResult.PARTY_WON: {
                 battle.assignRewards();
                 // battle.getEnemy().hide();
-                GameState.getInstance().getEnemies().remove(battle.getEnemy());
+                GameState.getInstance().getEnemies().remove(battle.getEnemies().get(0));
                 backToMap();
                 break;
             }

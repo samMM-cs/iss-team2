@@ -37,7 +37,6 @@ public class BattleView extends Pane {
     private final Party party;
     private List<CharacterPG> battlingPGs;
 
-
     private BattleController controller;
 
     private final Canvas canvas;
@@ -64,7 +63,7 @@ public class BattleView extends Pane {
         this.party = GameState.getInstance().getParty();
         this.battlingPGs = new ArrayList<>();
         battlingPGs.addAll(party.getMembers());
-        battlingPGs.add(battle.getEnemy());
+        battlingPGs.addAll(battle.getEnemies());
         this.controller = new BattleController(battle, this);
 
         uiOverlay = new BorderPane();
@@ -102,7 +101,8 @@ public class BattleView extends Pane {
         targetList.setStyle("-fx-font-size: 14px;");
         targetList.setVisible(false); // nascosta di default
         targetList.setManaged(false); // IMPORTANTISSIMO per layout
-        targetList.setOnMouseClicked(e -> controller.handleTargetSelection(targetList.getSelectionModel().getSelectedItem()));
+        targetList.setOnMouseClicked(
+                e -> controller.handleTargetSelection(targetList.getSelectionModel().getSelectedItem()));
 
         HBox bottomBox = new HBox(10, actionList, moveList, targetList);
         bottomBox.setAlignment(Pos.CENTER);
@@ -161,11 +161,11 @@ public class BattleView extends Pane {
     public void updateTargetList() {
         targetList.getItems().clear();
         targetList.getItems().addAll(battlingPGs
-            .stream()
-            .filter(player -> player.getCurrentStats().getHp() > 0)
-            .map(player -> player.getJob().name())
-            .toList());
-        
+                .stream()
+                .filter(player -> player.getCurrentStats().getHp() > 0)
+                .map(player -> player.getJob().name())
+                .toList());
+
         targetList.getItems().add("Back");
 
         resizeListViewToFitItems(targetList);
@@ -226,7 +226,7 @@ public class BattleView extends Pane {
         drawPlayers(w, groundY, h);
         drawEnemy(w, groundY, h);
 
-        //Update HUD
+        // Update HUD
         for (int i = 0; i < playerHud.size(); i++) {
             playerHud.get(i).update(party.getMembers().get(i));
         }
@@ -273,28 +273,30 @@ public class BattleView extends Pane {
     }
 
     private void drawEnemy(double w, double groundY, double h) {
-        Enemy enemy = battle.getEnemy();
-        if (enemy == null || enemy.getImg() == null)
-            return;
+        for (int i = 0; i < battle.getEnemies().size(); i++) {
+            Enemy enemy = battle.getEnemies().get(i);
+            if (enemy.getCurrentStats().getHp() <= 0)
+                continue;
 
-        double size = Math.floor(h * 0.4);
-        double x = Math.floor(w * 0.60);
+            double size = Math.floor(h * 0.3);
+            double x = Math.floor(w * 0.80 - i * size * .6);
 
-        // Compensa lo spazio vuoto nello sprite sheet
-        double enemyYOffset = size * 0.20;
+            // Compensa lo spazio vuoto nello sprite sheet
+            double enemyYOffset = size * 0.20;
 
-        double y = Math.floor(groundY - size + enemyYOffset);
+            double y = Math.floor(groundY - size + enemyYOffset);
 
-        int sx = enemy.getJob().getX();
-        int sy = enemy.getJob().getY();
-        int sw = Job.SIZE;
-        int sh = Job.SIZE;
+            int sx = enemy.getJob().getX();
+            int sy = enemy.getJob().getY();
+            int sw = Job.SIZE;
+            int sh = Job.SIZE;
 
-        gc.drawImage(enemy.getImg(),
-                sx, sy, sw, sh,
-                x, y, size, size);
+            gc.drawImage(enemy.getImg(),
+                    sx, sy, sw, sh,
+                    x, y, size, size);
 
-        drawEnemyHP(enemy, x, y, size);
+            drawEnemyHP(enemy, x, y, size);
+        }
     }
 
     private void drawEnemyHP(Enemy enemy, double x, double y, double size) {

@@ -40,7 +40,7 @@ public class Map3 implements MapData {
         new Position(20, 25), new Position(22, 25), new Position(24, 25));
     List<Job> jobs = List.of(Job.GOBLIN, Job.TROLL);
     Random rand = new Random();
-    return pos.stream().map(p -> new Enemy(jobs.get(rand.nextInt(jobs.size())), p)).toList();
+    return pos.stream().map(p -> new Enemy(jobs.get(rand.nextInt(jobs.size())), p, rand.nextInt(3, 7))).toList();
   }
 
   @Override

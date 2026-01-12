@@ -1,8 +1,6 @@
 package com.game.controller.exploration;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -64,7 +62,6 @@ public class ExplorationController {
         if (GameState.getInstance().getEnemies().isEmpty()
                 && !GameState.getInstance().getMap().getEnemies().isEmpty()
                 && GameState.getInstance().getMapInd() != GameState.getInstance().getMaps().size() - 1) {
-
             GameState.getInstance().nextMap();
             ViewManager.getInstance().updateMaps();
             prevPosition = null;
@@ -86,8 +83,7 @@ public class ExplorationController {
 
                 if (key == KeyCode.E)
                     handlePossibleInteractions();
-            }
-            else {
+            } else {
                 storyController.enter();
                 storyView.setStoryNode(GameState.getInstance().getCurrentStoryNode());
                 storyController = new StoryController(storyView);
@@ -113,8 +109,6 @@ public class ExplorationController {
 
     public void handleBattle(Enemy e) {
         // Versatile for multiple enemy
-        List<Enemy> enemiesList = new ArrayList<>();
-        enemiesList.add(e);
         Battle battle = new Battle(e);
 
         ViewManager.getInstance().showBattleView(battle);

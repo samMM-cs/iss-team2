@@ -15,9 +15,9 @@ public final class StaticSpeedTurn implements TurnStrategy {
         this.characters = characters;
     }
 
-    public StaticSpeedTurn(Party party, Enemy enemy) {
+    public StaticSpeedTurn(Party party, List<Enemy> enemies) {
         this.characters = new ArrayList<>();
-        characters.add(enemy);
+        characters.addAll(enemies);
         characters.addAll(party.getMembers());
     }
 

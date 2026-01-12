@@ -2,6 +2,7 @@ package com.game.model.map;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.game.model.Position;
 import com.game.model.character.Enemy;
@@ -39,7 +40,7 @@ public class Map1 implements MapData {
                 new Position(14, 33), new Position(35, 24));
         for (int i = 0; i < enemiesJob.size(); i++) {
             Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
-            enemies.add(new Enemy(enemiesJob.get(i), newPos));
+            enemies.add(new Enemy(enemiesJob.get(i), newPos, new Random().nextInt(1, 3)));
         }
         return enemies;
     }

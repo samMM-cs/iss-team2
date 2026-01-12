@@ -19,6 +19,7 @@ import com.game.model.GameState;
 import com.game.model.Position;
 import com.game.model.WorldPosition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BattleTest {
@@ -36,7 +37,7 @@ public class BattleTest {
         gameState = createGameState();
         enemy = new Enemy(Job.TROLL, mock(Position.class));
         rewardStrategy = new StandardRewardStrategy();
-        turnStrategy = new StaticSpeedTurn(gameState.getParty(), enemy);
+        turnStrategy = new StaticSpeedTurn(gameState.getParty(), enemy.clones(gameState.getNPlayers()));
 
         moves = MoveReader.readMove("/battle/moves.json");
         turnStrategy = mock(StaticSpeedTurn.class);
@@ -54,7 +55,7 @@ public class BattleTest {
     @Test
     void battleTestWithNoValidEnemy() {
         battle = new Battle(null);
-        assertNull(battle.getEnemy());
+        assertTrue(battle.getEnemies().isEmpty());
     }
 
     // T3
@@ -77,18 +78,22 @@ public class BattleTest {
     @Test
     void test_enemyAIString() {
         battle = new Battle(enemy);
-        String move = battle.enemyAIString();
-        assertNotNull(move);
-        assertTrue(moves.stream().map(Move::getName).toList().contains(move));
+        for (int i = 0; i < battle.getEnemies().size(); i++) {
+            String move = battle.enemyAIString(i);
+            assertNotNull(move);
+            assertTrue(moves.stream().map(Move::getName).toList().contains(move));
+        }
     }
 
     // T6
     @Test
     void test_enemyAIActionStrategy() {
         battle = new Battle(enemy);
-        ActionStrategy action = battle.enemyAIActionStrategy();
+        for (int i = 0; i < battle.getEnemies().size(); i++) {
+            ActionStrategy action = battle.enemyAIActionStrategy(i);
 
-        assertNotNull(action);
+            assertNotNull(action);
+        }
     }
 
     // T7
@@ -96,8 +101,11 @@ public class BattleTest {
     void nextTurn_testAllPlayerAlive() {
         GameState gameState = GameState.getInstance();
         battle = new Battle(enemy);
-        battle.setPlannedActionList(
-                List.of(new Action(battle.enemyAIString(), enemy, gameState.getParty().getMainPlayer())));
+        List<Action> planned = new ArrayList<>();
+        for (int i = 0; i < battle.getEnemies().size(); i++) {
+            planned.add(new Action(battle.enemyAIString(i), enemy, gameState.getParty().getMainPlayer()));
+        }
+        battle.setPlannedActionList(planned);
 
         BattleResult result = battle.nextTurn();
 
@@ -113,7 +121,7 @@ public class BattleTest {
 
         battle.assignRewards();
 
-        assertEquals(20, gameState.getParty().getMainPlayer().getCurrentStats().getXp());
+        assertEquals(40, gameState.getParty().getMainPlayer().getCurrentStats().getXp());
     }
 
     private GameState createGameState() {
