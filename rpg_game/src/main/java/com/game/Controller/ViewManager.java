@@ -176,14 +176,16 @@ public class ViewManager {
       System.err.println("Failed to autosave");
       e.printStackTrace();
     }
-    if (isUIVisible()) {
-      if (battleView != null)
-        battleView.setVisible(false);
-      if (dialogView != null)
-        dialogView.setVisible(false);
-      if (shopView != null)
-        shopView.setVisible(false);
-    }
+    /*
+     * if (isUIVisible()) {
+     * if (battleView != null)
+     * battleView.setVisible(false);
+     * if (dialogView != null)
+     * dialogView.setVisible(false);
+     * if (shopView != null)
+     * shopView.setVisible(false);
+     * }
+     */
     explorationView.showMap();
     explorationView.start();
   }
@@ -215,10 +217,10 @@ public class ViewManager {
 
     explorationView.stop();// Blocca il movimento
 
-    storyView.showDialogue(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());// Mostra la storia corrente
-
-    if (!dialogView.isVisible())
-      dialogView.handleAdvance();
+    storyView.showDialogue(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());// Mostra la storia
+                                                                                                   // corrente
+    dialogView.setVisible(true);
+    dialogView.handleAdvance();
     storyController.enter();
   }
 

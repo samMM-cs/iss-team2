@@ -14,7 +14,6 @@ import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Party;
 import com.game.model.character.Enemy;
-import com.game.view.DialogueView;
 import com.game.view.StoryView;
 import com.game.view.mapview.MapView;
 
@@ -40,9 +39,6 @@ public class ExplorationController {
         this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
-        DialogueView dialogueView = ViewManager.getInstance().getDialogView();
-        this.storyView = new StoryView(dialogueView);
-        this.storyController = new StoryController(storyView);
         // Listener to update limits when window gets resized
         this.scene.widthProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
         this.scene.heightProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
