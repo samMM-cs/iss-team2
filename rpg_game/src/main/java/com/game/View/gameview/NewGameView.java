@@ -1,6 +1,6 @@
 package com.game.view.gameview;
 
-import com.game.controller.GameController;
+import com.game.controller.NewGameController;
 import com.game.controller.ViewManager;
 
 import javafx.animation.FadeTransition;
@@ -32,9 +32,9 @@ import javafx.scene.control.ContentDisplay;
 
 public class NewGameView extends GameView {
     public static final int MAX_PLAYER = 4;
-    private GameController gameController;
+    private NewGameController gameController;
 
-    public NewGameView(GameController gameController) {
+    public NewGameView(NewGameController gameController) {
         this.gameController = gameController;
     }
 

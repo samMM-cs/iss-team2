@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import com.game.controller.GameController;
+import com.game.controller.NewGameController;
 import com.game.controller.ViewManager;
 import com.game.model.character.Job;
 
@@ -29,12 +29,12 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 
 public class CharacterSelectionView {
-    private GameController gameController;
+    private NewGameController gameController;
 
     private VBox selectedCard = null;
     private Button startGameBtn;
 
-    public CharacterSelectionView(GameController gameController) {
+    public CharacterSelectionView(NewGameController gameController) {
         this.gameController = gameController;
     }
 

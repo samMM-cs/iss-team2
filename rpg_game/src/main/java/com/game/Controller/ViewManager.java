@@ -70,7 +70,7 @@ public class ViewManager {
     mainMenuView.show();
   }
 
-  public void showNewGameView(GameController gameController) {
+  public void showNewGameView(NewGameController gameController) {
     if (this.gameController == null)
       this.gameController = gameController;
     if (newGameView == null)
@@ -157,7 +157,7 @@ public class ViewManager {
     }
   }
 
-  public void showCharacterSelectionView(GameController gameController) {
+  public void showCharacterSelectionView(NewGameController gameController) {
     if (characterSelectionView == null)
       characterSelectionView = new CharacterSelectionView(gameController);
     if (this.gameController == null)
