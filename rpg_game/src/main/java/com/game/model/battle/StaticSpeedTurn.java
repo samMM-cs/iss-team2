@@ -12,18 +12,18 @@ public final class StaticSpeedTurn implements TurnStrategy {
     private final List<CharacterPG> characters;
 
     public StaticSpeedTurn(List<CharacterPG> characters) {
-        this.characters= characters;
+        this.characters = characters;
     }
 
-    public StaticSpeedTurn(Party party, Enemy enemy) {
-        this.characters= new ArrayList<>();
-        characters.add(enemy);
+    public StaticSpeedTurn(Party party, List<Enemy> enemies) {
+        this.characters = new ArrayList<>();
+        characters.addAll(enemies);
         characters.addAll(party.getMembers());
     }
 
     @Override
     public void sortAction() {
-        Comparator<CharacterPG> cmp= Comparator.comparingInt(c->c.getCurrentStats().getSpeed());
+        Comparator<CharacterPG> cmp = Comparator.comparingInt(c -> c.getCurrentStats().getSpeed());
         this.characters.sort(cmp.reversed());
     }
 
@@ -34,6 +34,7 @@ public final class StaticSpeedTurn implements TurnStrategy {
 
     /**
      * Only for test
+     * 
      * @return this.characters
      */
     public List<CharacterPG> getCharacters() {

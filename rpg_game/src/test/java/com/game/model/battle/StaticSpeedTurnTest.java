@@ -25,27 +25,27 @@ public class StaticSpeedTurnTest {
 
     @BeforeEach
     void setUp() {
-        pos= mock(Position.class);
-        list= new ArrayList<>();
-        CharacterPG p1= new Player (Job.ARCHER, pos);
-        CharacterPG p2= new Player(Job.MAGE, pos);
-        CharacterPG e1= new Enemy(Job.GOBLIN, pos);
-        CharacterPG e2= new Enemy(Job.GOBLIN2, pos);
+        pos = mock(Position.class);
+        list = new ArrayList<>();
+        CharacterPG p1 = new Player(Job.ARCHER, pos);
+        CharacterPG p2 = new Player(Job.MAGE, pos);
+        CharacterPG e1 = new Enemy(Job.GOBLIN, pos);
+        CharacterPG e2 = new Enemy(Job.TROLL, pos);
         list.add(p1);
         list.add(p2);
         list.add(e1);
         list.add(e2);
-        sst= new StaticSpeedTurn(list);
+        sst = new StaticSpeedTurn(list);
     }
 
     @Test
     void testSortAction() {
         sst.sortAction();
 
-        List<CharacterPG> res= sst.getCharacters();
+        List<CharacterPG> res = sst.getCharacters();
         assertNotNull(res);
-        for (int i=0; i<res.size()-1; i++) {
-            assertTrue(res.get(i).getCurrentStats().getSpeed() >= res.get(i+1).getCurrentStats().getSpeed());
+        for (int i = 0; i < res.size() - 1; i++) {
+            assertTrue(res.get(i).getCurrentStats().getSpeed() >= res.get(i + 1).getCurrentStats().getSpeed());
         }
     }
 
@@ -53,14 +53,15 @@ public class StaticSpeedTurnTest {
     void testGetTurnIterator() {
         sst.sortAction();
 
-        List<CharacterPG> res= sst.getCharacters();
+        List<CharacterPG> res = sst.getCharacters();
         assertNotNull(res);
 
         ConcreteTurnIterator it = new ConcreteTurnIterator(res);
         assertNotNull(it);
-        
+
         while (it.hasCharacters()) {
-            assertTrue(it.nextCharacter().getCurrentStats().getSpeed() >= it.nextCharacter().getCurrentStats().getSpeed());
+            assertTrue(
+                    it.nextCharacter().getCurrentStats().getSpeed() >= it.nextCharacter().getCurrentStats().getSpeed());
         }
     }
 }

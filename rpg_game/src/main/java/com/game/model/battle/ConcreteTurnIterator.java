@@ -7,10 +7,11 @@ import com.game.model.character.CharacterPG;
 
 public final class ConcreteTurnIterator implements TurnIterator {
     private final Iterator<CharacterPG> iterator;
-    
+
     public ConcreteTurnIterator(List<CharacterPG> characters) {
-        this.iterator= characters.iterator();
+        this.iterator = characters.iterator();
     }
+
     @Override
     public boolean hasCharacters() {
         return this.iterator.hasNext();

@@ -2,6 +2,7 @@ package com.game.model.map;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.game.model.Position;
 import com.game.model.character.Enemy;
@@ -34,12 +35,12 @@ public class Map1 implements MapData {
     @Override
     public List<Enemy> getEnemies() {
         List<Enemy> enemies = new ArrayList<>();
-        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN, Job.GOBLIN2, Job.GOBLIN2);
+        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN, Job.TROLL, Job.TROLL);
         List<Position> pos = List.of(new Position(5, 5), new Position(13, 14),
                 new Position(14, 33), new Position(35, 24));
         for (int i = 0; i < enemiesJob.size(); i++) {
             Position newPos = new Position(pos.get(i).x(), pos.get(i).y());
-            enemies.add(new Enemy(enemiesJob.get(i), newPos));
+            enemies.add(new Enemy(enemiesJob.get(i), newPos, new Random().nextInt(1, 3)));
         }
         return enemies;
     }

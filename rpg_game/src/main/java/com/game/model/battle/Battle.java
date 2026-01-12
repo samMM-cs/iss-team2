@@ -11,7 +11,7 @@ import com.game.model.GameState;
 
 public class Battle {
     private GameState gameState;
-    private Enemy enemy;
+    private List<Enemy> enemies = new ArrayList<>();
     private int turnIndex;
     private TurnStrategy turnStrategy;
     private RewardStrategy rewardStrategy;
@@ -20,8 +20,9 @@ public class Battle {
     public Battle(Enemy enemy) {
         this.gameState = GameState.getInstance();
         this.turnIndex = 0;
-        this.enemy = enemy;
-        this.turnStrategy = new StaticSpeedTurn(gameState.getParty(), this.enemy);
+        if (enemy != null)
+            this.enemies = enemy.clones(GameState.getInstance().getNPlayers());
+        this.turnStrategy = new StaticSpeedTurn(gameState.getParty(), this.enemies);
         this.rewardStrategy = new StandardRewardStrategy();
     }
 
@@ -37,14 +38,16 @@ public class Battle {
     }
 
     // Minimal enemyAI
-    public String enemyAIString() {
-        return enemy.getCurrentMove().get(new Random().nextInt(enemy.getCurrentMove().size())).getName();
+    public String enemyAIString(int i) {
+        return enemies.get(i).getCurrentMove()
+                .get(new Random().nextInt(enemies.get(i).getCurrentMove().size()))
+                .getName();
     }
 
-    public ActionStrategy enemyAIActionStrategy() {
-        Move enemyMove = enemy.getCurrentMove().get(new Random().nextInt(enemy.getCurrentMove().size()));
+    public ActionStrategy enemyAIActionStrategy(int i) {
+        Move enemyMove = enemies.get(i).getCurrentMove()
+                .get(new Random().nextInt(enemies.get(i).getCurrentMove().size()));
         return enemyMove.getType().createMove(enemyMove);
-
     }
 
     public BattleResult nextTurn() {
@@ -74,30 +77,35 @@ public class Battle {
      *         wiped
      */
     public BattleResult isBattleOver() {
-        boolean partyWiped = true;
-        for (CharacterPG player : this.gameState.getParty().getMembers()) {
-            if (player.getCurrentStats().getHp() > 0) {
-                partyWiped = false;
-            }
-        }
-        boolean enemydead = true;
-        if (enemy.getCurrentStats().getHp() > 0)
-            enemydead = false;
+        // boolean partyWiped = true;
+        // for (CharacterPG player : this.gameState.getParty().getMembers()) {
+        // if (player.getCurrentStats().getHp() > 0) {
+        // partyWiped = false;
+        // }
+        // }
+
+        // boolean enemydead = true;
+        // if (enemies.getCurrentStats().getHp() > 0)
+        // enemydead = false;
+
+        boolean partyWiped = this.gameState.getParty().getMembers().stream()
+                .allMatch(p -> p.getCurrentStats().getHp() <= 0);
+        boolean enemiesDead = this.enemies.stream().allMatch(e -> e.getCurrentStats().getHp() <= 0);
         if (partyWiped)
             return BattleResult.PARTY_DEFEATED;
-        if (enemydead)
+        if (enemiesDead)
             return BattleResult.PARTY_WON;
         return BattleResult.ONGOING;
     }
 
     public void assignRewards() {
-        Reward reward = rewardStrategy.calculateRewards(enemy);
+        Reward reward = rewardStrategy.calculateRewards(enemies);
         reward.assignXP(this.gameState.getParty());
         reward.assignItem(this.gameState.getInventory());
     }
 
-    public Enemy getEnemy() {
-        return enemy;
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 
     public TurnStrategy getTurnStrategy() {

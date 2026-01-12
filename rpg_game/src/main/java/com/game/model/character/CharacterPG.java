@@ -119,5 +119,4 @@ public abstract class CharacterPG implements HasSpriteAndPosition {
     public String toString() {
         return this.getJob().toString();
     }
-
 }

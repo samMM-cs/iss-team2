@@ -1,7 +1,5 @@
 package com.game;
 
-import java.io.FileNotFoundException;
-
 import com.game.view.GameLauncher;
 
 import javafx.application.Application;
@@ -15,7 +13,7 @@ public class App extends Application {
         GameLauncher.getInstance().launch(primaryStage);
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         launch(args);
     }
 }

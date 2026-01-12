@@ -4,21 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.game.model.battle.Move;
 
 public class Stats {
-  int xp;
-  int level;
-  int maxXp;
-  int hp;
-  int maxHp;
-  int attack;
-  int defense;
-  int special;
-  int speed;
-  List<Move> moves;
-  int money;
+  private int xp;
+  private int level;
+  private int maxXp;
+  private int hp;
+  private int maxHp;
+  private int attack;
+  private int defense;
+  private int special;
+  private int speed;
+  private List<Move> moves;
+  private int money;
+  private int atkCount;
+  private int healCount;
+  private float dmgMult;
+  private float healMult;
 
   @JsonCreator
   public Stats(
@@ -33,8 +38,10 @@ public class Stats {
       @JsonProperty("speed") int speed,
       @JsonProperty("moves") List<Move> moves,
       @JsonProperty("money") int money,
-      @JsonProperty("xpPerc") float xpPerc,
-      @JsonProperty("hpPerc") float hpPerc) {
+      @JsonProperty("dmgCount") int dmgCount,
+      @JsonProperty("healCount") int healCount,
+      @JsonProperty("dmgMult") float dmgMult,
+      @JsonProperty("healMult") float healMult) {
     // jackson constructor
     this.xp = xp;
     this.level = level;
@@ -62,6 +69,10 @@ public class Stats {
     this.maxXp = 100;
     this.moves = new ArrayList<>();
     this.money = 1;
+    this.atkCount = 0;
+    this.healCount = 0;
+    this.dmgMult = 1;
+    this.healMult = 1;
   }
 
   public Stats(Stats newStats) {
@@ -72,12 +83,17 @@ public class Stats {
     this.special = newStats.getSpecial();
     this.speed = newStats.getSpeed();
 
-    this.xp = newStats.xp;
-    this.level = newStats.level;
-    this.maxXp = newStats.maxXp;
+    this.xp = newStats.getXp();
+    this.level = newStats.getLevel();
+    this.maxXp = newStats.getMaxXp();
 
-    this.moves = new ArrayList<>(newStats.moves);
-    this.money = newStats.money;
+    this.moves = new ArrayList<>(newStats.getMoves());
+    this.money = newStats.getMoney();
+
+    this.atkCount = newStats.getAtkCount();
+    this.healCount = newStats.getHealCount();
+    this.dmgMult = newStats.getDmgMult();
+    this.healMult = newStats.getHealMult();
   }
 
   public void addMove(Move move) {
@@ -100,8 +116,21 @@ public class Stats {
     xp -= maxXp;
     level++;
     maxXp = (int) (maxXp * 1.5);
+    if (atkCount >= 10 && healCount <= 5) {
+      atkCount -= 10;
+      dmgMult *= 1.5;
+    } else if (healCount >= 10 && atkCount <= 5) {
+      healCount -= 10;
+      healMult *= 1.5;
+    } else if (atkCount >= 5 && healCount >= 5) {
+      atkCount -= 5;
+      healCount -= 5;
+      dmgMult *= 1.25;
+      healMult *= 1.25;
+    }
   }
 
+  @JsonIgnore
   public double getHpPerc() {
     return (double) this.hp / (double) this.maxHp;
   }
@@ -158,6 +187,7 @@ public class Stats {
     this.xp = xp;
   }
 
+  @JsonIgnore
   public double getXpPerc() {
     return (double) xp / maxXp;
   }
@@ -205,5 +235,29 @@ public class Stats {
         ", moves=" + moves.size() +
         ", money=" + money +
         '}';
+  }
+
+  public int getAtkCount() {
+    return atkCount;
+  }
+
+  public void incAtkCount() {
+    this.atkCount++;
+  }
+
+  public int getHealCount() {
+    return healCount;
+  }
+
+  public void incHealCount() {
+    this.healCount++;
+  }
+
+  public float getDmgMult() {
+    return dmgMult;
+  }
+
+  public float getHealMult() {
+    return healMult;
   }
 }
