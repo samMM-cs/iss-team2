@@ -27,8 +27,8 @@ public class MovesNPC extends NPC {
     }
 
     @Override
-    public void interact(Player player) {
-        ShopView shop = new ShopView(player);
+    public void interact(Party party) {
+        ShopView shop = new ShopView(party);
         shop.open(this);
     }
 }

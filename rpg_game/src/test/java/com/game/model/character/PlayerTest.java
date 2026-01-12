@@ -25,7 +25,7 @@ public class PlayerTest {
 
         player.learnMove(addMove);
 
-        assertTrue(player.getLearnedMoves().contains(addMove));
+        assertTrue(player.getCurrentMove().contains(addMove));
     }
 
     @Test

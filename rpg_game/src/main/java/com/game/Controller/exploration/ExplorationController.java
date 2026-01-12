@@ -14,6 +14,7 @@ import com.game.model.Position;
 import com.game.model.battle.Battle;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
+import com.game.model.character.Party;
 import com.game.model.character.Enemy;
 import com.game.view.StoryView;
 import com.game.view.mapview.MapView;
@@ -97,7 +98,8 @@ public class ExplorationController {
 
     public void handlePossibleInteractions() {
         NPC target = null;
-        Player mainPlayer = GameState.getInstance().getParty().getMainPlayer();
+        Party party = GameState.getInstance().getParty();
+        Player mainPlayer = party.getMainPlayer();
         for (NPC npc : GameState.getInstance().getNpc()) {
             if (Math.abs(npc.getPosition().sub(mainPlayer.getPosition()).max()) <= 1) {
                 target = npc;
@@ -107,7 +109,7 @@ public class ExplorationController {
 
         if (target != null) {
             ViewManager.getInstance().showDialogView(scene, mainPlayer, target);
-            target.interact(mainPlayer);
+            target.interact(party);
         }
     }
 

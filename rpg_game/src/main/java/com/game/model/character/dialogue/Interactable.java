@@ -1,7 +1,7 @@
 package com.game.model.character.dialogue;
 
-import com.game.model.character.Player;
+import com.game.model.character.Party;
 
 public interface Interactable {
-    void interact(Player player);
+    void interact(Party party);
 }

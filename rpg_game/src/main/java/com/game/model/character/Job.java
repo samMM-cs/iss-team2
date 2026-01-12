@@ -27,6 +27,7 @@ public enum Job {
 
     private boolean isPlayable;
     private List<Move> effectiveMoves = new ArrayList<>();
+    private List<Move> shopMoves = new ArrayList<>();
 
     Job(int col, int row, int hp, int attack, int defense, int special, int speed, boolean isPlayable) {
         this.col = col;
@@ -53,15 +54,19 @@ public enum Job {
 
     public static void initAllMoves() {
         List<Move> allMoves = MoveReader.readMove("/battle/moves.json");
+        String shopTrainer = Job.TRAINER.name();
         for (Job job : Job.values()) {
             job.effectiveMoves = allMoves.stream()
-                    .filter(move -> move.getReq().contains(job.name()))
+                    .filter(move -> move.getReq().contains(job.name()) && move.getCost() == 0)
                     .collect(Collectors.toList());
+            job.shopMoves = allMoves.stream()
+                    .filter(move -> move.getReq().contains(shopTrainer) && move.getCost() > 0).collect(Collectors.toList());
         }
+        
     }
 
     public List<Move> getShopMoves() {
-        return this.effectiveMoves.stream().filter(m -> m.getCost() > 0).collect(Collectors.toList());
+        return shopMoves;
     }
 
     public List<Move> getEffectiveMoves() {
