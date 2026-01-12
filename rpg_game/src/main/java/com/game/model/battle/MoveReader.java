@@ -14,8 +14,10 @@ public class MoveReader {
                 System.err.println("File non trovato");
                 return List.of();// Resituisce una lista vuota immutabile
             }
-            return mapper.readValue(input, new TypeReference<List<Move>>() {
+            var out = mapper.readValue(input, new TypeReference<List<Move>>() {
             });
+            System.out.println(out);
+            return out;
         } catch (Exception e) {
             System.err.println("Impossibile leggere JSON delle mosse");
             e.printStackTrace();
