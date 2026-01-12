@@ -30,8 +30,8 @@ public class ExplorationController {
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = null;
     private boolean battleStarted = false;
-    private StoryView storyView = new StoryView(GameState.getInstance().getCurrentStoryNode());
-    private StoryController storyController = new StoryController(storyView);
+    private StoryView storyView;
+    private StoryController storyController;
 
     public ExplorationController(Scene scene, MapView mapView) {
         this.scene = scene;
@@ -39,7 +39,9 @@ public class ExplorationController {
         this.scene.setOnKeyPressed(e -> {
             activeKeys.offer(e.getCode());
         });
-
+        var dialogueView = ViewManager.getInstance().getDialogView();
+        this.storyView = new StoryView(dialogueView);
+        this.storyController = new StoryController(storyView);
         // Listener to update limits when window gets resized
         this.scene.widthProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
         this.scene.heightProperty().addListener((obs, oldVal, newVal) -> updatePositionLimit());
@@ -57,37 +59,57 @@ public class ExplorationController {
     }
 
     public void update() {
-        if (GameState.getInstance() == null) {
+        GameState gameState = GameState.getInstance();
+        if (gameState == null)
             return;
-        }
-        if (GameState.getInstance().getEnemies().isEmpty()
-                && !GameState.getInstance().getMap().getEnemies().isEmpty()
-                && GameState.getInstance().getMapInd() != GameState.getInstance().getMaps().size() - 1) {
-            GameState.getInstance().nextMap();
+
+        // Cambio mappa se necessario
+        if (gameState.getEnemies().isEmpty()
+                && !gameState.getMap().getEnemies().isEmpty()
+                && gameState.getMapInd() != gameState.getMaps().size() - 1) {
+            gameState.nextMap();
             ViewManager.getInstance().updateMaps();
             prevPosition = null;
-        } else {
-            Optional<Enemy> optEnemy = GameState.getInstance().getEnemies().stream()
-                    .filter(enemy -> enemy.getPosition().equals(
-                            GameState.getInstance().getParty().getMainPlayer().getPosition()))
-                    .findFirst();
-            if (!battleStarted && optEnemy.isPresent()) {
-                battleStarted = true;
-                optEnemy.ifPresent(this::handleBattle);
-                battleStarted = false;
-            }
+            return;
+        }
 
-            KeyCode key = activeKeys.poll();
-            if (!ViewManager.getInstance().isUIVisible() && key != null) {
-                if (movementKeys.contains(key))
-                    movePlayer(key);
+        // Controllo battaglia
+        Optional<Enemy> optEnemy = gameState.getEnemies().stream()
+                .filter(enemy -> enemy.getPosition().equals(
+                        gameState.getParty().getMainPlayer().getPosition()))
+                .findFirst();
 
-                if (key == KeyCode.E)
-                    handlePossibleInteractions();
-            } else {
+        if (!battleStarted && optEnemy.isPresent()) {
+            battleStarted = true;
+            optEnemy.ifPresent(this::handleBattle);
+            battleStarted = false;
+            return; // blocca update finché la battaglia non parte
+        }
+
+        // Prendo il tasto premuto
+        KeyCode key = activeKeys.poll();
+
+        // Se il gioco è in pausa o c'è qualsiasi overlay UI aperto, blocco tutto
+        if (ViewManager.getInstance().isPaused() || ViewManager.getInstance().isUIVisible()) {
+            return;
+        }
+
+        // Movimento player
+        if (key != null && movementKeys.contains(key)) {
+            movePlayer(key);
+        }
+
+        // Interazione con NPC
+        if (key == KeyCode.E) {
+            handlePossibleInteractions();
+        }
+
+        // Mostra la storia solo se c'è un nodo e nessun dialogo aperto
+        if (gameState.getCurrentStoryNode() != null
+                && !ViewManager.getInstance().getDialogView().isVisible()) {
+            if (storyView != null) {
+                storyView.show(gameState.getCurrentStoryNode(), gameState);
                 storyController.enter();
-                storyView.setStoryNode(GameState.getInstance().getCurrentStoryNode());
-                storyController = new StoryController(storyView);
             }
         }
     }

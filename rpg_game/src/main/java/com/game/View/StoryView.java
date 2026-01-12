@@ -1,27 +1,18 @@
 package com.game.view;
 
+import com.game.model.GameState;
 import com.game.model.character.dialogue.Dialogue;
 import com.game.model.story.StoryNode;
 
 public class StoryView {
-    private StoryNode storyNode;
-    public DialogueView dialogueView;
+    private final DialogueView dialogueView;
 
-    public StoryView(StoryNode storyNode) {
-        this.storyNode = storyNode;
+    public StoryView(DialogueView dialogueView) {
+        this.dialogueView = dialogueView;
     }
 
-    public void show() {
-        dialogueView = new DialogueView();
-        dialogueView.showDialogue(new Dialogue(storyNode.getDialogues()));
-    }
-
-    public StoryNode getStoryNode() {
-        return storyNode;
-    }
-
-    public void setStoryNode(StoryNode storyNode) {
-        this.storyNode = storyNode;
+    public void show(StoryNode node, GameState gameState) {
+        dialogueView.showDialogue(new Dialogue(node.getDialogues()));
     }
 
     public DialogueView getDialogueView() {

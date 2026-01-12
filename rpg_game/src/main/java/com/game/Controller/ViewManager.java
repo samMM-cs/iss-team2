@@ -201,47 +201,51 @@ public class ViewManager {
 
   public void showStory(Scene scene) {
     root = (Pane) scene.getRoot();
-    if (storyView == null) {
-      storyView = new StoryView(GameState.getInstance().getCurrentStoryNode());
-      storyController = new StoryController(storyView);
-      storyController.enter();
 
-      DialogueView dialogueView = storyView.getDialogueView();
-      if (dialogueView.isVisible())
-        explorationView.stop();
-      else
-        explorationView.start();
-
-      root.getChildren().add(dialogueView);
+    if (dialogView == null) {
+      dialogView = ViewManager.getInstance().getDialogView();
     }
+
+    if (!root.getChildren().contains(dialogView))
+      root.getChildren().add(dialogView);
+    if (storyView == null) {
+      storyView = new StoryView(dialogView);
+      storyController = new StoryController(storyView);
+    }
+
+    explorationView.stop();// Blocca il movimento
+
+    storyView.show(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());// Mostra la storia corrente
+
+    if (!dialogView.isVisible())
+      dialogView.handleAdvance();
+    storyController.enter();
   }
 
   public void showDialogView(Scene scene, Player player, NPC target) {
     root = (Pane) scene.getRoot();
-    if (dialogView == null) {
-      dialogView = new DialogueView();
-      if (dialogView.isVisible()) {
-        dialogView.handleAdvance();
+    if (dialogView == null)
+      dialogView = ViewManager.getInstance().getDialogView();
 
-        // Blocco il movimento una volta aperto il dialogo
-        explorationView.stop();
-      } else {
-        explorationView.showMap();
-        explorationView.start();
-      }
-      dialogView.showDialogue(target.getDialogue());
-      dialogView.setOnCloseClick(() -> {
-        showShop(player, target,GameState.getInstance().getParty());
-        dialogView.setVisible(false);
-        dialogView = null;
-        // Una volta finito il player riprende il movimento
-        explorationView.start();
-      });
+    if (!root.getChildren().contains(dialogView))
       root.getChildren().add(dialogView);
-    }
+
+    // Blocco il movimento una volta aperto il dialogo
+    explorationView.stop();
+
+    //dialogView.handleAdvance();
+
+    dialogView.showDialogue(target.getDialogue());
+
+    dialogView.setOnCloseClick(() -> {
+      showShop(player, target, GameState.getInstance().getParty());
+      dialogView.setVisible(false);
+      // Una volta finito il player riprende il movimento
+      explorationView.start();
+    });
   }
 
-  public void showShop(Player player, NPC npc,Party party) {
+  public void showShop(Player player, NPC npc, Party party) {
     root = (Pane) ViewManager.getInstance().getStage().getScene().getRoot();
     if (shopView == null) {
       shopView = new ShopView(party);
@@ -259,7 +263,7 @@ public class ViewManager {
   public boolean isUIVisible() {
     return (this.battleView != null && this.battleView.isVisible())
         || (this.dialogView != null && this.dialogView.isVisible())
-        || (this.shopView != null && this.shopView.isVisible());
+        || (this.shopView != null && this.shopView.isVisible()) || (this.pauseMenu!=null && this.pauseMenu.isVisible());
   }
 
   public void exit() {
@@ -268,6 +272,15 @@ public class ViewManager {
 
   public Stage getStage() {
     return stage;
+  }
+
+  public DialogueView getDialogView() {
+    if (dialogView == null) {
+      dialogView = new DialogueView();
+      root = (Pane) stage.getScene().getRoot();
+      root.getChildren().add(dialogView);
+    }
+    return dialogView;
   }
 
   public static ViewManager getInstance() {

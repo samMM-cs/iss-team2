@@ -6,37 +6,31 @@ import com.game.model.story.StoryNode;
 import com.game.view.StoryView;
 
 public class StoryController {
-    private StoryNode storyNode;
-    private StoryView view;
+    private final StoryView view;
+    private final StoryNode storyNode;
+    private final GameState gameState;
 
-    public StoryController (StoryView view) {
-        this.storyNode = view.getStoryNode();
+    public StoryController(StoryView view) {
         this.view = view;
+        this.gameState = GameState.getInstance();
+        this.storyNode = gameState.getCurrentStoryNode();
     }
 
     public void enter() {
-        if (storyNode != null && storyNode.getTrigger().test(GameState.getInstance())) {
-            System.out.println(storyNode.getName());
-            view.show();
-            //Only for purpose test
-            StoryNode nextsn = storyNode.getChoices().getFirst().getNextNode();
-            GameState.getInstance().setCurrentStoryNode(nextsn);
-        }
+        StoryNode node = gameState.getCurrentStoryNode();
+        if (node != null && node.getTrigger().test(GameState.getInstance()))
+            view.show(node, gameState);
     }
 
     public void onChoice(String choiceText) {
         Choice chosenOne = storyNode.getChoices().stream()
-            .filter(choice -> choice.getText().equals(choiceText))
-            .findFirst()
-            .orElse(null);
+                .filter(choice -> choice.getText().equals(choiceText))
+                .findFirst()
+                .orElse(null);
         if (chosenOne != null) {
             chosenOne.getChoiceAftermath().accept(GameState.getInstance());
-            updateCurrentStoryNode(chosenOne.getNextNode());
+            gameState.setCurrentStoryNode(chosenOne.getNextNode());
+            enter();
         }
     }
-
-    public void updateCurrentStoryNode(StoryNode newStoryNode) {
-        GameState.getInstance().setCurrentStoryNode(newStoryNode);
-    }
-    
 }
