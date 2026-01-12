@@ -31,12 +31,13 @@ public class BattleTest {
     int turnIndex;
 
     @BeforeEach
-    void setup() {
+    public void setup() {
+        GameState.destroy();
         gameState = createGameState();
-        enemy = new Enemy(Job.GOBLIN2, mock(Position.class));
+        enemy = new Enemy(Job.TROLL, mock(Position.class));
         rewardStrategy = new StandardRewardStrategy();
         turnStrategy = new StaticSpeedTurn(gameState.getParty(), enemy);
-        
+
         moves = MoveReader.readMove("/battle/moves.json");
         turnStrategy = mock(StaticSpeedTurn.class);
         turnIndex = 0;
@@ -96,8 +97,7 @@ public class BattleTest {
         GameState gameState = GameState.getInstance();
         battle = new Battle(enemy);
         battle.setPlannedActionList(
-            List.of(new Action(battle.enemyAIString(), enemy, gameState.getParty().getMainPlayer()))
-        );
+                List.of(new Action(battle.enemyAIString(), enemy, gameState.getParty().getMainPlayer())));
 
         BattleResult result = battle.nextTurn();
 
@@ -108,12 +108,12 @@ public class BattleTest {
 
     // T10
     @Test
-    void test_AssignRewards() throws Exception{
+    void test_AssignRewards() throws Exception {
         battle = new Battle(enemy);
 
         battle.assignRewards();
 
-        assertEquals(10, gameState.getParty().getMainPlayer().getCurrentStats().getXp());
+        assertEquals(20, gameState.getParty().getMainPlayer().getCurrentStats().getXp());
     }
 
     private GameState createGameState() {

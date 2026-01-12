@@ -32,7 +32,8 @@ public class SaveManager {
     public void autosave(GameState gameState) throws IOException {
         if (gameState == null)
             gameState = GameState.getInstance();
-        if (gameState.isAutoSaveEnabled() == false) return;
+        if (gameState.isAutoSaveEnabled() == false)
+            return;
         File autosaveFile = new File(AUTOSAVE_FILE + EXT);
         GameStateMemento memento = gameState.saveToMemento();
         objectMapper.writeValue(autosaveFile, memento);

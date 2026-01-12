@@ -44,7 +44,6 @@ public class Battle {
     public ActionStrategy enemyAIActionStrategy() {
         Move enemyMove = enemy.getCurrentMove().get(new Random().nextInt(enemy.getCurrentMove().size()));
         return enemyMove.getType().createMove(enemyMove);
-
     }
 
     public BattleResult nextTurn() {

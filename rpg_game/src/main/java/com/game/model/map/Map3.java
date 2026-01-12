@@ -38,7 +38,7 @@ public class Map3 implements MapData {
   public List<Enemy> getEnemies() {
     List<Position> pos = List.of(new Position(14, 4), new Position(17, 9),
         new Position(20, 25), new Position(22, 25), new Position(24, 25));
-    List<Job> jobs = List.of(Job.GOBLIN, Job.GOBLIN2);
+    List<Job> jobs = List.of(Job.GOBLIN, Job.TROLL);
     Random rand = new Random();
     return pos.stream().map(p -> new Enemy(jobs.get(rand.nextInt(jobs.size())), p)).toList();
   }

@@ -24,39 +24,42 @@ import java.util.List;
 
 public class SaveManagerTests {
     private SaveManager saveManager;
+    private String projectRoot;
 
     @BeforeEach
-    void setUp(@TempDir Path tempDir) {
+    public void setUp(@TempDir Path tempDir) {
         saveManager = new SaveManager();
-        new File("autosave.json").delete();
-        new File("save_slot0.json").delete();
-        new File("save_slot1.json").delete();
-        new File("save_slot2.json").delete();
+        String projectRoot = System.getProperty("user.dir");
+
+        new File(projectRoot, "autosave.json").delete();
+        new File(projectRoot, "save_slot0.json").delete();
+        new File(projectRoot, "save_slot1.json").delete();
+        new File(projectRoot, "save_slot2.json").delete();
     }
 
     // T1 - isSlotUsed()==false
     @Test
-    void testIsSlotUsed_slotNotExists() throws IOException {
+    public void testIsSlotUsed_slotNotExists() throws IOException {
         assertFalse(saveManager.isSlotUsed(1));
     }
 
     // T2 - isSlotUsed()==true
     @Test
-    void testIsSlotUsed_slotExists() throws IOException {
+    public void testIsSlotUsed_slotExists() throws IOException {
         GameState gameState = trueGameState();
         saveManager.saveGame(1, gameState);
-        assertTrue(new File("save_slot1.json").exists());
+        assertTrue(new File(projectRoot, "save_slot1.json").exists());
     }
 
     // T3
     @Test
-    void testAutosave_NotExists() {
+    public void testAutosave_NotExists() {
         assertFalse(saveManager.isAutosaveUsed());
     }
 
     // T4
     @Test
-    void testAutosave_exists() throws IOException {
+    public void testAutosave_exists() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
         assertTrue(saveManager.isAutosaveUsed());
@@ -64,32 +67,32 @@ public class SaveManagerTests {
 
     // T5
     @Test
-    void testAutosaveGameStateValid() throws IOException {
+    public void testAutosaveGameStateValid() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
-        assertTrue(new File("autosave.json").exists());
+        assertTrue(new File(projectRoot, "autosave.json").exists());
     }
 
     // T6
     @Test
-    void testAutosaveGameStateNull() throws IOException {
+    public void testAutosaveGameStateNull() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
-        assertTrue(new File("autosave.json").exists());
+        assertTrue(new File(projectRoot, "autosave.json").exists());
     }
 
     // T7
     @Test
-    void testSaveGame_InSlotValid() throws IOException {
+    public void testSaveGame_InSlotValid() throws IOException {
         GameState gameState = trueGameState();
 
         saveManager.saveGame(1, gameState);
-        assertTrue(new File("save_slot1.json").exists());
+        assertTrue(new File(projectRoot, "save_slot1.json").exists());
     }
 
     // T8
     @Test
-    void testLoadGame_SlotValid() throws IOException {
+    public void testLoadGame_SlotValid() throws IOException {
         GameState gameState = trueGameState();
         gameState.getParty();
         saveManager.saveGame(1, gameState);
@@ -99,13 +102,13 @@ public class SaveManagerTests {
 
     // T9
     @Test
-    void testLoadGame_SlotNotValid() {
+    public void testLoadGame_SlotNotValid() {
         assertThrows(IOException.class, () -> saveManager.loadGame(99));
     }
 
     // T10
     @Test
-    void testLoadFromAutosave_Valid() throws IOException {
+    public void testLoadFromAutosave_Valid() throws IOException {
         GameState gameState = trueGameState();
         saveManager.autosave(gameState);
 
@@ -114,7 +117,7 @@ public class SaveManagerTests {
 
     // T11
     @Test
-    void testLoadFromAutosave_NotValid() {
+    public void testLoadFromAutosave_NotValid() {
         assertThrows(IOException.class, () -> saveManager.loadGameFromAutoSave());
     }
 

@@ -34,7 +34,7 @@ public class Map1 implements MapData {
     @Override
     public List<Enemy> getEnemies() {
         List<Enemy> enemies = new ArrayList<>();
-        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN, Job.GOBLIN2, Job.GOBLIN2);
+        List<Job> enemiesJob = List.of(Job.GOBLIN, Job.GOBLIN, Job.TROLL, Job.TROLL);
         List<Position> pos = List.of(new Position(5, 5), new Position(13, 14),
                 new Position(14, 33), new Position(35, 24));
         for (int i = 0; i < enemiesJob.size(); i++) {

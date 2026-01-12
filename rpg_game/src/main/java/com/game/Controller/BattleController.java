@@ -12,6 +12,7 @@ import com.game.model.battle.Battle;
 import com.game.model.battle.BattleResult;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Party;
+import com.game.model.character.Player;
 import com.game.view.battleview.BattleView;
 
 public class BattleController {
@@ -39,9 +40,9 @@ public class BattleController {
             return;
 
         switch (selected) {
-            case "Flee" :
+            case "Flee":
                 backToMap();
-            case "Move" : {
+            case "Move": {
                 view.showMoveList();
                 view.hideActionList();
             }
@@ -61,7 +62,7 @@ public class BattleController {
         if (moveData != null) {
             currentPlayerActing = party.getMembers().get(currentPlayerActingIndex);
             actionStrategy = moveData.getType().createMove(moveData);
-            
+
             view.hideMoveList();
             view.showTargetList();
         }
@@ -70,18 +71,17 @@ public class BattleController {
 
     public void handleTargetSelection(String target) {
         switch (target) {
-            case ("Back") : {
+            case ("Back"): {
                 view.hideTargetList();
                 view.showMoveList();
                 break;
             }
 
-            default : {
+            default: {
                 CharacterPG suitableTarget = battlingPGs.stream()
-                    .filter(character -> character.getJob().name().equals(target))
-                    .findFirst()
-                    .orElse(null);
-                
+                        .filter(character -> character.getJob().name().equals(target))
+                        .findFirst()
+                        .orElse(null);
 
                 plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(suitableTarget)));
 
@@ -110,8 +110,12 @@ public class BattleController {
 
     private void nextPlayerAction() {
         if (allPlayerActed()) {
+            // choose random target
+            Player target = party.getMembers()
+                    .get((int) (party.getMembers().size()
+                            * Math.random() / Math.nextDown(1.0)));
             // Mosse del nemico
-            plannedActionList.add(new Action(battle.enemyAIString(), battle.getEnemy(), party.getMainPlayer()));
+            plannedActionList.add(new Action(battle.enemyAIString(), battle.getEnemy(), target));
             // Esecuzione logica del turno
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
