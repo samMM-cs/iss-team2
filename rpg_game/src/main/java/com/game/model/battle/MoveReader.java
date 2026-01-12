@@ -16,7 +16,6 @@ public class MoveReader {
             }
             var out = mapper.readValue(input, new TypeReference<List<Move>>() {
             });
-            System.out.println(out);
             return out;
         } catch (Exception e) {
             System.err.println("Impossibile leggere JSON delle mosse");

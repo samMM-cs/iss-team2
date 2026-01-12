@@ -22,4 +22,9 @@ public final class ConcreteTurnIterator implements TurnIterator {
         return this.iterator.next();
     }
 
+    @Override
+    public void remove() {
+        this.iterator.remove();
+    }
+
 }

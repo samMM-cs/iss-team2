@@ -74,7 +74,10 @@ public class BattleController {
             view.hideTargetList();
             view.showMoveList();
         } else {
-            CharacterPG suitableTarget = battlingPGs.get(index);
+            CharacterPG suitableTarget = battlingPGs.stream()
+                    .filter(c -> c.getCurrentStats().getHp() > 0)
+                    .toList()
+                    .get(index);
 
             plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(suitableTarget)));
 
@@ -96,12 +99,13 @@ public class BattleController {
 
     private void nextPlayerAction() {
         if (allPlayerActed()) {
-            // choose random target
+            // choose random targets
             for (int i = 0; i < battle.getEnemies().size(); i++) {
                 Player target = party.getMembers()
                         .get((int) (party.getMembers().size()
                                 * Math.random() / Math.nextDown(1.0)));
-                plannedActionList.add(new Action(battle.enemyAIString(i), battle.getEnemies().get(i), target));
+                if (battle.getEnemies().get(i).getCurrentStats().getHp() > 0)
+                    plannedActionList.add(new Action(battle.enemyAIString(i), battle.getEnemies().get(i), target));
             }
 
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));

@@ -55,7 +55,9 @@ public class Battle {
         TurnIterator it = turnStrategy.getTurnIterator();
         while (it.hasCharacters()) {
             CharacterPG character = it.nextCharacter();
-            if (character.getCurrentStats().getHp() > 0) {
+            if (character.getCurrentStats().getHp() < 0) {
+                it.remove();
+            } else {
                 Action action = getCurrentAction(character);
                 if (action != null) {
                     System.out.println("Azione di: " + character);
@@ -77,17 +79,6 @@ public class Battle {
      *         wiped
      */
     public BattleResult isBattleOver() {
-        // boolean partyWiped = true;
-        // for (CharacterPG player : this.gameState.getParty().getMembers()) {
-        // if (player.getCurrentStats().getHp() > 0) {
-        // partyWiped = false;
-        // }
-        // }
-
-        // boolean enemydead = true;
-        // if (enemies.getCurrentStats().getHp() > 0)
-        // enemydead = false;
-
         boolean partyWiped = this.gameState.getParty().getMembers().stream()
                 .allMatch(p -> p.getCurrentStats().getHp() <= 0);
         boolean enemiesDead = this.enemies.stream().allMatch(e -> e.getCurrentStats().getHp() <= 0);
@@ -117,17 +108,14 @@ public class Battle {
     }
 
     public void setPlannedActionList(List<Action> plannedActionList) {
-        // this.plannedActionList = plannedActionList;
         this.plannedActionList.clear();
         this.plannedActionList.addAll(plannedActionList);
     }
 
     private Action getCurrentAction(CharacterPG character) {
-        for (Action action : plannedActionList) {
-            if (action.getUser().equals(character)) {
-                return action;
-            }
-        }
-        return null;
+        return plannedActionList.stream()
+                .filter(action -> action.getUser().equals(character))
+                .findFirst()
+                .orElse(null);
     }
 }

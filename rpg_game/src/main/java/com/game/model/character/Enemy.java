@@ -36,8 +36,8 @@ public class Enemy extends CharacterPG {
     }
 
     public List<Enemy> clones(int N) {
-        List<Enemy> out = new ArrayList<>(N);
-        for (int i = 0; i < N; i++) {
+        List<Enemy> out = new ArrayList<>(List.of(this));
+        for (int i = 0; i < N - 1; i++) {
             out.add(new Enemy(getJob(), getPosition(), getCurrentStats().copy()));
         }
         return out;
