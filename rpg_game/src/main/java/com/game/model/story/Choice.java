@@ -13,7 +13,7 @@ public class Choice {
     @JsonTypeInfo(use = Id.CLASS)
     private SerializableConsumer<GameState> choiceAftermath;
 
-    @JsonCreator
+    // @JsonCreator
     public Choice(@JsonProperty("nextNode") StoryNode nextNode, @JsonProperty("text") String text) {
         this.nextNode = nextNode;
         this.text = text;
@@ -23,7 +23,7 @@ public class Choice {
     public Choice(
             @JsonProperty("nextNode") StoryNode nextNode,
             @JsonProperty("text") String text,
-            SerializableConsumer<GameState> choiceAftermath) {
+            @JsonProperty("choiceAftermath") SerializableConsumer<GameState> choiceAftermath) {
         this.nextNode = nextNode;
         this.text = text;
         this.choiceAftermath = choiceAftermath;

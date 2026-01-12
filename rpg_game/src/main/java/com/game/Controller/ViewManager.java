@@ -233,7 +233,7 @@ public class ViewManager {
     // Blocco il movimento una volta aperto il dialogo
     explorationView.stop();
 
-    //dialogView.handleAdvance();
+    // dialogView.handleAdvance();
 
     dialogView.showDialogue(target.getDialogue());
 
@@ -263,7 +263,8 @@ public class ViewManager {
   public boolean isUIVisible() {
     return (this.battleView != null && this.battleView.isVisible())
         || (this.dialogView != null && this.dialogView.isVisible())
-        || (this.shopView != null && this.shopView.isVisible()) || (this.pauseMenu!=null && this.pauseMenu.isVisible());
+        || (this.shopView != null && this.shopView.isVisible())
+        || (this.pauseMenu != null && this.pauseMenu.isVisible());
   }
 
   public void exit() {

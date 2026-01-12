@@ -26,6 +26,10 @@ public class ExplorationView {
     private AnimationTimer timer;
     private GameController gameController;
 
+    // FPS Counter
+    private long lastFpsTime = System.nanoTime();
+    private int frameCount = 0;
+
     public ExplorationView(MapData map, GameController gameController) {
         TiledMapData mapData = MapBuilder.loadRawMapData(map.getFilePath());
 
@@ -56,7 +60,6 @@ public class ExplorationView {
     }
 
     public void showMap() {
-
         ViewManager.getInstance().setAndShowScene(scene);
         ViewManager.getInstance().initPauseMenu(scene, gameController);
         ViewManager.getInstance().enableGlobalPause(scene);
@@ -97,6 +100,16 @@ public class ExplorationView {
                         hud.update(player);
                     } else
                         hud.setVisible(false);
+                }
+
+                // FPS Counter
+                frameCount++;
+                long currentTime = System.nanoTime();
+                long elapsedTime = currentTime - lastFpsTime;
+                if (elapsedTime >= 1_000_000_000) { // 1 second
+                    System.out.println("FPS: " + frameCount);
+                    frameCount = 0;
+                    lastFpsTime = currentTime;
                 }
             }
         };
