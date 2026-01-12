@@ -101,8 +101,8 @@ public class BattleView extends Pane {
         targetList.setStyle("-fx-font-size: 14px;");
         targetList.setVisible(false); // nascosta di default
         targetList.setManaged(false); // IMPORTANTISSIMO per layout
-        targetList.setOnMouseClicked(
-                e -> controller.handleTargetSelection(targetList.getSelectionModel().getSelectedItem()));
+        targetList.setOnMouseClicked(e -> controller.handleTargetSelection(targetList.getItems().size(),
+                targetList.getSelectionModel().getSelectedIndex()));
 
         HBox bottomBox = new HBox(10, actionList, moveList, targetList);
         bottomBox.setAlignment(Pos.CENTER);

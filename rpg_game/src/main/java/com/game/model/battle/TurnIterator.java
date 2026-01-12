@@ -6,4 +6,6 @@ public interface TurnIterator {
     public abstract boolean hasCharacters();
 
     public abstract CharacterPG nextCharacter();
+
+    public abstract void remove();
 }

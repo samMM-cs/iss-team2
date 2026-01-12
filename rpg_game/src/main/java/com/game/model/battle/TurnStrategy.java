@@ -7,4 +7,5 @@ public interface TurnStrategy {
     public abstract void sortAction();
 
     public abstract TurnIterator getTurnIterator();
+
 }

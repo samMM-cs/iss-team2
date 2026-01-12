@@ -13,7 +13,7 @@ import com.game.model.battle.BattleResult;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
-import com.game.view.battleview.BattleView; 
+import com.game.view.battleview.BattleView;
 
 public class BattleController {
     private Battle battle;
@@ -69,29 +69,24 @@ public class BattleController {
 
     }
 
-    public void handleTargetSelection(String target) {
-        switch (target) {
-            case ("Back"): {
-                view.hideTargetList();
-                view.showMoveList();
-                break;
-            }
+    public void handleTargetSelection(int numOpt, int index) {
+        if (index == numOpt - 1) { // back
+            view.hideTargetList();
+            view.showMoveList();
+        } else {
+            CharacterPG suitableTarget = battlingPGs.stream()
+                    .filter(c -> c.getCurrentStats().getHp() > 0)
+                    .toList()
+                    .get(index);
 
-            default: {
-                CharacterPG suitableTarget = battlingPGs.stream()
-                        .filter(character -> character.getJob().name().equals(target))
-                        .findFirst()
-                        .orElse(null);
+            plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(suitableTarget)));
 
-                plannedActionList.add(new Action(actionStrategy, currentPlayerActing, List.of(suitableTarget)));
-
-                nextPlayerAction();
-                view.hideTargetList();
-                view.hideMoveList();
-                view.showActionList();
-                break;
-            }
+            nextPlayerAction();
+            view.hideTargetList();
+            view.hideMoveList();
+            view.showActionList();
         }
+
     }
 
     private void updatePlayerUI() {
@@ -99,20 +94,20 @@ public class BattleController {
 
         CharacterPG character = party.getMembers().get(currentPlayerActingIndex);
         List<String> moveNames = character.getCurrentMove().stream().map(Move::getName).collect(Collectors.toList());
-
         view.updateMoveList(moveNames);
     }
 
     private void nextPlayerAction() {
         if (allPlayerActed()) {
-            // choose random target
-            Player target = party.getMembers()
-                    .get((int) (party.getMembers().size()
-                            * Math.random() / Math.nextDown(1.0)));
+            // choose random targets
             for (int i = 0; i < battle.getEnemies().size(); i++) {
-                plannedActionList.add(new Action(battle.enemyAIString(i), battle.getEnemies().get(i), target));
+                Player target = party.getMembers()
+                        .get((int) (party.getMembers().size()
+                                * Math.random() / Math.nextDown(1.0)));
+                if (battle.getEnemies().get(i).getCurrentStats().getHp() > 0)
+                    plannedActionList.add(new Action(battle.enemyAIString(i), battle.getEnemies().get(i), target));
             }
-            
+
             battle.setPlannedActionList(new ArrayList<>(plannedActionList));
             view.disableInput();
             this.result = battle.nextTurn();

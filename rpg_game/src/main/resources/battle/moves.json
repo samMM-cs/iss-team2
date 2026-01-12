@@ -5,7 +5,7 @@
     "type": "ATTACK",
     "value": 10,
     "cost": 0,
-    "requirements": ["WARRIOR", "ROGUE", "ARCHER", "GOBLIN", "TROLL"],
+    "requirements": ["WARRIOR", "ROGUE", "ARCHER", "GOBLIN", "TROLL", "MAGE"],
     "description": "Attacco fisico base"
   },
   {
@@ -42,7 +42,7 @@
     "type": "HEAL",
     "value": 15,
     "cost": 0,
-    "requirements": ["WARRIOR", "ARCHER", "ROGUE"],
+    "requirements": ["WARRIOR", "ARCHER", "ROGUE", "MAGE"],
     "description": "Piccola cura rapida non magica"
   },
   {

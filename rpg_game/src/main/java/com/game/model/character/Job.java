@@ -60,9 +60,10 @@ public enum Job {
                     .filter(move -> move.getReq().contains(job.name()) && move.getCost() == 0)
                     .collect(Collectors.toList());
             job.shopMoves = allMoves.stream()
-                    .filter(move -> move.getReq().contains(shopTrainer) && move.getCost() > 0).collect(Collectors.toList());
+                    .filter(move -> move.getReq().contains(shopTrainer) && move.getCost() > 0)
+                    .collect(Collectors.toList());
         }
-        
+
     }
 
     public List<Move> getShopMoves() {

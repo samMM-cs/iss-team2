@@ -83,4 +83,17 @@ public class Move {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", value=" + value +
+                ", cost=" + cost +
+                ", req=" + req +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
