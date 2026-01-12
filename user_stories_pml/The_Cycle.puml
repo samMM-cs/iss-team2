@@ -55,18 +55,25 @@ class GameState {
     - storyFlags : Map<Event, Boolean>
     - worldPosition : WorldPosition
 
+    +createParty(): void
+    +createEnemy(): void
+    +createNPC(): void
     + saveToMemento() : GameStateMemento
 }
 
 class GameStateMemento{
-    - selectedCharacters: List<Job>
-    - worldPosition: WorldPosition
-    - storyFlags: Map<String, Boolean>
+    -nPlayers: int
+    -autoSaveEnable: boolean
+    -party: Party
+    -worldPosition: WorldPosition
+    -flagMap: FlagMap
+    -currentStoryNode: StoryNode
+    -enemies: List<Enemy>
+    -npc: List<NPC>
+    -maps: List<String>
+    -mapId: int
 
-    + getSelectedCharaters(): List<Job>
-    +getStoryFlags(): Map<String, Boolean>
-    +getWorldPosition(): WorldPosition
-    
+    +toString: String
 }
 
 'CareTaker'
@@ -192,7 +199,7 @@ class Enemy extends CharacterPG {
 }
 
 interface Interactable {
-    + interact(player: Player): void
+    + interact(party: Party): void
 }
 
 abstract class NPC implements Interactable {
@@ -333,8 +340,9 @@ class ShopView {
 
 ShopView --> Player: interacts
 ShopView --> NPC: showShop
+
 'Indica dipendenza perchè shopview ha bisogno di Move per creare UI'
-ShopView ..> Move : add()
+ShopView ..> Move : add() 
 
 ' ===========================
 ' Builder Pattern (Map)

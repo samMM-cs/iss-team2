@@ -13,7 +13,7 @@ import com.game.model.battle.BattleResult;
 import com.game.model.character.CharacterPG;
 import com.game.model.character.Party;
 import com.game.model.character.Player;
-import com.game.view.battleview.BattleView;
+import com.game.view.battleview.BattleView; 
 
 public class BattleController {
     private Battle battle;
