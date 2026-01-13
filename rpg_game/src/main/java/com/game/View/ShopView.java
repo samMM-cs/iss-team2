@@ -99,7 +99,7 @@ public class ShopView extends VBox {
 
                 boolean canLearn = false;
                 for (Player player : party.getMembers()) {
-                        canLearn = move.getReq().contains(player.getJob().name()) &&
+                        canLearn = canLearn || move.getReq().contains(player.getJob().name()) &&
                                         !player.getCurrentMove().contains(move);
                 }
 

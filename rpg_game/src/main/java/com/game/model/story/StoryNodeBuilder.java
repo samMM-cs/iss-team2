@@ -30,13 +30,13 @@ public class StoryNodeBuilder {
         return this;
     }
 
-    public StoryNodeBuilder setDialogues(List<String> dialogues) {
-        this.dialogues = dialogues;
+    public StoryNodeBuilder addDialogues(List<String> dialogues) {
+        this.dialogues.addAll(dialogues);
         return this;
     }
 
-    public StoryNodeBuilder setChoice(List<Choice> choices) {
-        this.choices = choices;
+    public StoryNodeBuilder addChoices(List<Choice> choices) {
+        this.choices.addAll(choices);
         return this;
     }
 

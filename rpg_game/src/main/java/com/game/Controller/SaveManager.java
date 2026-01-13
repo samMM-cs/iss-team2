@@ -59,7 +59,8 @@ public class SaveManager {
             new GameState.GameStateBuilder().restoreFromMemento(memento);
 
         } catch (IOException e) {
-            throw e;
+            ViewManager.getInstance().showCorruptSave(slot);
+            ViewManager.getInstance().showMainMenu();
         }
     }
 
@@ -76,7 +77,8 @@ public class SaveManager {
             new GameState.GameStateBuilder().restoreFromMemento(memento);
 
         } catch (IOException e) {
-            throw e;
+            ViewManager.getInstance().showCorruptSave();
+            ViewManager.getInstance().showMainMenu();
         }
     }
 

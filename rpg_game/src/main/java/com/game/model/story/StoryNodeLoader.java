@@ -1,7 +1,6 @@
 package com.game.model.story;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +31,19 @@ public class StoryNodeLoader {
             String startNodeName = root.get("startNode").asText();
             JsonNode nodes = root.get("nodes");
             Map<String, StoryNode> nodeMap = new HashMap<>();
+
+            // create and build story nodes with empty choices
             for (JsonNode jsonNode : nodes) {
                 String name = jsonNode.get("name").asText();
                 List<String> dialogues = mapper.readerForListOf(String.class).readValue(jsonNode.get("dialogues"));
-                SerializablePredicate<GameState> trigger = mapper.convertValue(jsonNode.get("trigger"), triggerType);
-                nodeMap.put(name, new StoryNode(name, dialogues, new ArrayList<>(), trigger));
+                SerializablePredicate<GameState> trigger = mapper.convertValue(
+                        jsonNode.get("trigger"), triggerType);
+                nodeMap.put(name, new StoryNodeBuilder().setName(name)
+                        .addDialogues(dialogues).setTrigger(trigger)
+                        .buildStoryNode());
             }
+
+            // add choices to nodes
             for (JsonNode jsonNode : nodes) {
                 String name = jsonNode.get("name").asText();
                 StoryNode node = nodeMap.get(name);
@@ -45,8 +51,8 @@ public class StoryNodeLoader {
                 for (JsonNode choiceJson : choices) {
                     String text = choiceJson.get("text").asText();
                     StoryNode next = nodeMap.get(choiceJson.get("nextNode").asText());
-                    SerializableConsumer<GameState> aftermath = mapper.convertValue(choiceJson.get("choiceAftermath"),
-                            afterType);
+                    SerializableConsumer<GameState> aftermath = mapper.convertValue(
+                            choiceJson.get("choiceAftermath"), afterType);
                     node.addChoice(new Choice(next, text, aftermath));
                 }
             }
