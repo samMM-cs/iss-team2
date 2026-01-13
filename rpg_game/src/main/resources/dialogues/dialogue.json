@@ -1,0 +1,227 @@
+{
+  "story": {
+    "startNode": "intro",
+    "nodes": [
+
+      {
+        "id": "intro",
+        "dialogues": [
+          "Il mondo sta morendo.",
+          "Creature oscure emergono dalla terra e divorano ogni cosa.",
+          "Città cadono. Regni scompaiono.",
+          "Voi siete l'ultimo gruppo rimasto a combattere."
+        ],
+        "choices": [
+          {
+            "text": "Partire per fermare la minaccia.",
+            "next": "map1_start"
+          }
+        ]
+      },
+
+      {
+        "id": "map1_start",
+        "dialogues": [
+          "Le prime terre sono devastate.",
+          "I nemici sembrano nascere dal mondo stesso.",
+          "Ogni battaglia lascia ferite nella realtà."
+        ],
+        "choices": [
+          {
+            "text": "Continuare ad avanzare.",
+            "next": "map1_end"
+          }
+        ]
+      },
+
+      {
+        "id": "map1_end",
+        "dialogues": [
+          "I servitori sono stati sconfitti.",
+          "Ma nuovi nemici continuano ad apparire.",
+          "Qualcosa li sta creando."
+        ],
+        "choices": [
+          {
+            "text": "Scoprire l'origine dei nemici.",
+            "next": "map2_start"
+          }
+        ]
+      },
+
+
+      {
+        "id": "map2_start",
+        "dialogues": [
+          "Antiche rovine emergono dal terreno.",
+          "Simboli parlano di una forza primordiale.",
+          "Il suo nome è Distruzione."
+        ],
+        "choices": [
+          {
+            "text": "Distruggerla a ogni costo.",
+            "next": "map2_force"
+          },
+          {
+            "text": "Studiare ciò che è la Distruzione.",
+            "next": "map2_truth"
+          }
+        ]
+      },
+
+      {
+        "id": "map2_force",
+        "dialogues": [
+          "La Distruzione non sembra un'entità malvagia.",
+          "È una presenza costante.",
+          "Un processo."
+        ],
+        "choices": [
+          {
+            "text": "Non importa. Deve morire.",
+            "next": "map3_start"
+          }
+        ]
+      },
+
+      {
+        "id": "map2_truth",
+        "dialogues": [
+          "La Distruzione non crea il caos.",
+          "Essa distrugge ciò che deve essere distrutto.",
+          "È parte di qualcosa di più grande."
+        ],
+        "choices": [
+          {
+            "text": "Andare fino in fondo.",
+            "next": "map3_start"
+          }
+        ]
+      },
+
+
+      {
+        "id": "map3_start",
+        "dialogues": [
+          "Alla fine del mondo, una figura vi attende.",
+          "La Distruzione non mostra ostilità.",
+          "Solo necessità."
+        ],
+        "choices": [
+          {
+            "text": "Affrontarla.",
+            "next": "boss_intro"
+          }
+        ]
+      },
+
+
+      {
+        "id": "boss_intro",
+        "dialogues": [
+          "DISTRUZIONE:",
+          "«Io distruggo perché devo.»",
+          "«Quando tutto sarà finito, distruggerò me stessa.»",
+          "«Solo allora la Creazione agirà.»"
+        ],
+        "choices": [
+          {
+            "text": "Combattere la Distruzione.",
+            "next": "boss_fight"
+          },
+          {
+            "text": "Fermarsi e ascoltare.",
+            "next": "resignation"
+          }
+        ]
+      },
+
+
+      {
+        "id": "boss_fight",
+        "dialogues": [
+          "Lo scontro scuote la realtà.",
+          "Il colpo finale colpisce la Distruzione.",
+          "Essa cade senza opporsi."
+        ],
+        "choices": [
+          {
+            "text": "Osservare ciò che accade.",
+            "next": "victory_creation"
+          }
+        ]
+      },
+
+      {
+        "id": "victory_creation",
+        "dialogues": [
+          "CREAZIONE:",
+          "«Il ciclo è stato spezzato.»",
+          "«Ma non fermato.»",
+          "Un nuovo mondo inizia a formarsi sopra il vostro.",
+          "La realtà viene riscritta."
+        ],
+        "choices": [
+          {
+            "text": "Accettare la verità.",
+            "next": "victory_ending"
+          }
+        ]
+      },
+
+      {
+        "id": "victory_ending",
+        "dialogues": [
+          "Avete vinto.",
+          "Ma il mondo è condannato.",
+          "La Distruzione tornerà.",
+          "E voi sarete gli unici a ricordare.",
+          "",
+          "FINE – VITTORIA"
+        ],
+        "choices": []
+      },
+
+      {
+        "id": "resignation",
+        "dialogues": [
+          "Abbassate le armi.",
+          "La Distruzione vi osserva.",
+          "",
+          "DISTRUZIONE:",
+          "«Avete compreso.»",
+          "",
+          "Il mondo continua a sgretolarsi.",
+          "Ma questa volta… è giusto così."
+        ],
+        "choices": [
+          {
+            "text": "Accettare la fine.",
+            "next": "resignation_ending"
+          }
+        ]
+      },
+
+      {
+        "id": "resignation_ending",
+        "dialogues": [
+          "Il mondo viene distrutto fino all'ultimo frammento.",
+          "Poi, la Distruzione si annienta.",
+          "",
+          "CREAZIONE:",
+          "«Ora posso creare.»",
+          "",
+          "Un nuovo mondo nasce.",
+          "Pulito.",
+          "Senza memoria.",
+          "",
+          "Voi non esistete più.",
+          "",
+          "FINE – RESA"
+        ],
+        "choices": []
+      }
+
+    ]
+  }
+}

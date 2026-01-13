@@ -33,6 +33,7 @@ public class GameState {
     public String mapId;
     public FlagMap flagMap;
     public StoryNode currentStoryNode;
+    private boolean storyShown = false;
 
     // Costruttore privato, il Builder lo costruisce
     private GameState(GameStateBuilder builder) {
@@ -192,8 +193,16 @@ public class GameState {
 
     public void setCurrentStoryNode(StoryNode newStoryNode) {
         this.currentStoryNode = newStoryNode;
+        this.storyShown = false;
     }
 
+    public boolean showCurrentStory() {
+        if (currentStoryNode != null && !storyShown) {
+            storyShown = true;
+            return true;
+        }
+        return false;
+    }
     public boolean isAutoSaveEnabled() {
         return autoSaveEnabled;
     }
