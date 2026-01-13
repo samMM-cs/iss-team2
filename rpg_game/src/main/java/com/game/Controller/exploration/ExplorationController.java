@@ -9,6 +9,7 @@ import com.game.controller.StoryController;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.Position;
+import com.game.model.SerializablePredicate.CanChangeMap;
 import com.game.model.battle.Battle;
 import com.game.model.character.Player;
 import com.game.model.character.NPC;
@@ -61,9 +62,8 @@ public class ExplorationController {
             return;
 
         // Cambio mappa se necessario
-        if (gameState.getEnemies().isEmpty()
-                && !gameState.getMap().getEnemies().isEmpty()
-                && gameState.getMapInd() != gameState.getMaps().size() - 1) {
+        if (gameState.getCurrentStoryNode().getTrigger() instanceof CanChangeMap
+                && gameState.getCurrentStoryNode().getTrigger().test(gameState)) {
             gameState.nextMap();
             ViewManager.getInstance().updateMaps();
             prevPosition = null;

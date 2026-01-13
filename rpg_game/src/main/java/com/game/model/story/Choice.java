@@ -11,10 +11,9 @@ public class Choice {
     private final StoryNode nextNode;
     private final String text;
     @JsonTypeInfo(use = Id.CLASS)
-    private SerializableConsumer<GameState> choiceAftermath;
+    private SerializableConsumer<GameState> choiceAftermath = new SerializableConsumer.DoNothing<>();
 
-    // @JsonCreator
-    public Choice(@JsonProperty("nextNode") StoryNode nextNode, @JsonProperty("text") String text) {
+    public Choice(StoryNode nextNode, String text) {
         this.nextNode = nextNode;
         this.text = text;
     }
@@ -39,5 +38,14 @@ public class Choice {
 
     public SerializableConsumer<GameState> getChoiceAftermath() {
         return this.choiceAftermath;
+    }
+
+    @Override
+    public String toString() {
+        return "Choice{" +
+                "nextNode=" + nextNode +
+                ", text='" + text + '\'' +
+                ", choiceAftermath=" + choiceAftermath.getClass().getCanonicalName() +
+                '}';
     }
 }

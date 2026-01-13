@@ -19,8 +19,7 @@ public class StoryController {
     public void enter() {
         StoryNode node = gameState.getCurrentStoryNode();
         if (node != null && node.getTrigger().test(GameState.getInstance())) {
-            view.showDialogue(node, gameState);
-            view.showChoices(node);
+            view.show(node, gameState);
         }
     }
 

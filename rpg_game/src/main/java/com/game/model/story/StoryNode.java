@@ -9,13 +9,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.game.model.GameState;
 import com.game.model.SerializablePredicate;
+import com.game.model.SerializablePredicate.ConstantTrue;
 
 public class StoryNode {
     private String name;
     private List<String> dialogues;
     private List<Choice> choices;
     @JsonTypeInfo(use = Id.CLASS)
-    private SerializablePredicate<GameState> trigger;
+    private SerializablePredicate<GameState> trigger = new ConstantTrue<GameState>();
 
     @JsonCreator
     public StoryNode(
@@ -25,6 +26,16 @@ public class StoryNode {
         this.name = name;
         this.dialogues = dialogues;
         this.choices = choices;
+    }
+
+    public StoryNode(String name, List<String> dialogues, List<Choice> choices,
+            SerializablePredicate<GameState> trigger) {
+        this.name = name;
+        this.dialogues = dialogues;
+        this.choices = choices;
+        if (trigger != null) {
+            this.trigger = trigger;
+        }
     }
 
     public StoryNode(StoryNodeBuilder sNodeBuilder) {
@@ -52,5 +63,15 @@ public class StoryNode {
 
     public Predicate<GameState> getTrigger() {
         return trigger;
+    }
+
+    @Override
+    public String toString() {
+        return "StoryNode{" +
+                "name='" + name + '\'' +
+                ", dialogues=" + dialogues +
+                ", choices=" + choices +
+                ", trigger=" + trigger.getClass().getCanonicalName() +
+                '}';
     }
 }

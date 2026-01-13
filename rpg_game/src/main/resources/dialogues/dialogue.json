@@ -2,25 +2,30 @@
   "story": {
     "startNode": "intro",
     "nodes": [
-
       {
-        "id": "intro",
+        "name": "intro",
         "dialogues": [
           "Il mondo sta morendo.",
-          "Creature oscure emergono dalla terra e divorano ogni cosa.",
+          "Creature oscure emergono dalla terra e divorano tutto.",
           "Città cadono. Regni scompaiono.",
           "Voi siete l'ultimo gruppo rimasto a combattere."
         ],
         "choices": [
           {
             "text": "Partire per fermare la minaccia.",
-            "next": "map1_start"
+            "nextNode": "map1_start",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
       {
-        "id": "map1_start",
+        "name": "map1_start",
         "dialogues": [
           "Le prime terre sono devastate.",
           "I nemici sembrano nascere dal mondo stesso.",
@@ -29,13 +34,18 @@
         "choices": [
           {
             "text": "Continuare ad avanzare.",
-            "next": "map1_end"
+            "nextNode": "map1_end",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
-
       {
-        "id": "map1_end",
+        "name": "map1_end",
         "dialogues": [
           "I servitori sono stati sconfitti.",
           "Ma nuovi nemici continuano ad apparire.",
@@ -44,14 +54,19 @@
         "choices": [
           {
             "text": "Scoprire l'origine dei nemici.",
-            "next": "map2_start"
+            "nextNode": "map2_start",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
-
       {
-        "id": "map2_start",
+        "name": "map2_start",
         "dialogues": [
           "Antiche rovine emergono dal terreno.",
           "Simboli parlano di una forza primordiale.",
@@ -60,17 +75,26 @@
         "choices": [
           {
             "text": "Distruggerla a ogni costo.",
-            "next": "map2_force"
+            "nextNode": "map2_force",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           },
           {
             "text": "Studiare ciò che è la Distruzione.",
-            "next": "map2_truth"
+            "nextNode": "map2_truth",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
+        }
       },
 
       {
-        "id": "map2_force",
+        "name": "map2_force",
         "dialogues": [
           "La Distruzione non sembra un'entità malvagia.",
           "È una presenza costante.",
@@ -79,13 +103,19 @@
         "choices": [
           {
             "text": "Non importa. Deve morire.",
-            "next": "map3_start"
+            "nextNode": "map3_start",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
       {
-        "id": "map2_truth",
+        "name": "map2_truth",
         "dialogues": [
           "La Distruzione non crea il caos.",
           "Essa distrugge ciò che deve essere distrutto.",
@@ -94,14 +124,19 @@
         "choices": [
           {
             "text": "Andare fino in fondo.",
-            "next": "map3_start"
+            "nextNode": "map3_start",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
-
       {
-        "id": "map3_start",
+        "name": "map3_start",
         "dialogues": [
           "Alla fine del mondo, una figura vi attende.",
           "La Distruzione non mostra ostilità.",
@@ -110,14 +145,19 @@
         "choices": [
           {
             "text": "Affrontarla.",
-            "next": "boss_intro"
+            "nextNode": "boss_intro",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
+        }
       },
 
-
       {
-        "id": "boss_intro",
+        "name": "boss_intro",
         "dialogues": [
           "DISTRUZIONE:",
           "«Io distruggo perché devo.»",
@@ -127,18 +167,26 @@
         "choices": [
           {
             "text": "Combattere la Distruzione.",
-            "next": "boss_fight"
+            "nextNode": "boss_fight",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           },
           {
             "text": "Fermarsi e ascoltare.",
-            "next": "resignation"
+            "nextNode": "resignation",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
-
       {
-        "id": "boss_fight",
+        "name": "boss_fight",
         "dialogues": [
           "Lo scontro scuote la realtà.",
           "Il colpo finale colpisce la Distruzione.",
@@ -147,13 +195,19 @@
         "choices": [
           {
             "text": "Osservare ciò che accade.",
-            "next": "victory_creation"
+            "nextNode": "victory_creation",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
       {
-        "id": "victory_creation",
+        "name": "victory_creation",
         "dialogues": [
           "CREAZIONE:",
           "«Il ciclo è stato spezzato.»",
@@ -164,13 +218,19 @@
         "choices": [
           {
             "text": "Accettare la verità.",
-            "next": "victory_ending"
+            "nextNode": "victory_ending",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
       {
-        "id": "victory_ending",
+        "name": "victory_ending",
         "dialogues": [
           "Avete vinto.",
           "Ma il mondo è condannato.",
@@ -179,11 +239,14 @@
           "",
           "FINE – VITTORIA"
         ],
-        "choices": []
+        "choices": [],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
       {
-        "id": "resignation",
+        "name": "resignation",
         "dialogues": [
           "Abbassate le armi.",
           "La Distruzione vi osserva.",
@@ -197,13 +260,19 @@
         "choices": [
           {
             "text": "Accettare la fine.",
-            "next": "resignation_ending"
+            "nextNode": "resignation_ending",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
           }
-        ]
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       },
 
       {
-        "id": "resignation_ending",
+        "name": "resignation_ending",
         "dialogues": [
           "Il mondo viene distrutto fino all'ultimo frammento.",
           "Poi, la Distruzione si annienta.",
@@ -219,9 +288,11 @@
           "",
           "FINE – RESA"
         ],
-        "choices": []
+        "choices": [],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
       }
-
     ]
   }
 }
