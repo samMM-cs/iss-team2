@@ -1,0 +1,172 @@
+15/11/2025
+Attività svolte: Inizio progetto, definizione degli obiettivi generali del gioco
+Problemi incontrati: Capire quale tecnologia usare
+Soluzioni adottate: Dopo varie ricerche abbiamo deciso di adottare Maven, come progetto software, e JavaFX, come libreria Java per la gestione delle UI
+
+17/11/2025
+Attività svolte: Creazione del Model-View-Control (MVC)
+Problemi incontrati: Capire come disegnare al meglio l'architettura
+Soluzioni adottate: Utilizzo dell'estensione PUML per la creazione del modello
+
+21/11/2025
+Attività svolte: Implementazione delle User-Story 1-3-13. Inizio progettazione della struttura del gioco basata sui requisiti delle US.
+Problemi incontrati: Decidere con esattezza quali pattern di progettazione fossero più adatti per gestire le US.
+Soluzioni adottate: Abbiamo deciso di adottare i pattern Singleton, Factory e Observer
+
+22/11/2025
+Attività svolte: Eseguiti test sul funzionamento delle prime mappe e del movimento del party.
+                 Test delle prime interazioni con i nemici e collisioni negli scenari di esplorazioni.
+                 Verifica del corretto caricamento degli assets.
+Problemi incontrati: Alcuni sprite non venivano aggiornati correttamente.
+                     Problemi di sincronizzazione tra aggiornamento della posizione del party e refresh della mappa.
+Soluzioni adottate: Aggiunto requestLayout() nella mappa per aggiornare correttamente la posizione dei personaggi.
+                    Corretto il ciclo di aggiornamento dei movimenti per evitare sovrapposizioni grafiche.
+23/11/2025
+Attività svolte: Implementazione del Game launcher usando JavaFX, permettendo di avviare il gioco. Ricerca e raccolta degli assets grafici da utilizzare nel progetto (sprite e mappe). Bozza iniziale della struttura dei package.
+Problemi incontrati: Incertezza sulla gestione delle risorse e sul caricamento dinamico delle immagini.
+Soluzioni adottate: Abbiamo deciso di adottare una cartella resources centralizzata e usato dei metodi per il caricamento delle immagini.
+
+24/11/2025
+Attività svolte: Implementazione US4 (scelta del personaggio). Collegamento alla scelta del giocatore alla logca del GameState, così che il party venga creato in base ai personaggi selezionati.
+Problemi incontrati: Come gestire più giocatori. Aggiornamento dinamico dell'interfaccia grafica per mostrare i personaggi selezionati.
+Soluzioni adottate: Implementare la logica della selezione in base al numero dei giocatori selezionati.
+                    Aggiornamento della UI in tempo reale quando un personaggio viene selezionato o deselezionato.
+                    Collegamento con la creazione del party, usando i personaggi selezionati per inizializzare la mappa e le posizioni dei membri del party.
+
+25/11/2025
+Attività svolte: Vari test sulla US 4.
+                 Verifica del corretto collegamento tra la scelta del giocatore e la logica del GameState, assicurando che il party venga creato correttamente in base ai personaggi selezioni.
+Problemi incontrati: Aggiornamento dinamico dell'interfaccia grafica per riflettere in tempo reale i personaggi già selezionati.
+Soluzioni adottate:Implementata la logica di selezione basata sul numero di giocatori, impedendo selezioni non valide.
+
+26/11/2025
+Attività svolte: Implementazione delle US 15-16. Creazione di un TurnIterator per la gestione dei turni di combattimento
+    US15: calcolo dei danni inflitti dai player e dai nemici durante i combattimenti.
+    US16: gestione del sisema di combattimenti a turni, inclusa la sequenza dei turni e l'esecuzione delle mosse.
+Problemi incontrati: Gestione delle priorità dei turni e calcolo corretto dei danni in base aggli attributi di attacco e difesa.
+                     Assicurarsi che gli effetti delle mosse e degli statis fossero applicati correttamente
+Soluzioni adottate: Implementazione di un algoritmo per il calcolo dei danni basato su attacco. Creata una coda di turni tramite TurnIterator, che cicla tra i personaggi e gestisce l'esecuzione ordinata delle azioni
+
+27/11/2025
+Attività svolte: Vari test sulle US 15-16.
+                 Verifica del calcolo dei danni inflitti dai personaggi e dai nemici.
+                 Test del sistema di combattimento a turni.
+Problemi incontrati: Alcune mosse non venivano eseguite correttamente
+                     I danni non aggiornavano correttamente le statistiche dei personaggi o dei nemici.
+Soluzioni adottate: Modifica dell'algoritmo di gestione dei turni per agarntire la corretta sequenza di esecuzione.
+
+30/11/2025
+Attività svolte: Implementazione della BattleView, la vista grafica del combattimento, che mostra i personaggi, nemici e i turni.
+                 Creazione e caricamento delle mosse dei personaggi e dei nemici dei nemici da un file JSON, rendendo il sistema modulare e facilmente aggiornabile.
+                 Collegamento della logica delle mosse con il TurnIterator per l'esecuzione dei turni.
+Problemi incontrati: Difficoltà a collegare le mosse lette dal JSON con la logica di danno. Gestione della sincronizzazione tra aggiornamento della BattleView ed esecuzione dei turni.
+Soluzioni adottate: Definito un formato JSON standard per tutte le mosse, con attributi come danno, costo, personaggi.
+                    Creazione di una classe per la costruzione delle mosse in oggetti utilizzabili dal sistema di combattimento.
+
+01/12/2025
+Attività svolte: Implementazione degli NPC all'interno della mappa.
+                 Creazione delle interazioni base tra il party e gli NPC.
+Problemi incontrati: Gestione della collisione tra NPC e personaggi del party per evitare sovrapposizioni.
+Soluzioni adottate: Implementazione della logica di posizionamento degli NPC e controllo collisioni.
+
+03/12/2025
+Attività svolte: Creazione ShopView, utilizzata come schermata per imparare nuove abilità dei personaggi.
+                 Il collegamento della ShopView avviene con la classe Player.
+                 Creazione del'interfaccia grafica con vari pulsanti per selezionare l'abilità da apprendere.
+Problemi incontrati: Aggiornamento dinamico delle abilità nella UI dopo che il personaggio le ha imparate.
+Soluzioni adottate: Ogni abilità nuova viene aggiunta alla lista delle abilità correnti del personaggio.
+
+06/12/2025
+Attività svolta: Creazione HUD dei giocatori e nemici, visibile solo durante il combattimento nella BttleView.
+                 Implementazione della barra Hp e Xp.
+Problemi incontrati: Aggiornamento dinamico dell'HUD quando più entità subiscono modifiche contemporaneamente.
+Soluzioni adottate: Creazione di un layout flessibile che permette la visualizzazione di più entità senza problemi grafici.
+
+09/12/2025
+Attività svolta: Aggiunta delle animazioni nell'HUD per rendere più chiari i danni.
+                 Collegamento delle animazioni al TurnIterator e alle mosse dei personaggi, così che ogni azione mostri un feedback immediato
+Problemi incontrati: Sincronizzazione delle animazioni con l'esecuzione delle mosse per evitare che L'HUD mostrasse valori errati.
+                     Gestione di più animazioni simultanee quando più personaggi o nemici agiscono nello stesso turno
+Soluzioni adottate: Test e calibrazione dei tempi di animazione per una visualizzazione più chiara e fluida.
+
+13/12/2025
+Attività svolta: Eseguiti vari test delle classi principali del progetto per verificare il corretto funzionamento e l'integrazione tra i componenti.
+                 Test su: GameState, Party, Player ed Enemy
+Problemi incontrati: Alcune classi non aggiornavano correttamente il loro stato interno quando interagivano tra loro.
+Soluzioni adottate: Aggiunti test unitari mirati per verificare che ogni classe aggiornasse correttamente lo stato del gioco.
+
+20/12/2025
+Attività svolte: Implementazione della US 21.
+                 Progettazione e realizzazione del MapBuilder, utilizzato per costruire le mappe di gioco in modo modulare e riutilizzabile.
+                 Separazione della logica di creazione delle mappe dalla loro rappresentazione, ficilitando l'aggiunta di nuove mappe e la manutenzione del codice.
+Problemi incontrati: Definizione di una struttura flessibile che permettesse di gestire mappe con layout, nemici e NPC differenti.
+Soluzioni adottate: Utilizzo del pattern Builder per costruire step by step le mappe, impostando elementi come tile, posizioni dei giocatori, nemici e NPC.
+                    Integrazione del MapBuilder con il sistema di caricamento delle mappe, mantenendo il GameState indipendente dai dettagli della costruzione.
+
+23/12/2025
+Attività svolte: Eseguiti vari test sulle funzionalità. Verificato il corretto funzionamento di:
+                 MapBuilder e caricamento delle mappe.
+                 Transizione tra mappe e aggiornamento del GameState.
+                 Interazione con NPC e apprendimento delle abilità tramite learnMove().
+Problemi incontrati: Individuati alcuni casi limite durante il cambio mappa e l'inizializzazione dei nemici.
+Soluzioni adottate: Correzione di bug minori legati all'aggiornamento dei dati nel GameState.
+                    Rafforzati i controlli sullo stato di gioco durante le transizioni.
+
+28/12/2025
+Attività svolte: Implementazione US9: Manual save into slot.
+                 Progettazione e utilizzo del Memento Pattern per salvare e ripristinare lo stato del gioco.
+                 Implementazione del salvataggio dello stato completo del GameState, includendo: Party, Enemy,NPC, Mappa corrente, Flag di gioco e stato della storia
+                 Creazione di uno o più salvataggi di slot (anche sovrascrivendoli), permettendo al giocatore di riprendere la partita da uno stato precedente.
+Problemi incontrati: Decidere quali parti del GameState includere nel memento senza violare l'incapsulamento.
+                     Gestione della serializzazione degli oggetti complessi (mappe, personaggi, storia)
+Soluzioni adottate:Introduzione della classe GameStateMemento per incapsulare lo stato da salvare.
+                    Utilizzo di un costruttore dedicato per ripristinare correttamente il GameState a partire dal Memento
+
+30/12/2025
+Attività svolta: Introduzione della ContinueGameView, la schermata dedicata al caricamento delle partita salvate.
+                 Implementazione del aricamento della partita da uno slot di salvataggio, ripristinando lo stato del gioco tramite il Memento Pattern.
+Problemi incontrati: Gestione dei casi in cui uno slot non è valido o non presente.
+                     Sincronizzazione corretta tra GameState ripristinato e interfaccia grafica.
+Soluzioni adottate: Aggiunto il controllo di validità di uno slot prima del caricamento.
+                    Inizializzazione corretta delle view a partire da un salvataggio ripristinato dal memento.
+
+03/01/2026
+Attività svolte: Aggiunta la funzionalità di autosave del gioco.
+                 Integrazione dell'autosave con il sistema di salvataggio già implementato.
+Problemi incontrati: Evitare salvataggi troppo frequenti.
+                     Gestione della coerenza dello stato salvato durante eventi complessi.
+Soluzioni adottate: Riutilizzo del meccanismo di salvataggio manuale per garantire coerenza e stabilità
+
+05/01/2026
+Attivià svolte: Eseguiti vari test su tutte le funzionalità di gioco.
+                Sistema di salvataggio manuale e auto-save.
+                Caricamento della partita tramite ContinueGameView.
+Problemi incontrati: Individuati alcuni bug minori in casi limite.
+Soluzioni adottate: Correzione dei problemi individuati e stabilizzazione del codice.
+
+08/01/2026
+Attività svolte: Implementazione US10: Story choices influences future
+                 Integrazione dei StoryNode, delle Choice e dei Flag narrativi per la gestione dei finali.
+Problemi incontrati: Gestione della coerenza della storia in base alle scelte effettuate dal giocatore
+Soluzioni adottate: Utilizzo di FlagMap per memorizzare le decisioni prese e condizionare i fututi dialoghi.
+                    Uso di trigger sui StoryNode per attivare i dialoghi solo in determinate condizioni.
+                    Uso del Builder Pattern tramite StoryNodeBuilder per la costruzione dei nodi narrativi in modo modulare, leggibile ed estendibile, mantenendo separata la logica della storia da quella del gioco
+
+10/01/2026
+Attività svolte: Inizio progettazione della storia e dei dialoghi.
+                 Definizione dei primi eventi narrativi e delle possibili scelte del giocatore.
+Problemi incontrati: Come integrare la componente narrativa con il sistema dei nodi della storia e scelte, mantenendo il codice leggibile e flessibile.
+Soluzioni adottate: Separazione della logica della storia da quella di gioco, utilizzando il GameState solo come punto di comunicazione tra narrazione e gameplay.
+
+11/01/2026
+Attività svolte: Implementazione del caricamento dei dialoghi dal JSON
+Problemi incontrati: Come collegare le scelte ai nodi già creati
+Soluzioni adottate: Abbiamo risolto adottando una soluzione custom usando HashMap<String, StoryNode> per mappare i nodi
+
+13/01/2026
+Attivià svolte: Aggiunta del Boss finale del gioco.
+                Implementazione del nemico speciale con statistiche e mosse uniche, integrato nel sistema di combattimento BattleView.
+                Preparazione della logica per il finale della storia, collegando le scelte del giocatore e i flag narrativi allo scontro conclusivo.
+Problemi incontrati: Bilanciamento del combattimento per renderlo impegnativo ma non impossibile.
+Soluzioni adottate: Definizione di abilità e punti vita del boss calibrati in base al party.
+                    Gestione accurata dei turni e aggiornamento HUD per rendere chiari i cambiamenti di stato durante il combattimento.
