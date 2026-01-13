@@ -54,7 +54,31 @@ class ItemAction implements ActionStrategy{
     + execute(user, target)
 }
 
+class MoveReader {
+    + readMove(String path): List<Move>
+}
+
+class MoveRegistry {
+    - MoveRegistry instance
+    - Map<String, Move> moves
+    + getInstance(): MoveRegistry
+    + getMoveActionStrategy(String move): ActionStrategy
+}
+
+class Action {
+    - CharacterPG user
+    - List<? extends CharacterPG> targets
+    - ActionStrategy actionStrategy
+    + execute(): void
+}
+
 Player ..> ActionStrategy : uses
 Enemy..>ActionStrategy : uses
 MoveType..>MoveAction: creates
+
+MoveRegistry ..> MoveReader : uses
+MoveRegistry ..> ActionStrategy : creates
+
+Action ..> ActionStrategy : consumes
+Battle ..> Action : consumes
 @enduml

@@ -30,6 +30,7 @@ class StoryNodeLoader {
 class Choice {
     - nextNode: StoryNode
     - text: String
+    - SerializableConsumer<GameState>
     + getNextNode(): StoryNode
     + getText(): String
 }
@@ -44,10 +45,22 @@ class FlagMap {
     + setFlag(Flag flag): void
 }
 
+class StoryView {
+
+}
+
+class StoryController {
+    + enter(): void
+    + onChoice(String choiceText): void
+}
+
 StoryNodeBuilder --> StoryNode
 StoryNodeLoader --> StoryNodeBuilder
 StoryNode --> Choice
 
 FlagMap *-- Flag
+
+StoryController --> StoryView
+StoryController --> StoryNode
 
 @enduml
