@@ -45,7 +45,6 @@ public class ViewManager {
   private Pane root;
   private GameController gameController;
   private StoryView storyView;
-  private StoryController storyController;
 
   private ViewManager(Stage stage) {
     this.stage = stage;
@@ -208,20 +207,15 @@ public class ViewManager {
       dialogView = ViewManager.getInstance().getDialogView();
     }
 
-    if (!root.getChildren().contains(dialogView))
-      root.getChildren().add(dialogView);
-    if (storyView == null) {
+    if (storyView == null)
       storyView = new StoryView(dialogView);
-      storyController = new StoryController(storyView);
-    }
 
+    if (!root.getChildren().contains(storyView))
+      root.getChildren().add(storyView);
     explorationView.stop();// Blocca il movimento
 
     // Mostra la storia corrente
-    storyView.showDialogue(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());
-    dialogView.setVisible(true);
-    dialogView.handleAdvance();
-    storyController.enter();
+    storyView.show(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());
   }
 
   public void showDialogView(Scene scene, Player player, NPC target) {
