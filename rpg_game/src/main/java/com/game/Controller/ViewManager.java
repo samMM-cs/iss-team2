@@ -20,6 +20,7 @@ import com.game.view.gameview.SaveMenuView;
 import com.game.view.mapview.ExplorationView;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -198,6 +199,20 @@ public class ViewManager {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void showCorruptSave(int slot) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error while loading the save");
+    alert.setHeaderText("Slot " + slot + " contains a corrupt save file");
+    alert.showAndWait();
+  }
+
+  public void showCorruptSave() {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error while loading the save");
+    alert.setHeaderText("Autosave slot is corrupted");
+    alert.showAndWait();
   }
 
   public void showStory(Scene scene) {

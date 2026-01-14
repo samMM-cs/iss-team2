@@ -5,7 +5,7 @@ title US9 - Manual save into slot (Memento Pattern)
 
 'Originator'
 class GameState{
-    +saveToMemento() :GameStateMemento
+    +saveToMemento(): GameStateMemento
 }
 
 class GameStateMemento{
@@ -25,6 +25,8 @@ class SaveManager{
     +continueGame(slot: int): GameState
     +isSlotUsed(slot: int): boolean
     +confirmOwerwrite(slot: int): boolean
+    +autosave(state: GameState)
+    +loadFromAutosave(): GameState
 }
 
 GameState-->GameStateMemento: creates
