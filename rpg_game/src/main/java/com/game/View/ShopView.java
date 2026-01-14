@@ -45,7 +45,6 @@ public class ShopView extends VBox {
         }
 
         private void addShopItem(Move move) {
-                Player activePlayer = party.getMainPlayer();
 
                 // Box principale
                 HBox itemBox = new HBox(20);
@@ -78,45 +77,47 @@ public class ShopView extends VBox {
                 nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;");
 
                 // Bottone Learn
-                Button buyButton = new Button("Learn");
-                buyButton.setStyle(
+                Button learnButton = new Button("Learn");
+                learnButton.setStyle(
                                 "-fx-background-color: #228B22;" +
                                                 "-fx-text-fill: white;" +
                                                 "-fx-font-weight: bold;" +
                                                 "-fx-background-radius: 8;");
-                buyButton.setCursor(Cursor.HAND);
+                learnButton.setCursor(Cursor.HAND);
 
-                buyButton.setOnMouseEntered(e -> buyButton.setStyle(
+                learnButton.setOnMouseEntered(e -> learnButton.setStyle(
                                 "-fx-background-color: #2ecc71;" +
                                                 "-fx-text-fill: black;" +
                                                 "-fx-font-weight: bold;" +
                                                 "-fx-background-radius: 8;"));
-                buyButton.setOnMouseExited(e -> buyButton.setStyle(
+                learnButton.setOnMouseExited(e -> learnButton.setStyle(
                                 "-fx-background-color: #228B22;" +
                                                 "-fx-text-fill: white;" +
                                                 "-fx-font-weight: bold;" +
                                                 "-fx-background-radius: 8;"));
-
+                learnButton.setAlignment(Pos.CENTER_RIGHT);
                 boolean canLearn = false;
                 for (Player player : party.getMembers()) {
-                        canLearn = move.getReq().contains(player.getJob().name()) &&
+                        canLearn = canLearn || move.getReq().contains(player.getJob().name()) &&
                                         !player.getCurrentMove().contains(move);
                 }
 
-                buyButton.setDisable(!canLearn);
+               learnButton.setDisable(!canLearn);
 
-                buyButton.setOnAction(e -> {
-                        activePlayer.learnMove(move);
-                        showFeedback(activePlayer.getJob().name(), move.getName());
-                        buyButton.setDisable(true);
+             learnButton.setOnAction(e -> {
+                        for (Player player : party.getMembers()) {
+                                player.learnMove(move);
+                                showFeedback(player.getJob().name(), move.getName());
+                        }
+                        learnButton.setDisable(true);
                 });
 
-                itemBox.getChildren().addAll(nameLabel, buyButton);
+                itemBox.getChildren().addAll(nameLabel, learnButton);
                 movesBox.getChildren().add(itemBox);
         }
 
         private void showFeedback(String name, String moveName) {
-                feedbackLabel.setText(name + " ha imparato" + moveName);
+                feedbackLabel.setText(name + " " + " ha imparato" + " " + moveName);
 
                 PauseTransition delay = new PauseTransition(Duration.seconds(2));
                 delay.setOnFinished(e -> feedbackLabel.setText(""));
