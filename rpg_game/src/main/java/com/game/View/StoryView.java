@@ -19,9 +19,9 @@ public class StoryView extends VBox {
     private VBox choicesBox;
     private StoryController storyController;
 
-    public StoryView(DialogueView dialogueView) {
+    public StoryView(DialogueView dialogueView, StoryController controller) {
         this.dialogueView = dialogueView;
-        this.storyController = new StoryController(this);
+        this.storyController = controller;
 
         choicesBox = new VBox();
         choicesBox.setSpacing(10);

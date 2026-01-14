@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
+import com.game.controller.StoryController;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.Position;
@@ -58,13 +59,13 @@ public class ExplorationController {
             return;
 
         // Cambio mappa se necessario
-        if (gameState.getCurrentStoryNode().getTrigger() instanceof CanChangeMap
+        /*if (gameState.getCurrentStoryNode().getTrigger() instanceof CanChangeMap
                 && gameState.getCurrentStoryNode().getTrigger().test(gameState)) {
             gameState.nextMap();
             ViewManager.getInstance().updateMaps();
             prevPosition = null;
             return;
-        }
+        }*/
 
         // Controllo battaglia
         Optional<Enemy> optEnemy = gameState.getEnemies().stream()
@@ -97,16 +98,17 @@ public class ExplorationController {
             handlePossibleInteractions();
         }
 
-        // System.out.println(gameState.getCurrentStoryNode().getName() + ", "
-        // + ViewManager.getInstance().getDialogView().isVisible() + ", "
-        // + ViewManager.getInstance().getStoryView());
+        System.out.println(gameState.getCurrentStoryNode().getName() + ", "
+                + ViewManager.getInstance().getDialogView().isVisible() + ", "
+                + ViewManager.getInstance().getStoryView());
 
         // Mostra la storia solo se c'è un nodo e nessun dialogo aperto
         if (gameState.getCurrentStoryNode() != null
                 && !ViewManager.getInstance().getDialogView().isVisible()
                 && gameState.getCurrentStoryNode().getTrigger().test(gameState)
                 && !gameState.getStoryShown()) {
-            ViewManager.getInstance().showStory(scene);
+            //ViewManager.getInstance().showStory();
+            new StoryController().enter();
         }
     }
 

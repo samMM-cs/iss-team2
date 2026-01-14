@@ -53,15 +53,6 @@ public class ExplorationView {
         mapView.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(mapView);
         root.getChildren().add(hud);
-    }
-
-    public void showMap() {
-        ViewManager.getInstance().setAndShowScene(scene);
-        ViewManager.getInstance().initPauseMenu(scene, gameController);
-        ViewManager.getInstance().enableGlobalPause(scene);
-
-        if (!GameState.getInstance().getStoryShown())
-            ViewManager.getInstance().showStory(scene);
 
         timer = new AnimationTimer() {
 
@@ -101,6 +92,17 @@ public class ExplorationView {
                 }
             }
         };
+    }
+
+    public void showMap() {
+        ViewManager.getInstance().setAndShowScene(scene);
+        ViewManager.getInstance().initPauseMenu(scene, gameController);
+        ViewManager.getInstance().enableGlobalPause(scene);
+
+        /*if (!GameState.getInstance().getStoryShown())
+            ViewManager.getInstance().showStory();*/
+
+        
 
         // timer.start();
     }

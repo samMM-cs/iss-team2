@@ -219,15 +219,15 @@ public class ViewManager {
     alert.showAndWait();
   }
 
-  public void showStory(Scene scene) {
-    root = (Pane) scene.getRoot();
+  public void showStory(StoryController controller) {
+    root = (Pane) stage.getScene().getRoot();
 
     if (dialogView == null) {
       dialogView = ViewManager.getInstance().getDialogView();
     }
 
     if (storyView == null)
-      storyView = new StoryView(dialogView);
+      storyView = new StoryView(dialogView, controller);
 
     if (!root.getChildren().contains(storyView))
       root.getChildren().add(storyView);

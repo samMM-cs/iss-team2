@@ -3,15 +3,12 @@ package com.game.controller;
 import com.game.model.GameState;
 import com.game.model.story.Choice;
 import com.game.model.story.StoryNode;
-import com.game.view.StoryView;
 
 public class StoryController {
-    private final StoryView view;
     private StoryNode storyNode;
     private final GameState gameState;
 
-    public StoryController(StoryView view) {
-        this.view = view;
+    public StoryController() {
         this.gameState = GameState.getInstance();
         this.storyNode = gameState.getCurrentStoryNode();
     }
@@ -19,7 +16,7 @@ public class StoryController {
     public void enter() {
         StoryNode node = gameState.getCurrentStoryNode();
         if (node != null && node.getTrigger().test(GameState.getInstance())) {
-            view.show(node, gameState);
+            ViewManager.getInstance().showStory(this);
         }
     }
 
