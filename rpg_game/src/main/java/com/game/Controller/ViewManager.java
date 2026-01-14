@@ -226,7 +226,8 @@ public class ViewManager {
       dialogView = ViewManager.getInstance().getDialogView();
     }
 
-    if (storyView == null)
+    //questo commento rimarrà qui come memento dei nostri sforzi
+    //if (storyView == null)
       storyView = new StoryView(dialogView, controller);
 
     if (!root.getChildren().contains(storyView))

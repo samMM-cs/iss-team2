@@ -104,7 +104,7 @@ public class ExplorationView {
 
         
 
-        // timer.start();
+        timer.start();
     }
 
     public void stop() {

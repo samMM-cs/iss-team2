@@ -239,7 +239,15 @@
           "",
           "FINE – VITTORIA"
         ],
-        "choices": [],
+        "choices": [
+          {
+            "text": "E' finita",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$EndOfStory"
+            }
+          }
+        ],
         "trigger": {
           "@class": "com.game.model.SerializablePredicate$ConstantTrue"
         }
@@ -288,7 +296,15 @@
           "",
           "FINE – RESA"
         ],
-        "choices": [],
+        "choices": [
+          {
+            "text": "E' finita",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$EndOfStory"
+            }
+          }
+        ],
         "trigger": {
           "@class": "com.game.model.SerializablePredicate$ConstantTrue"
         }

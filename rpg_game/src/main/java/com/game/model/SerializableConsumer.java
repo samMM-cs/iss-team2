@@ -25,4 +25,11 @@ public interface SerializableConsumer<T> extends Consumer<T>, Serializable {
             ViewManager.getInstance().updateMaps();
         }
     }
+
+    public class EndOfStory<T extends GameState> implements SerializableConsumer<T> {
+        @Override
+        public void accept(T t) {
+            ViewManager.getInstance().exit();
+        }
+    }
 }

@@ -25,7 +25,7 @@ public class Map3 implements MapData {
 
   @Override
   public Position getPlayerPosition(int N, int i) {
-    return switch (N - i) {
+    return switch (N +1 - i) {
       case 1 -> new Position(18, 0); // last player
       case 2 -> new Position(17, 0);
       case 3 -> new Position(17, 1);

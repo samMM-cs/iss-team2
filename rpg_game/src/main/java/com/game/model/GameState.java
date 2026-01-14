@@ -3,6 +3,7 @@ package com.game.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.game.controller.ViewManager;
 import com.game.model.character.Enemy;
 import com.game.model.character.HasSpriteAndPosition;
 import com.game.model.character.Player;
