@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 
-import com.game.controller.StoryController;
 import com.game.controller.ViewManager;
 import com.game.model.GameState;
 import com.game.model.Position;
@@ -15,7 +14,6 @@ import com.game.model.character.Player;
 import com.game.model.character.NPC;
 import com.game.model.character.Party;
 import com.game.model.character.Enemy;
-import com.game.view.StoryView;
 import com.game.view.mapview.MapView;
 
 import javafx.scene.Scene;
@@ -31,8 +29,6 @@ public class ExplorationController {
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = null;
     private boolean battleStarted = false;
-    private StoryView storyView;
-    private StoryController storyController;
 
     public ExplorationController(Scene scene, MapView mapView) {
         this.scene = scene;
@@ -101,13 +97,16 @@ public class ExplorationController {
             handlePossibleInteractions();
         }
 
+        System.out.println(gameState.getCurrentStoryNode().getName() + ", "
+                + ViewManager.getInstance().getDialogView().isVisible() + ", "
+                + ViewManager.getInstance().getStoryView());
+
         // Mostra la storia solo se c'è un nodo e nessun dialogo aperto
         if (gameState.getCurrentStoryNode() != null
-                && !ViewManager.getInstance().getDialogView().isVisible()) {
-            if (storyView != null) {
-                storyView.showDialogue(gameState.getCurrentStoryNode(), gameState);
-                storyController.enter();
-            }
+                && !ViewManager.getInstance().getDialogView().isVisible()
+                && gameState.getCurrentStoryNode().getTrigger().test(gameState)
+                && !gameState.getStoryShown()) {
+            ViewManager.getInstance().showStory(scene);
         }
     }
 

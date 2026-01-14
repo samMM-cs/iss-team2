@@ -94,6 +94,7 @@ public class StoryView extends VBox {
 
     public void show(StoryNode node, GameState gameState) {
         hideChoices();
+        gameState.showCurrentStory();
 
         dialogueView.setOnCloseClick(() -> {
             if (node.getChoices() != null && !node.getChoices().isEmpty())

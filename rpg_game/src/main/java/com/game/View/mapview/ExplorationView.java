@@ -60,7 +60,7 @@ public class ExplorationView {
         ViewManager.getInstance().initPauseMenu(scene, gameController);
         ViewManager.getInstance().enableGlobalPause(scene);
 
-        if (GameState.getInstance().showCurrentStory())
+        if (!GameState.getInstance().getStoryShown())
             ViewManager.getInstance().showStory(scene);
 
         timer = new AnimationTimer() {

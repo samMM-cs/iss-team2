@@ -47,6 +47,10 @@ public class ViewManager {
   private GameController gameController;
   private StoryView storyView;
 
+  public StoryView getStoryView() {
+    return storyView;
+  }
+
   private ViewManager(Stage stage) {
     this.stage = stage;
     this.stage.setTitle("The Cycle");
@@ -227,10 +231,12 @@ public class ViewManager {
 
     if (!root.getChildren().contains(storyView))
       root.getChildren().add(storyView);
-    explorationView.stop();// Blocca il movimento
+    // explorationView.stop();// Blocca il movimento
 
     // Mostra la storia corrente
-    storyView.show(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());
+    if (GameState.getInstance().getCurrentStoryNode().getTrigger().test(GameState.getInstance())
+        && !GameState.getInstance().getStoryShown())
+      storyView.show(GameState.getInstance().getCurrentStoryNode(), GameState.getInstance());
   }
 
   public void showDialogView(Scene scene, Player player, NPC target) {

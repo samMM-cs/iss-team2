@@ -196,13 +196,14 @@ public class GameState {
         this.storyShown = false;
     }
 
-    public boolean showCurrentStory() {
-        if (currentStoryNode != null && !storyShown) {
-            storyShown = true;
-            return true;
-        }
-        return false;
+    public void showCurrentStory() {
+        storyShown = true;
     }
+
+    public boolean getStoryShown() {
+        return storyShown;
+    }
+
     public boolean isAutoSaveEnabled() {
         return autoSaveEnabled;
     }
