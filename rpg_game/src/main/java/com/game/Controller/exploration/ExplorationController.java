@@ -102,22 +102,11 @@ public class ExplorationController {
             handlePossibleInteractions();
         }
 
-        String now = "Node: " + gameState.getCurrentStoryNode().getName() + ", "
-                + "shown: " + gameState.getStoryShown() + ", "
-                + "view: " + ViewManager.getInstance().getStoryView() + ", "
-                + "trigger: " + gameState.getCurrentStoryNode().getTrigger().test(gameState);
-        if (true || !prevString.equals(now)) {
-            System.out.print(now);
-            prevString = now;
-        }
-        System.out.println(", prev: " + prevPosition + ", curr: " + gameState.getParty().getMainPlayer().getPosition());
         // Mostra la storia solo se c'è un nodo e nessun dialogo aperto
         if (gameState.getCurrentStoryNode() != null
                 && !ViewManager.getInstance().getDialogView().isVisible()
                 && gameState.getCurrentStoryNode().getTrigger().test(gameState)
                 && !gameState.getStoryShown()) {
-            // ViewManager.getInstance().showStory();
-            // new StoryController().enter();
             storyController.enter();
 
         }

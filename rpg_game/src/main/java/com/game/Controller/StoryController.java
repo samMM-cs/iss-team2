@@ -26,7 +26,6 @@ public class StoryController {
                 .filter(choice -> choice.getText().equals(choiceText))
                 .findFirst()
                 .orElse(null);
-        System.out.println("CHIAMATO onChoice(" + choiceText + "): " + storyNode.getChoices());
         if (chosenOne != null) {
             chosenOne.getChoiceAftermath().accept(GameState.getInstance());
             gameState.setCurrentStoryNode(chosenOne.getNextNode());

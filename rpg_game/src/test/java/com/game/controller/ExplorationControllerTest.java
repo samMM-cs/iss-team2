@@ -281,7 +281,6 @@ public class ExplorationControllerTest {
         gameState.createParty();
         gameState.createEnemy();
         gameState.createNpc();
-        System.out.println(gameState.toString());
         return gameState;
     }
 

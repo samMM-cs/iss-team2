@@ -57,18 +57,6 @@ public class ExplorationView {
         timer = new AnimationTimer() {
 
             @Override
-            public void start() {
-                System.out.println("Starting timer");
-                super.start();
-            }
-
-            @Override
-            public void stop() {
-                System.out.println("Stopping timer");
-                super.stop();
-            }
-
-            @Override
             public void handle(long now) {
                 movementController.update();
                 mapView.requestLayout();
