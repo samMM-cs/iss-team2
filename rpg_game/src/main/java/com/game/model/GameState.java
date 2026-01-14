@@ -133,7 +133,7 @@ public class GameState {
         for (int i = 0; i < selectedCharacters.size(); i++) {
             Job selectedJob = selectedCharacters.get(i);
 
-            Player p = new Player(selectedJob, maps.get(mapInd).getPlayerPosition(selectedCharacters.size(), i));
+            Player p = new Player(selectedJob, maps.get(mapInd).getPlayerPosition(nPlayers, i));
             if (i > 0)
                 p.subscribeToFollowed(players.get(i - 1));
             players.add(p);

@@ -17,6 +17,7 @@ public class Party {
     }
 
     public void updateFollowPosition(Position newLeaderPos) {
+        assert newLeaderPos != null;
         getMainPlayer().notifyFollower();
         getMainPlayer().setPosition(newLeaderPos);
     }

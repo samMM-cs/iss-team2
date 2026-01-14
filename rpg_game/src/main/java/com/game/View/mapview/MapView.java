@@ -106,6 +106,7 @@ public class MapView extends Pane {
             Position dest = new Position(sprite.getX(), sprite.getY());
             if (dest.equals(Position.Origin))
                 dest = offset.add(position.scale(renderedTileSize));
+            assert canvas.getWidth() > 0 && canvas.getHeight() > 0;
 
             graphicsContext.drawImage(img,
                     vp.getMinX(), vp.getMinY(),
@@ -128,6 +129,8 @@ public class MapView extends Pane {
                     continue;
                 int sourceX = tileSize * (tile % tileSetCols);
                 int sourceY = tileSize * (tile / tileSetCols);
+                assert canvas.getWidth() > 0 && canvas.getHeight() > 0;
+
                 graphicsContext.drawImage(
                         tileSet, // image to take tiles from
                         sourceX, sourceY, // coords in source img

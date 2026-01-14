@@ -58,23 +58,13 @@ public class ExplorationView {
 
             @Override
             public void start() {
-                if (isRunning)
-                    System.out.println("Already running");
-                else {
-                    System.out.println("Starting timer");
-                    isRunning = true;
-                }
+                System.out.println("Starting timer");
                 super.start();
             }
 
             @Override
             public void stop() {
-                if (isRunning) {
-                    System.out.println("Stopping timer");
-                    isRunning = false;
-                } else {
-                    System.out.println("Already stopped");
-                }
+                System.out.println("Stopping timer");
                 super.stop();
             }
 
@@ -99,10 +89,10 @@ public class ExplorationView {
         ViewManager.getInstance().initPauseMenu(scene, gameController);
         ViewManager.getInstance().enableGlobalPause(scene);
 
-        /*if (!GameState.getInstance().getStoryShown())
-            ViewManager.getInstance().showStory();*/
-
-        
+        /*
+         * if (!GameState.getInstance().getStoryShown())
+         * ViewManager.getInstance().showStory();
+         */
 
         timer.start();
     }

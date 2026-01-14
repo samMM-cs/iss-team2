@@ -30,7 +30,7 @@ public class ExplorationController {
             KeyCode.D, KeyCode.DOWN, KeyCode.UP, KeyCode.LEFT, KeyCode.RIGHT);
     private Position prevPosition = null;
     private boolean battleStarted = false;
-    private final StoryController storyController= new StoryController();
+    private final StoryController storyController = new StoryController();
 
     public ExplorationController(Scene scene, MapView mapView) {
         this.scene = scene;
@@ -54,18 +54,21 @@ public class ExplorationController {
         this.posLimit = new Position(maxX, maxY);
     }
 
+    String prevString = "";
+
     public void update() {
         GameState gameState = GameState.getInstance();
         if (gameState == null)
             return;
 
         // Cambio mappa se necessario
+
         if (gameState.getCurrentStoryNode().getTrigger() instanceof CanChangeMap
                 && gameState.getCurrentStoryNode().getTrigger().test(gameState)) {
-            //gameState.nextMap();
-            //ViewManager.getInstance().updateMaps();
+            // gameState.nextMap();
+            // ViewManager.getInstance().updateMaps();
             prevPosition = null;
-            //return;
+            // return;
         }
 
         // Controllo battaglia
@@ -99,18 +102,24 @@ public class ExplorationController {
             handlePossibleInteractions();
         }
 
-        /*System.out.println(gameState.getCurrentStoryNode().getName() + ", "
-                + ViewManager.getInstance().getDialogView().isVisible() + ", "
-                + ViewManager.getInstance().getStoryView());*/
-
+        String now = "Node: " + gameState.getCurrentStoryNode().getName() + ", "
+                + "shown: " + gameState.getStoryShown() + ", "
+                + "view: " + ViewManager.getInstance().getStoryView() + ", "
+                + "trigger: " + gameState.getCurrentStoryNode().getTrigger().test(gameState);
+        if (true || !prevString.equals(now)) {
+            System.out.print(now);
+            prevString = now;
+        }
+        System.out.println(", prev: " + prevPosition + ", curr: " + gameState.getParty().getMainPlayer().getPosition());
         // Mostra la storia solo se c'è un nodo e nessun dialogo aperto
         if (gameState.getCurrentStoryNode() != null
                 && !ViewManager.getInstance().getDialogView().isVisible()
                 && gameState.getCurrentStoryNode().getTrigger().test(gameState)
                 && !gameState.getStoryShown()) {
-            //ViewManager.getInstance().showStory();
-            //new StoryController().enter();
+            // ViewManager.getInstance().showStory();
+            // new StoryController().enter();
             storyController.enter();
+
         }
     }
 

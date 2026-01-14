@@ -216,7 +216,7 @@ public class BattleView extends Pane {
             return;
 
         gc.clearRect(0, 0, w, h);
-
+        assert canvas.getWidth() > 0 && canvas.getHeight() > 0;
         // SFONDO
         gc.drawImage(backgroundImage, 0, 0, w, h);
         gc.setImageSmoothing(false);
@@ -256,6 +256,7 @@ public class BattleView extends Pane {
             gc.translate(currentX + size / 2, 0);
             gc.scale(-1, 1);
             gc.translate(-currentX - size / 2, 0);
+            assert canvas.getWidth() > 0 && canvas.getHeight() > 0;
 
             gc.drawImage(p.getImg(), p.getJob().getX(), p.getJob().getY(), Job.SIZE, Job.SIZE,
                     Math.floor(currentX), Math.floor(y), size, size);
@@ -296,6 +297,7 @@ public class BattleView extends Pane {
             int sy = enemy.getJob().getY();
             int sw = Job.SIZE;
             int sh = Job.SIZE;
+            assert canvas.getWidth() > 0 && canvas.getHeight() > 0;
 
             gc.drawImage(enemy.getImg(),
                     sx, sy, sw, sh,
@@ -332,6 +334,7 @@ public class BattleView extends Pane {
         double iconSize = 20;
         double iconX = barX - iconSize - 6;
         double iconY = barY - (iconSize - barHeight) / 2;
+        assert canvas.getWidth() > 0 && canvas.getHeight() > 0;
 
         gc.drawImage(heart_img[frame], iconX, iconY, iconSize, iconSize);
 

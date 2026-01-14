@@ -202,7 +202,7 @@
           }
         ],
         "trigger": {
-          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+          "@class": "com.game.model.SerializablePredicate$EnemiesDead"
         }
       },
 
