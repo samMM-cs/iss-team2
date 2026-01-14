@@ -5,7 +5,6 @@ public class Main {
     try {
       App.main(args);
     } catch (Throwable e) {
-      System.out.println("ooops");
       e.printStackTrace();
     }
   }

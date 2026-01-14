@@ -17,7 +17,6 @@ public class GameLauncher {
     }
 
     public void launch(Stage primaryStage) {
-        System.out.println("RGP Game launching...");
         ViewManager.ViewManagerBuilder.build(primaryStage);
 
         ViewManager.getInstance().showMainMenu();
