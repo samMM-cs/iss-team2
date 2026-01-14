@@ -61,7 +61,7 @@
           }
         ],
         "trigger": {
-          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
         }
       },
 
@@ -89,7 +89,7 @@
           }
         ],
         "trigger": {
-          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
         }
       },
 
@@ -110,7 +110,7 @@
           }
         ],
         "trigger": {
-          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
         }
       },
 
@@ -131,7 +131,7 @@
           }
         ],
         "trigger": {
-          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
         }
       },
 
@@ -152,7 +152,7 @@
           }
         ],
         "trigger": {
-          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
         }
       },
 
