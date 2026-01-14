@@ -7,7 +7,7 @@ import com.game.view.StoryView;
 
 public class StoryController {
     private final StoryView view;
-    private final StoryNode storyNode;
+    private StoryNode storyNode;
     private final GameState gameState;
 
     public StoryController(StoryView view) {
@@ -24,10 +24,12 @@ public class StoryController {
     }
 
     public void onChoice(String choiceText) {
+        storyNode = gameState.getCurrentStoryNode();
         Choice chosenOne = storyNode.getChoices().stream()
                 .filter(choice -> choice.getText().equals(choiceText))
                 .findFirst()
                 .orElse(null);
+        System.out.println("CHIAMATO onChoice(" + choiceText + "): " + storyNode.getChoices());
         if (chosenOne != null) {
             chosenOne.getChoiceAftermath().accept(GameState.getInstance());
             gameState.setCurrentStoryNode(chosenOne.getNextNode());

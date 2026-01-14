@@ -43,7 +43,7 @@ public class Choice {
     @Override
     public String toString() {
         return "Choice{" +
-                "nextNode=" + nextNode +
+                "nextNode=" + nextNode.getName() +
                 ", text='" + text + '\'' +
                 ", choiceAftermath=" + choiceAftermath.getClass().getCanonicalName() +
                 '}';

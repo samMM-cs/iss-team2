@@ -97,9 +97,9 @@ public class ExplorationController {
             handlePossibleInteractions();
         }
 
-        System.out.println(gameState.getCurrentStoryNode().getName() + ", "
-                + ViewManager.getInstance().getDialogView().isVisible() + ", "
-                + ViewManager.getInstance().getStoryView());
+        // System.out.println(gameState.getCurrentStoryNode().getName() + ", "
+        // + ViewManager.getInstance().getDialogView().isVisible() + ", "
+        // + ViewManager.getInstance().getStoryView());
 
         // Mostra la storia solo se c'è un nodo e nessun dialogo aperto
         if (gameState.getCurrentStoryNode() != null

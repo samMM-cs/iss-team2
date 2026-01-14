@@ -104,7 +104,8 @@ public class ShopView extends VBox {
 
         learnButton.setOnAction(e -> {
             for (Player player : party.getMembers()) {
-                if (canLearn) {
+                if (move.getReq().contains(player.getJob().name()) &&
+                        !player.getCurrentMove().contains(move)) {
                     player.learnMove(move);
                     showFeedback(player.getJob().name(), move.getName());
                 }
