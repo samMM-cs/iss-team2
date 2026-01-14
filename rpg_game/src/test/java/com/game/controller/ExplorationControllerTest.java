@@ -32,6 +32,7 @@ import com.game.model.map.Map1;
 import com.game.model.map.Map2;
 import com.game.model.map.Map3;
 import com.game.model.story.FlagMap;
+import com.game.model.story.StoryNodeLoader;
 import com.game.view.DialogueView;
 import com.game.view.mapview.MapView;
 
@@ -273,12 +274,14 @@ public class ExplorationControllerTest {
                 .enableAutoSave(true)
                 .setInventory()
                 .setFlagMap(new FlagMap())
+                .setStoryNode(StoryNodeLoader.load())
                 .setWorldPosition(new WorldPosition(0, 0))
                 .setMaps(List.of(new Map1(), new Map2(), new Map3()))
                 .build();
         gameState.createParty();
         gameState.createEnemy();
         gameState.createNpc();
+        System.out.println(gameState.toString());
         return gameState;
     }
 
