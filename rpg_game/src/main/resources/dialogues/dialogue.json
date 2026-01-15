@@ -518,9 +518,9 @@
         "choices": [
           {
             "text": "This will be the last world ever.",
-            "nextNode": null,
+            "nextNode": "self_annihilation",
             "choiceAftermath": {
-              "@class": "com.game.model.SerializableConsumer$EndOfStory"
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
           },
           {
@@ -528,6 +528,39 @@
             "nextNode": "total_annihilation",
             "choiceAftermath": {
               "@class":"com.game.model.SerializableConsumer$DoNothing"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "self_annihilation",
+        "dialogues": [
+          "After all this efforts, all you can get",
+          "is the survival of this world 'til it meets",
+          "its natural end.",
+          "Since this is the last chance for the world,",
+          "it should'nt be wasted.",
+          "You all can feel the instincts these battles",
+          "awakened in you. They're the proof of the",
+          "DESTRUCTION's words truthfulness.",
+          "You know you can't give up to them.",
+          "There are to choices:",
+          "Hid together away from the civilized world",
+          "surviving until your natural death,",
+          "or ensuring the peace for this world by",
+          "choosing death now.",
+          "Regardless of your choice,",
+          "it'll make you all suffer..."
+        ],
+        "choices": [
+          {
+            "text": "Only the Players can now the end",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$EndOfStory"
             }
           }
         ],
