@@ -492,7 +492,7 @@
             "text": "At this point, what choice could you possibly have?",
             "nextNode": "destruction_and_creation_defeated_small_doubt",
             "choiceAftermath": {
-              "@class": "com.game.model.SerializableConsumer$DoNothing"
+              "@class": "com.game.model.SerializableConsumer$BossFight"
             }
 
           }
@@ -546,11 +546,18 @@
           "You all can feel the instincts these battles",
           "awakened in you. They're the proof of the",
           "DESTRUCTION's words truthfulness.",
-          "You know you can't give up to them.",
-          "There are to choices:",
+          "The pain you felt due to your wounds",
+          "made you stronger. Your brains are starting",
+          "to associate PAIN = MORE POWER",
+          "and MORE POWER = MORE PLEASURE",
+          "MORE PAIN = MORE PLEASURE?",
+          "This thought scares you.",
+          "You know you can't give up to it.",
+          "There are two choices.",
           "Hid together away from the civilized world",
-          "surviving until your natural death,",
-          "or ensuring the peace for this world by",
+          "surviving until your natural death. This",
+          "way you all will never experience a normal life.",
+          "Or ensure the peace for this world by",
           "choosing death now.",
           "Regardless of your choice,",
           "it'll make you all suffer..."
@@ -698,13 +705,17 @@
           "being destroyed.",
           "If this is what you enjoy in life",
           "you all are quite messed up.",
-          "The thought of being savages yourselves like your foes",
-          "scares you. But there's more than meets the eye.",
-          "Fighting everyone, everything until someone stronger",
-          "kills you sounds not exciting, but releasing.",
+          "The thought of being savages yourselves",
+          "like your foes",
+          "scares you. But there's more than",
+          "meets the eye.",
+          "Fighting everyone, everything until",
+          "someone strongerkills you sounds not",
+          "exciting, but releasing.",
           "You'd have nothing to worry.",
           "Ultimately the only difference between the Party",
-          "and the Enemies is the former uses intellect to fight,",
+          "and the Enemies is the former",
+          "uses intellect to fight,",
           "the latter seems to attack RandomLy.",
           "If the Party embraces this twisted side of them,",
           "they only would have to worry about winning.",
@@ -763,11 +774,14 @@
       {
         "name": "destruction_fight_twisted",
         "dialogues": [
-          "You all are enjoying this bloody feast. Even DESTRUCTION themself",
-          "wasn't a match for you. Outside of battle you all lost reason.",
+          "You all are enjoying this bloody feast.",
+          "Even DESTRUCTION themself",
+          "wasn't a match for you. Outside of battle",
+          "you all lost reason.",
           "You all can think clearly only while fighting.",
-          "Of course, the only thought can cross your lost minds",
-          "can be fighting at your best because there would be no fun",
+          "Of course, the only thought can cross",
+          "your lost minds can be fighting at your best",
+          "because there would be no fun",
           "in holding back."
         ],
         "choices": [

@@ -37,7 +37,7 @@ public class Map3 implements MapData {
   @Override
   public List<Enemy> getEnemies() {
     List<Position> pos = List.of(new Position(14, 4), new Position(17, 9),
-        new Position(20, 25), new Position(22, 25), new Position(24, 25));
+        new Position(20, 25), new Position(22, 25));
     List<Job> jobs = List.of(Job.GOBLIN, Job.TROLL);
     Random rand = new Random();
     List<Enemy> enemies = pos.stream()
