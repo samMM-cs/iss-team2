@@ -1,5 +1,7 @@
 package com.game.model.story;
 
 public enum Flag {
-    EXAMPLE_FLAG
+    THINKED_IN_MAP1,
+    STUDY_ENEMY_BEHAVIOR,
+    DEEP_THINKING
 }

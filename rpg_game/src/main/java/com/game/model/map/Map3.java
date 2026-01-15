@@ -44,7 +44,6 @@ public class Map3 implements MapData {
         .map(p -> new Enemy(jobs.get(rand.nextInt(jobs.size())), p, rand.nextInt(3,
             7)))
         .collect(Collectors.toList());
-    enemies.add(new Enemy(List.of(Job.BOSS, Job.BOSS2, Job.BOSS3).get(rand.nextInt(3)), new Position(22, 27), 1));
     return enemies;
   }
 

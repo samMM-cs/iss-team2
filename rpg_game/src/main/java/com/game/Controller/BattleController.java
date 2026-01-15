@@ -127,7 +127,7 @@ public class BattleController {
                 plannedActionList.clear();
                 break;
             case BattleResult.PARTY_DEFEATED: {
-                backToMap();
+                ViewManager.getInstance().exit();
                 break;
             }
             case BattleResult.PARTY_WON: {

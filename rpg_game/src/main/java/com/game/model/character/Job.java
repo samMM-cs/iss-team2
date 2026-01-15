@@ -9,10 +9,10 @@ import com.game.model.battle.MoveReader;
 
 public enum Job {
 
-    WARRIOR(0, 0, 100, 40, 3, 0, 6, true),
-    ROGUE(4, 1, 100, 40, 3, 0, 6, true),
-    MAGE(1, 0, 100, 60, 3, 0, 4, true),
-    ARCHER(2, 0, 100, 40, 3, 0, 4, true),
+    WARRIOR(0, 0, 100, 40, 3, 0, 60, true),
+    ROGUE(4, 1, 100, 40, 3, 0, 60, true),
+    MAGE(1, 0, 100, 60, 3, 0, 40, true),
+    ARCHER(2, 0, 100, 40, 3, 0, 40, true),
     // Enemy
     GOBLIN(0, 0, 100, 3, 3, 0, 4, false),
     TROLL(0, 1, 100, 4, 3, 0, 2, false),

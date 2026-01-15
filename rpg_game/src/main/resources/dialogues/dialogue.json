@@ -5,15 +5,35 @@
       {
         "name": "intro",
         "dialogues": [
-          "Il mondo sta morendo.",
-          "Creature oscure emergono dalla terra e divorano tutto.",
-          "Città cadono. Regni scompaiono.",
-          "Voi siete l'ultimo gruppo rimasto a combattere."
+          "Hi, this is a RPG built by",
+          "Giulia Filicicchia",
+          "Giusto Baiamonte",
+          "Samuele Morreale",
+          "as project for ISS exam.",
+          "During the game you can fight enemies",
+          "and level up by defeating them.",
+          "You can also learn more Moves from a NPC.",
+          "You can interact with him when you're near him",
+          "and then by pressing E",
+          "If you lose only once, it's Game Over.",
+          "Don't worry, you can save your game by pressing Esc",
+          "However, pay attention to the plot, because",
+          "your choices will influence the outcome",
+          "Have fun",
+          "PS. you cannot see your stats yet :(",
+          "But now just enjoy The Cycle :)"
         ],
         "choices": [
           {
-            "text": "Partire per fermare la minaccia.",
+            "text": "Let's go",
             "nextNode": "map1_start",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          },
+          {
+            "text": "What? And how can i know how strong I am?",
+            "nextNode": "map1_start_funny",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
@@ -25,15 +45,44 @@
       },
 
       {
-        "name": "map1_start",
+        "name": "map1_start_funny",
         "dialogues": [
-          "Le prime terre sono devastate.",
-          "I nemici sembrano nascere dal mondo stesso.",
-          "Ogni battaglia lascia ferite nella realtà."
+          "Just check your Job.java file",
+          "Across the world are surging hostile creatures,",
+          "like they were hid underground and are going out",
+          "only now.",
+          "But when someone checked the underground,",
+          "they didn't find anything at all.",
+          "These hostile creatures attack everyone at sight",
+          "and don't even speak."
         ],
         "choices": [
           {
-            "text": "Continuare ad avanzare.",
+            "text": "Look for them and kill them all",
+            "nextNode": "map1_end",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "map1_start",
+        "dialogues": [
+          "Across the world are surging hostile creatures,",
+          "like they were hid underground and are going out",
+          "only now.",
+          "But when someone checked the underground,",
+          "they didn't find anything at all.",
+          "These hostile creatures attack everyone at sight",
+          "and don't even speak."
+        ],
+        "choices": [
+          {
+            "text": "Look for them and kill them all",
             "nextNode": "map1_end",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
@@ -47,13 +96,19 @@
       {
         "name": "map1_end",
         "dialogues": [
-          "I servitori sono stati sconfitti.",
-          "Ma nuovi nemici continuano ad apparire.",
-          "Qualcosa li sta creando."
+          "You defeated all the enemies in this area.",
+          "Perhaps you have to move onto the next area"
         ],
         "choices": [
           {
-            "text": "Scoprire l'origine dei nemici.",
+            "text": "Think about the battle you had here",
+            "nextNode": "map1_yapping",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ThinkInMap1"
+            }
+          },
+          {
+            "text": "Go to the next area",
             "nextNode": "map2_start",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$ChangeMap"
@@ -64,27 +119,52 @@
           "@class": "com.game.model.SerializablePredicate$CanChangeMap"
         }
       },
-
       {
-        "name": "map2_start",
+        "name": "map1_yapping",
         "dialogues": [
-          "Antiche rovine emergono dal terreno.",
-          "Simboli parlano di una forza primordiale.",
-          "Il suo nome è Distruzione."
+          "You did well.",
+          "This is the first area though.",
+          "You couldn't help but notice you felt a familiar",
+          "feelings when battling, like you knew what to do.",
+          "Moreover, during the fight you are pretty silent",
+          "and your only thought is slaying every enemy ahead of you."
         ],
         "choices": [
           {
-            "text": "Distruggerla a ogni costo.",
+            "text": "Go to the next area",
+            "nextNode": "map2_start",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$CanChangeMap"
+        }
+      },
+      {
+        "name": "map2_start",
+        "dialogues": [
+          "Finally you're in the second area.",
+          "You feel the enemies are stronger here, but",
+          "you think you can do it.",
+          "You heard from someone those enemies started to",
+          "tear up an area after they killed everyone.",
+          "Perhaps they have a goal in mind."
+        ],
+        "choices": [
+          {
+            "text": "Whatever. You only need to kill them, right?",
             "nextNode": "map2_force",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
           },
           {
-            "text": "Studiare ciò che è la Distruzione.",
+            "text": "Fight them and study their behavior",
             "nextNode": "map2_truth",
             "choiceAftermath": {
-              "@class": "com.game.model.SerializableConsumer$DoNothing"
+              "@class": "com.game.model.SerializableConsumer$StudyEnemyBehavior"
             }
           }
         ],
@@ -96,14 +176,12 @@
       {
         "name": "map2_force",
         "dialogues": [
-          "La Distruzione non sembra un'entità malvagia.",
-          "È una presenza costante.",
-          "Un processo."
+          "You did it."
         ],
         "choices": [
           {
-            "text": "Non importa. Deve morire.",
-            "nextNode": "map3_start",
+            "text": "Advance to the next area",
+            "nextNode": "map3_start_no_doubt",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$ChangeMap"
             }
@@ -117,16 +195,29 @@
       {
         "name": "map2_truth",
         "dialogues": [
-          "La Distruzione non crea il caos.",
-          "Essa distrugge ciò che deve essere distrutto.",
-          "È parte di qualcosa di più grande."
+          "You tried to study your enemy's behavior.",
+          "Ultimately you failed.",
+          "You couldn't understand a thing of them.",
+          "Perhaps it's due to the fact there's nothing",
+          "to get about 'em.",
+          "Maybe they just enjoy destruction, feeling",
+          "the touch of their foes' blood,",
+          "releasing what they feel",
+          "by ravaging every area they step in..."
         ],
         "choices": [
           {
-            "text": "Andare fino in fondo.",
-            "nextNode": "map3_start",
+            "text": "Another reason to stop them. Go to the next area",
+            "nextNode": "map3_start_no_doubt",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
+          },
+          {
+            "text": "They're... like us?",
+            "nextNode": "map2_deep_thinking",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DeepThinking"
             }
           }
         ],
@@ -134,47 +225,58 @@
           "@class": "com.game.model.SerializablePredicate$CanChangeMap"
         }
       },
-
       {
-        "name": "map3_start",
+        "name": "map2_deep_thinking",
         "dialogues": [
-          "Alla fine del mondo, una figura vi attende.",
-          "La Distruzione non mostra ostilità.",
-          "Solo necessità."
+          "Why would you think they're similar to you?",
+          "You're supposed to be the heroes who vanquish",
+          "the enemies and save innocent lives",
+          "from their brutality.",
+          "A question comes at your minds:",
+          "Why did you even start traveling this world",
+          "and kill monsters?"
         ],
         "choices": [
           {
-            "text": "Affrontarla.",
-            "nextNode": "boss_intro",
+            "text": "To repent this threat.",
+            "nextNode": "map3_start_no_doubt",
             "choiceAftermath": {
-              "@class": "com.game.model.SerializableConsumer$DoNothing"
-            }
-          }
-        ],
-        "trigger": {
-          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
-        }
-      },
-
-      {
-        "name": "boss_intro",
-        "dialogues": [
-          "DISTRUZIONE:",
-          "«Io distruggo perché devo.»",
-          "«Quando tutto sarà finito, distruggerò me stessa.»",
-          "«Solo allora la Creazione agirà.»"
-        ],
-        "choices": [
-          {
-            "text": "Combattere la Distruzione.",
-            "nextNode": "boss_fight",
-            "choiceAftermath": {
-              "@class": "com.game.model.SerializableConsumer$DoNothing"
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
             }
           },
           {
-            "text": "Fermarsi e ascoltare.",
-            "nextNode": "resignation",
+            "text": "You don't know.",
+            "nextNode": "map3_start_small_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
+          },
+          {
+            "text": "You just like fighting",
+            "nextNode": "map3_start_hard_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$ChangeMap"
+            }
+          }
+        ],
+        "trigger": {
+          "@class" : "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "map3_start_no_doubt",
+        "dialogues": [
+          "You know it: this is the last area.",
+          "You fought bravely and killed all enemies.",
+          "All battles trained you and now you're ready",
+          "to face the last battle.",
+          "But before you have to wipe another bunch",
+          "of monsters."
+        ],
+        "choices": [
+          {
+            "text": "Go on. Time to end this",
+            "nextNode": "destruction_intro_no_doubt",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
@@ -184,18 +286,31 @@
           "@class": "com.game.model.SerializablePredicate$ConstantTrue"
         }
       },
-
       {
-        "name": "boss_fight",
+        "name": "destruction_intro_no_doubt",
         "dialogues": [
-          "Lo scontro scuote la realtà.",
-          "Il colpo finale colpisce la Distruzione.",
-          "Essa cade senza opporsi."
+          "DESTRUCTION.",
+          "«I knew you would've done 'til the end.»",
+          "The voice echoes in the air. It's clear and firm,",
+          "but they're not shouting. Instead, they're calm.",
+          "Like they're announcing a truth they foresaw",
+          "from the beginning.",
+          "«Destruction is a constant in this world and it's",
+          "unstoppable.»",
+          "«And at the end, when only I stand alone, I'll",
+          "have nothing to but destroy this body of mine.»"
         ],
         "choices": [
           {
-            "text": "Osservare ciò che accade.",
-            "nextNode": "victory_creation",
+            "text": "Fight them and end all this no-sense!",
+            "nextNode": "destruction_fight_no_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$BossFight"
+            }
+          },
+          {
+            "text": "Did they say they foresaw this outcome?",
+            "nextNode": "destruction_from_no_doubt_branching",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
@@ -205,20 +320,16 @@
           "@class": "com.game.model.SerializablePredicate$EnemiesDead"
         }
       },
-
       {
-        "name": "victory_creation",
+        "name": "destruction_fight_no_doubt",
         "dialogues": [
-          "CREAZIONE:",
-          "«Il ciclo è stato spezzato.»",
-          "«Ma non fermato.»",
-          "Un nuovo mondo inizia a formarsi sopra il vostro.",
-          "La realtà viene riscritta."
+          "The party won.",
+          "They lost."
         ],
         "choices": [
           {
-            "text": "Accettare la verità.",
-            "nextNode": "victory_ending",
+            "text": "What's happening?",
+            "nextNode": "creation_arrival_no_doubt",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
@@ -230,18 +341,57 @@
       },
 
       {
-        "name": "victory_ending",
+        "name": "creation_arrival_no_doubt",
         "dialogues": [
-          "Avete vinto.",
-          "Ma il mondo è condannato.",
-          "La Distruzione tornerà.",
-          "E voi sarete gli unici a ricordare.",
-          "",
-          "FINE – VITTORIA"
+          "CREATION:",
+          "«...»",
+          "«You did well.»",
+          "«You managed to defeat Destruction.»",
+          "The voice is clear and kind, but seems kinda apathetic.",
+          "«But in a world without Destruction",
+          "there's nothing to balance this power of mine.»",
+          "«Endless creation... This is what I am.»",
+          "«And it can't be stopped.»",
+          "«A new world will be created and this one be overridden.»",
+          "Clouds are swirling upon you and",
+          "you can catch a glimpse of a new world."
         ],
         "choices": [
           {
-            "text": "E' finita",
+            "text": "At the end this is a Game Over",
+            "nextNode": "surrend_to_creation",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          },
+          {
+            "text": "You can't let this! Fight the Creation too",
+            "nextNode": "destruction_and_creation_defeated_no_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$BossFight"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+
+      {
+        "name": "destruction_and_creation_defeated_no_doubt",
+        "dialogues": [
+          "At the end the Creation lost.",
+          "Now no Destruction thing will threaten this world",
+          "Nor there will be a Creation force spiraling out",
+          "of control and trying to override this world.",
+          "But when the universe will reach its Heat Death",
+          "there will be none to reshape it.",
+          "Everything will be ended. After only the void",
+          "Was this the right choice?"
+        ],
+        "choices": [
+          {
+            "text": "Do you win?",
             "nextNode": null,
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$EndOfStory"
@@ -254,21 +404,35 @@
       },
 
       {
-        "name": "resignation",
+        "name": "destruction_from_no_doubt_branching",
         "dialogues": [
-          "Abbassate le armi.",
-          "La Distruzione vi osserva.",
-          "",
-          "DISTRUZIONE:",
-          "«Avete compreso.»",
-          "",
-          "Il mondo continua a sgretolarsi.",
-          "Ma questa volta… è giusto così."
+          "DESTRUCTION:",
+          "«Why do you think you're so strong?»",
+          "«Why do you think only you managed to",
+          "defeat my creations?»",
+          "«YOU HAVE the Destruction in you,",
+          "YOU HAVE the same power of me and the monsters",
+          "you killed.»",
+          "«I created you and left you in this world.»",
+          "«The only difference between you and those monsters",
+          "is you're smart enough to be aware of your existence»",
+          "«You slayed everything in your path, WITHOUT",
+          "ASKING QUESTIONS, just like, even if you",
+          "were unaware, you sought DESTRUCTION.»",
+          "«Now come on, there's only one way. Kill me",
+          "if you can and then ravage this world by yourself.»"
         ],
         "choices": [
           {
-            "text": "Accettare la fine.",
-            "nextNode": "resignation_ending",
+            "text": "You fight, even knowing your powers come from Destruction",
+            "nextNode": "creation_arrival_small_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$BossFight"
+            }
+          },
+          {
+            "text": "Object your true nature",
+            "nextNode": "surrend_to_destruction_no_doubt",
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
@@ -280,28 +444,330 @@
       },
 
       {
-        "name": "resignation_ending",
+        "name": "surrend_to_destruction_no_doubt",
         "dialogues": [
-          "Il mondo viene distrutto fino all'ultimo frammento.",
-          "Poi, la Distruzione si annienta.",
-          "",
-          "CREAZIONE:",
-          "«Ora posso creare.»",
-          "",
-          "Un nuovo mondo nasce.",
-          "Pulito.",
-          "Senza memoria.",
-          "",
-          "Voi non esistete più.",
-          "",
-          "FINE – RESA"
+          "If your power comes from DESTRUCTION,",
+          "if you're fated to destroy everything,",
+          "then you understand there can be one way out.",
+          "At the end you could save no one, nothing",
+          "but your own freedom. Like the Stoic Seneca",
+          "you accepted death to achieve release from",
+          "every constraint.",
+          "YOU SURRENDERED TO DESTRUCTION"
         ],
         "choices": [
           {
-            "text": "E' finita",
+            "text": "GAME OVER",
             "nextNode": null,
             "choiceAftermath": {
               "@class": "com.game.model.SerializableConsumer$EndOfStory"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "creation_arrival_small_doubt",
+        "dialogues": [
+          "You dit it.",
+          "You used DESTRUCTION's power to overthrow",
+          "DESTRUCTION.",
+          "CREATION:",
+          "«...»",
+          "«You did well.»",
+          "«You managed to defeat Destruction.»",
+          "The voice is clear and kind, but seems kinda apathetic.",
+          "«But in a world without Destruction",
+          "there's nothing to balance this power of mine.»",
+          "«Endless creation... This is what I am.»",
+          "«And it can't be stopped.»",
+          "«A new world will be created and this one be overridden.»",
+          "Clouds are swirling upon you and",
+          "you can catch a glimpse of a new world."
+        ],
+        "choices": [
+          {
+            "text": "At this point, what choice could you possibly have?",
+            "nextNode": "destruction_and_creation_defeated_small_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+
+          }
+        ],
+        "trigger": {
+          "@class":"com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "destruction_and_creation_defeated_small_doubt",
+        "dialogues": [
+          "At the end the Creation lost.",
+          "Now no Destruction thing will threaten this world",
+          "Nor there will be a Creation force spiraling out",
+          "of control and trying to override this world.",
+          "But when the universe will reach it's Heat Death",
+          "there will be none to reshape it.",
+          "Everything will be ended. After only the void",
+          "Or perhaps...",
+          "maybe...",
+          "there's one other choice for you..."
+        ],
+        "choices": [
+          {
+            "text": "This will be the last world ever.",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$EndOfStory"
+            }
+          },
+          {
+            "text": "EMBRACE DESTRUCTION!",
+            "nextNode": "total_annihilation",
+            "choiceAftermath": {
+              "@class":"com.game.model.SerializableConsumer$DoNothing"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "total_annihilation",
+        "dialogues": [
+          "You are indeed beasts.",
+          "You embraced your true nature and ended",
+          "up killing everyone and destroying",
+          "everything but yourselves.",
+          "And then that sudden urge.",
+          "What choice could you possibly have?",
+          "Amidst the void you can do nothing but",
+          "destroying yourselves.",
+          "Since you destroyed creation,",
+          "there will be no new world."
+        ],
+        "choices": [
+          {
+            "text": "...",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$EndOfStory"
+            }
+          }
+        ],
+        "trigger": {
+          "@class":"com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "surrend_to_creation",
+        "dialogues": [
+          "The party understood they cannot oppose",
+          "a natural force which is a constant in the world.",
+          "They let Creation erase their world with a new one.",
+          "However, in this world there will be Destruction.",
+          "But those who were dwelling in the old world",
+          "won't face the same. They will never appear again",
+          "like they are now.",
+          "YOU SURREND TO CREATION"
+        ],
+        "choices": [
+          {
+            "text": "GAME OVER",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$EndOfStory"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "map3_start_small_doubt",
+        "dialogues": [
+          "You don't know.",
+          "You don't even know why this little adventure of yours",
+          "started. Here's the question: What do you feel?",
+          "The answer will change everything. Keep in mind you",
+          "choose your outcome.",
+          "You",
+          "can",
+          "be",
+          "everything",
+          "you",
+          "want"
+        ],
+        "choices": [
+          {
+            "text": "Heroes. This sounds good",
+            "nextNode": "destruction_intro_no_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          },
+          {
+            "text": "But you don't really now",
+            "nextNode": "nothingness",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          },
+          {
+            "text": "You felt fighting was fun",
+            "nextNode": "map3_start_hard_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          }
+        ],
+        "trigger":{
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "nothingness",
+        "dialogues": [
+          "You're engulfed by questions.",
+          "Yet you have no answers.",
+          "Monsters surround you, but, if you don't even know",
+          "why are you fighting, what's the point of doing it?",
+          "at the end you'd feel nothingness.",
+          "Perhaps this is your Stoic death.",
+          "Now you're free from doubt."
+        ],
+        "choices": [
+          {
+            "text": "...",
+            "nextNode": null,
+            "choiceAftermath": {
+              "@class":"com.game.model.SerializableConsumer$EndOfStory"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "map3_start_hard_doubt",
+        "dialogues": [
+          "Did you say you like fighting?",
+          "These are no entertaining fights.",
+          "You're putting your own lives on the edge",
+          "to kill monsters no one know wherever",
+          "they come from.",
+          "You can only end up destroying or",
+          "being destroyed.",
+          "If this is what you enjoy in life",
+          "you all are quite messed up.",
+          "The thought of being savages yourselves like your foes",
+          "scares you. But there's more than meets the eye.",
+          "Fighting everyone, everything until someone stronger",
+          "kills you sounds not exciting, but releasing.",
+          "You'd have nothing to worry.",
+          "Ultimately the only difference between the Party",
+          "and the Enemies is the former uses intellect to fight,",
+          "the latter seems to attack RandomLy.",
+          "If the Party embraces this twisted side of them,",
+          "they only would have to worry about winning.",
+          "No more choices,",
+          "no more ethics.",
+          "Just their instinct and their intellect to satisfy",
+          "their bloodthirst.",
+          "These thoughts put you all to the edge,",
+          "you all start feeling a big headache.",
+          "When did those monsters surround you?",
+          "Did you all space out so much even",
+          "these brainless monsters noticed you?",
+          "It seems it's time to choose..."
+        ],
+        "choices": [
+          {
+            "text": "You don't know how all of this started",
+            "nextNode": "map3_start_small_doubt",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          },
+          {
+            "text": "There's no better moment to embrace Destruction than now",
+            "nextNode": "destruction_intro_twisted",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
+            }
+          }
+        ],
+        "trigger": {
+          "@class":"com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "destruction_intro_twisted",
+        "dialogues": [
+          "«My creations, I see...»",
+          "«you couldn't help but feel the call of your true nature",
+          "and embraced it at all. You used those brainless monsters",
+          "to power up your...."
+        ],
+        "choices": [
+          {
+            "text": "DO THEY WANT TO STOP YAPPING? KILL THEM!",
+            "nextNode": "destruction_fight_twisted",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$BossFight"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$EnemiesDead"
+        }
+      },
+      {
+        "name": "destruction_fight_twisted",
+        "dialogues": [
+          "You all are enjoying this bloody feast. Even DESTRUCTION themself",
+          "wasn't a match for you. Outside of battle you all lost reason.",
+          "You all can think clearly only while fighting.",
+          "Of course, the only thought can cross your lost minds",
+          "can be fighting at your best because there would be no fun",
+          "in holding back."
+        ],
+        "choices": [
+          {
+            "text": "YES! GIVE US MORE FOES!",
+            "nextNode": "creation_defeat_twisted",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$BossFight"
+            }
+          }
+        ],
+        "trigger": {
+          "@class": "com.game.model.SerializablePredicate$ConstantTrue"
+        }
+      },
+      {
+        "name": "creation_defeat_twisted",
+        "dialogues": [
+          "What would even be the point of listening all",
+          "of that boring talks?",
+          "You already defeated all the minions in all area.",
+          "Now you just defeated the big shots.",
+          "There's no more foe for you.",
+          "You all feel outraged. What does mean",
+          "\"No more foe for you?\"",
+          "Wait. Who are you talking to? You really went insane."
+        ],
+        "choices": [
+          {
+            "text": "No more foes... Unless you make the world your foe!",
+            "nextNode": "total_annihilation",
+            "choiceAftermath": {
+              "@class": "com.game.model.SerializableConsumer$DoNothing"
             }
           }
         ],
